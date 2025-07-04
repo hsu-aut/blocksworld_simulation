@@ -1,6 +1,6 @@
 # 🤖 Siemens Project 
 
-This project explores compares the Capabilities & Skills approach vs AI Agents for planning and task execution. 
+the project compares the Capabilities & Skills approach vs AI Agents for planning and task execution. 
 ---
 
 ## 🧱 Box World (Pygame)
