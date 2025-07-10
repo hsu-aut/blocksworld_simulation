@@ -3,6 +3,7 @@ import sys
 import random
 
 pygame.init()
+# test comment
 
 # Screen setup
 WIDTH, HEIGHT = 700, 500
