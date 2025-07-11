@@ -1,11 +1,7 @@
-# 🤖 Siemens Project 
+# 🧱 Blocksworld Simulation (Pygame)
 
-the project compares the Capabilities & Skills approach vs AI Agents for planning and task execution. 
----
-
-## 🧱 Blocksworld (Pygame)
-
-A minimal 2D grid environment built with Pygame. It serves as a simple testbed for agents to navigate, interact with boxes, and complete basic tasks.
+In this project, a simulation is provided with which the classic Blocksworld problem can be represented or simulated. For this purpose, a robot arm is simulated that can place and move colored boxes on different stacks.  
+The graphical simulation is based on Pygame and several actions can be controlled either via keyboard input or conveniently via a REST API with Flask.
 
 ### Run it:
 
@@ -20,9 +16,9 @@ Press the letter of a corresponding block to pick it up. (When controlling via t
 
 When a block is lifted, it can either be placed on the floor (put down) using the space bar or stacked on another block by typing the corresponding letter of the block (stack).
 
-**Controlling the Robot via the MCP server:**
+**Controlling the Robot via REST API commands:**
 
-The MCP-Server has 5 tools:
+There are the following 5 commands:
 
 1. pick_up(block):
     picks up a block from the ground
@@ -38,3 +34,5 @@ The MCP-Server has 5 tools:
 
 5. getstatus():
     returns the current status from the robot as well as the current positions of each block
+
+There is also an MCP server that provides tools to control the robot via the REST API using the commands mentioned. The tools of the MCP server interact directly with the REST endpoints and thus also enable an AI or external programs to control the robot and receive feedback.
