@@ -7,7 +7,11 @@ import queue
 
 app=Flask(__name__)
 command_queue = queue.Queue()
+status_queue = queue.Queue()
+reply_queue = queue.Queue()
 
+
+# Defines the Flask routes for the robot actions and the status requests
 @app.route('/pick_up', methods=['POST'])
 def pick_up():
     data = request.get_json()
@@ -30,8 +34,20 @@ def stack():
     command_queue.put(('stack', block1, block2))
     return jsonify({"result": f"Command stack {block1} on {block2} queued."})
 
+@app.route('/get_status', methods=['POST'])
+def get_status():
+    #Get the status of the stacks
+    status_queue.put(('get_status',))
+    try:
+        status_received = reply_queue.get(timeout=2) #wait for 2s for a reply
+        return jsonify({"result": f"{status_received}"})
+    except queue.Empty:
+        return jsonify({"result": "No status available."})
+
+
+    
+# Main function to run the Pygame loop
 def pygame_mainloop():
-    # Hier initialisiere Pygame
     pygame.init()
 
     # Screen setup
@@ -101,6 +117,7 @@ def pygame_mainloop():
             text_rect = text.get_rect(center=rect.center)
             screen.blit(text, text_rect)
 
+    # Find a box by its letter in the stacks
     def find_box_by_letter(letter):
         for stack_x in stacks:
             stack = stacks[stack_x]
@@ -108,6 +125,7 @@ def pygame_mainloop():
                 return stack_x
         return None
 
+    # Find a free stack (one that has no boxes)
     def find_free_stack():
         for x in stacks:
             if not stacks[x]:
@@ -119,7 +137,7 @@ def pygame_mainloop():
             self.robot_x = STACK_X_POSITIONS[0]
             self.robot_y = 100  # initial height
             self.speed = 8
-            self.state = "idle"  # idle, moving_to_pick, picking, lifting, moving_to_place, lowering, releasing
+            self.state = "idle"  # idle, moving_to_pick, picking, lifting, moving_to_place, lowering, releasing, holding
             self.box = None
             self.from_x = None
             self.to_x = None
@@ -129,7 +147,7 @@ def pygame_mainloop():
         def _get_stack_top_y(self, x):
             return GROUND_Y - len(stacks[x]) * BOX_HEIGHT
         
-
+        #Pickup a box with a specific letter
         def pickup_by_letter(self, letter):
             if self.state == "idle" and self.box is None:
                 stack_x = find_box_by_letter(letter)
@@ -140,6 +158,7 @@ def pygame_mainloop():
             print("Cannot pickup.")
             return False
         
+        # Put down a box on a Box with a specific letter
         def put_down_on_letter(self, target_letter):
             if self.state == "holding" and self.box is not None:
                 stack_x = find_box_by_letter(target_letter)
@@ -151,6 +170,7 @@ def pygame_mainloop():
             print("No block is held!")
             return False
         
+        # Put down a box on the ground
         def put_down_on_ground(self):
             if self.state == "holding" and self.box is not None:
                 stack_x = find_free_stack()
@@ -159,9 +179,10 @@ def pygame_mainloop():
                 else:
                     print("No free Stack!")
                     return False
-            print("No block is held")
+            print("No block is held!")
             return False
 
+        # Pickup a box from a specific stack
         def pickup(self, from_x):
             if self.state == "idle" and self.box is None and stacks[from_x]:
                 self.from_x = from_x
@@ -175,6 +196,7 @@ def pygame_mainloop():
             print("Cannot pickup.")
             return False
 
+        # Put down a box to a specific stack
         def put_down(self, to_x):
             if self.state == "holding" and self.box is not None:
                 self.from_x = None
@@ -186,33 +208,7 @@ def pygame_mainloop():
             print("Cannot put down.")
             return False
 
-        # def stack(self, from_x, to_x):
-        #     if self.state == "holding" and self.box is None and stacks[from_x]:
-        #         self.from_x = from_x
-        #         self.to_x = to_x
-        #         self.box = stacks[from_x].pop()
-        #         self.box.landed = False
-        #         self.state = "moving_to_place"
-        #         self.target_y = self._get_stack_top_y(from_x) - BOX_HEIGHT - 20
-        #         print(f"Stacking from {from_x} to {to_x}")
-        #         return True
-        #     print("Cannot stack.")
-        #     return False
-
-        # def unstack(self, from_x):
-        #     # Only allow if there is a box below (i.e., stack has at least 2 boxes)
-        #     if self.state == "idle" and self.box is None and len(stacks[from_x]) >= 2:
-        #         self.from_x = from_x
-        #         self.to_x = None
-        #         self.box = stacks[from_x].pop()
-        #         self.box.landed = False
-        #         self.state = "moving_to_pick"
-        #         self.target_y = self._get_stack_top_y(from_x) - BOX_HEIGHT - 20
-        #         print(f"Unstacked box from {from_x}")
-        #         return True
-        #     print("Cannot unstack.")
-        #     return False
-        
+        # Updates the robot arm's state and position (like state machine)
         def update(self):
             if self.state == "idle":
                 return
@@ -326,6 +322,24 @@ def pygame_mainloop():
             box = Box(STACK_X_POSITIONS[0], letter=letter, color=color)
             falling_boxes.append(box)
 
+    stack_name_to_pos = {
+        'Stack 1': STACK_X_POSITIONS[0],
+        'Stack 2': STACK_X_POSITIONS[1],
+        'Stack 3': STACK_X_POSITIONS[2],
+    }
+
+    def get_current_status(stacks):
+        status = {}
+        status['robot'] = robot.state
+        status['holding'] = robot.box.letter if robot.box else None
+        for stack_name, x_pos in stack_name_to_pos.items():
+            boxes = stacks.get(x_pos, [])  # Note: stacks keys are x positions, not 'stack0' strings
+            box_letters = [box.letter for box in boxes]  # Extract letters from Box objects
+            status[stack_name] = {
+                'boxes from bottom to top': box_letters,
+            }
+        return status
+
     def draw_stack_labels():
         labels = ["Stack 1", "Stack 2", "Stack 3", "Stack 4"]
         for x, label in zip(STACK_X_POSITIONS, labels):
@@ -342,6 +356,16 @@ def pygame_mainloop():
     while running:
         screen.fill(WHITE)
 
+  
+        # Processing Status Queries
+        while not status_queue.empty():
+            status_cmd = status_queue.get()
+            if status_cmd[0] == 'get_status':
+                current_status = get_current_status(stacks)
+                reply_queue.put(current_status)
+               
+
+        # Processing Commands
         while not command_queue.empty():
             cmd = command_queue.get()
             if cmd[0] == 'pick_up':
@@ -352,6 +376,7 @@ def pygame_mainloop():
                 robot.put_down_on_ground()
             elif cmd[0] == 'stack':
                 robot.put_down_on_letter(cmd[2])
+            
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -360,7 +385,7 @@ def pygame_mainloop():
             elif event.type == pygame.KEYDOWN:
                 if robot.state != "idle" and robot.state != "holding":
                     continue
-                # Pickup Block mit Buchstaben: Taste 'A', 'B', 'C', 'D', ...
+                # Pickup block with letters: ‘A’, ‘B’, ‘C’, ‘D’, ...
                 if robot.state == "idle" and robot.box is None:
                     if pygame.K_a <= event.key <= pygame.K_z:
                         letter = chr(event.key).upper()
@@ -399,6 +424,7 @@ def pygame_mainloop():
     pygame.quit()
     sys.exit()
 
+# Run the Flask app and Pygame loop in separate threads
 if __name__ == "__main__":
     t = threading.Thread(target=pygame_mainloop)
     t.daemon = True
