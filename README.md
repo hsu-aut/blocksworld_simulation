@@ -1,6 +1,6 @@
 # 🧱 Blocksworld Simulation (Pygame)
 
-In this project, a simulation is provided with which the classic Blocksworld problem can be represented or simulated. For this purpose, a robot arm is simulated that can place and move colored boxes on different stacks.  
+In this project, a simulation is provided with which the classic Blocksworld problem can be represented / simulated. For this purpose, a robot arm is simulated that can place and move colored boxes on different stacks.  
 The graphical simulation is based on Pygame and several actions can be controlled either via keyboard input or conveniently via a REST API with Flask.
 
 ### Run it:
@@ -32,7 +32,7 @@ There are the following 5 commands:
 4. unstack(block1, block2):
     unstacks block1 from block2
 
-5. getstatus():
+5. get_status():
     returns the current status from the robot as well as the current positions of each block
 
 **MCP-Server**
