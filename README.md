@@ -18,7 +18,7 @@ python blocksworld.py
 
 Press the letter of a corresponding block to pick it up. (When controlling via the keyboard, there's no distinction made between unstack and pickup)
 
-When a block is lifted, it can either be placed on the floor (put down) using the ´space bar` or stacked on another block by typing the corresponding letter of the block (stack).
+When a block is lifted, it can either be placed on the floor (put down) using the space bar or stacked on another block by typing the corresponding letter of the block (stack).
 
 **Controlling the Robot via the MCP server:**
 
