@@ -1,5 +1,5 @@
 import pygame
-import sys
+import os
 import random
 from flask import Flask, request, jsonify
 import threading
@@ -422,7 +422,7 @@ def pygame_mainloop():
         clock.tick(FPS)
 
     pygame.quit()
-    sys.exit()
+    os._exit(0)
 
 # Run the Flask app and Pygame loop in separate threads
 if __name__ == "__main__":
