@@ -37,4 +37,4 @@ There are the following 5 commands:
 
 **MCP-Server**
 
-There is also an MCP server (MCP-Server.py) that provides tools to control the robot via the REST API using the commands mentioned. The tools of the MCP server interact directly with the REST endpoints and thus also enable an AI or external programs to control the robot and receive feedback.
+There is also an MCP server (`Blocksworld_MCP_Server.py`) that provides tools to control the robot via the REST API using the commands mentioned. The tools of the MCP server interact directly with the REST endpoints and thus also enable an AI or external programs to control the robot and receive feedback.
