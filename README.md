@@ -1,4 +1,4 @@
-# 🤖 Siemens Project 
+# 🤖 Box World Simulation  
 
 the project compares the Capabilities & Skills approach vs AI Agents for planning and task execution. 
 ---
