@@ -72,7 +72,7 @@ def pygame_mainloop():
     # Screen setup
     WIDTH, HEIGHT = 850, 500
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Robot Arm Box Stacking")
+    pygame.display.set_caption("Blocks World Simulation")
 
     # Colors
     WHITE = (240, 240, 240)
