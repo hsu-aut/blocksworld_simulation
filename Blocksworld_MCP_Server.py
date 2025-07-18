@@ -15,6 +15,7 @@ def pick_up(block:str) -> str:
     Requirements: 
         The block to be picked up must be on the ground (= block is in the first position of the stack).
         There must not be any other block on top of it.
+        Robot must be idle.
 
     Result:
         The robot will hold the block.
@@ -36,8 +37,9 @@ def unstack(block1:str, block2:str) -> str:
         Unstacks block1 from block2.
 
     Requirements:
-        The robot must hold block1.
-        block2 must have block1 on top of it.         
+        The robot must be idle.
+        block2 must have block1 on top of it.  
+           
     Result:
         block1 will be unstacked from block2 and the robot will hold it.
 
@@ -88,6 +90,7 @@ def stack(block1:str, block2:str) -> str:
 
     Result:
         Block1 will be stacked on block2.
+        Robot is free.
 
     Args:
         block1 (str): The name of the block to stack.
@@ -110,7 +113,7 @@ def get_status() -> str:
         None
 
     Result:
-        Returns the current status of the robot including any held blocks and the total number of available stacks and the positions of the blocks.
+        Returns the current status of the robot including any held blocks and the total number of available positions on the ground and the current order of the blocks.
 
 
     Args:
