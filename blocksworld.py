@@ -52,6 +52,16 @@ def get_status():
         return jsonify({"result": f"{status_received}"})
     except queue.Empty:
         return jsonify({"result": "No status available."})
+    
+@app.route('/check_free_stack', methods=['POST'])
+def check_free_stack():
+    #Get the status of the stacks
+    status_queue.put(('check_free_stack',))
+    try:
+        status_received = reply_queue.get(timeout=2) #wait for 2s for a reply
+        return jsonify({"result": f"{status_received}"})
+    except queue.Empty:
+        return jsonify({"result": "No status available."})
 
 
     
@@ -69,17 +79,28 @@ def pygame_mainloop():
     BORDER_COLOR = (50, 50, 50)
     SHADOW_COLOR = (180, 180, 180)
     TEXT_COLOR = (30, 30, 30)
+    # COLOR_LIST = [
+    #     (255, 140, 140), (140, 255, 140), (140, 140, 255),
+    #     (255, 215, 140), (200, 140, 255), (140, 255, 255)
+    # ]
     COLOR_LIST = [
-        (255, 140, 140), (140, 255, 140), (140, 140, 255),
-        (255, 215, 140), (200, 140, 255), (140, 255, 255)
-    ]
+    (255, 140, 140), (140, 255, 140), (140, 140, 255),
+    (255, 215, 140), (200, 140, 255), (140, 255, 255),
+    (255, 255, 140), (255, 140, 255), (140, 255, 200),
+    (255, 200, 140), (255, 140, 200), (200, 255, 140),
+    (140, 200, 255), (200, 140, 200), (140, 200, 140),
+    (200, 200, 255), (215, 255, 140), (140, 255, 215),
+    (255, 140, 215), (215, 140, 255), (140, 215, 255),
+    (255, 255, 200), (200, 255, 255), (255, 200, 255),
+    (255, 215, 215), (215, 255, 215)
+]
 
     # Constants
     FPS = 60
     GRAVITY = 0.4
     BOX_WIDTH, BOX_HEIGHT = 100, 50
-    STACK_X_POSITIONS = [200, 350, 500, 650]  # X positions for the stacks
-    GROUND_Y = HEIGHT - 20
+    STACK_X_POSITIONS = [200, 350, 500, 650]  # X coordinates for the stacks
+    GROUND_Y = HEIGHT - 40
 
     # State
     stacks = {x: [] for x in STACK_X_POSITIONS}
@@ -175,7 +196,7 @@ def pygame_mainloop():
         def unstack(self, letter, lower_letter):
             if self.state == "idle" and self.box is None:
                 stack_x = find_box_by_letter(letter)
-                if stack_x is not None and stacks[stack_x][-2].letter.upper() == lower_letter.upper():
+                if stack_x is not None and len(stacks[stack_x]) >= 2 and stacks[stack_x][-2].letter.upper() == lower_letter.upper():
                     return self.pickup_stack(stack_x)
                 print(f" Block {letter} is not available or wrong unstack letter {lower_letter}!")
                 return False
@@ -208,7 +229,7 @@ def pygame_mainloop():
                     if stack_x is not None:
                         return self.put_down_stack(stack_x)
                     else:
-                        print("No free Stack!")
+                        print("No free stack!")
                         return False
                 else:
                     print(f"Block {letter.upper()} is not held!")
@@ -250,7 +271,7 @@ def pygame_mainloop():
                 if stack_x is not None:
                     return self.put_down_stack(stack_x)
                 else:
-                    print("No free Stack!")
+                    print("No free stack!")
                     return False
             print("No block is held!")
             return False
@@ -285,7 +306,7 @@ def pygame_mainloop():
             return False
 ################################################################################
 
-        # Updates the robot arm's state and position (like state machine)
+        # Updates the robot arm's state and stack (like state machine)
         def update(self):
             if self.state == "idle":
                 return
@@ -365,6 +386,7 @@ def pygame_mainloop():
                 
 
         def draw(self, screen):
+            pygame.draw.line(screen, BORDER_COLOR, (0, GROUND_Y), (WIDTH, GROUND_Y), 3)
             base_rect = pygame.Rect(self.robot_x - 30, 50, 60, 20)
             pygame.draw.rect(screen, (100, 100, 100), base_rect, border_radius=5)
 
@@ -383,27 +405,31 @@ def pygame_mainloop():
             right_finger = pygame.Rect(self.robot_x + grip_width // 2 - finger_width, grip_y, finger_width, finger_height)
             pygame.draw.rect(screen, (80, 80, 80), left_finger, border_radius=3)
             pygame.draw.rect(screen, (80, 80, 80), right_finger, border_radius=3)
+            
 
             if self.box:
                 self.box.draw(screen)
 
     def spawn_initial_boxes():
-        letters = ['A', 'B', 'C', 'D', 'E', 'F']
+        letters = ['A', 'B', 'C']   #,'D','E']  # You can add more letters if needed
         random.shuffle(letters)
+        # stacks = {'A': STACK_X_POSITIONS[0], 'B': STACK_X_POSITIONS[0], 'C': STACK_X_POSITIONS[2],'D': STACK_X_POSITIONS[1], 'E': STACK_X_POSITIONS[1]}   # Can be used to set initial positions of boxes (for fixed initial positions random.shuffle has to be removed)
         # Pick distinct colors for boxes without repetition
         used_colors = []
         for letter in letters:
             available_colors = [c for c in COLOR_LIST if c not in used_colors]
             color = random.choice(available_colors)
             used_colors.append(color)
-            box = Box(STACK_X_POSITIONS[0], letter=letter, color=color)
+            x_pos = random.choice(STACK_X_POSITIONS)
+            #x_pos = stacks[letter] if letter in stacks else x_pos      # Can be used to set initial positions of boxes
+            box = Box(x_pos, letter=letter, color=color)
             falling_boxes.append(box)
 
     stack_name_to_pos = {
-        'Stack 1': STACK_X_POSITIONS[0],
-        'Stack 2': STACK_X_POSITIONS[1],
-        'Stack 3': STACK_X_POSITIONS[2],
-        'Stack 4': STACK_X_POSITIONS[3]
+        'stack 1': STACK_X_POSITIONS[0],
+        'stack 2': STACK_X_POSITIONS[1],
+        'stack 3': STACK_X_POSITIONS[2],
+        'stack 4': STACK_X_POSITIONS[3]
     }
 
     def get_current_status(stacks):
@@ -420,10 +446,10 @@ def pygame_mainloop():
         return status
 
     def draw_stack_labels():
-        labels = ["Stack 1", "Stack 2", "Stack 3", "Stack 4"]
+        labels = ["stack 1", "stack 2", "stack 3", "stack 4"]
         for x, label in zip(STACK_X_POSITIONS, labels):
             text = label_font.render(label, True, TEXT_COLOR)
-            text_rect = text.get_rect(center=(x, GROUND_Y))  # Below ground line
+            text_rect = text.get_rect(center=(x, GROUND_Y+20))  # Below ground line
             screen.blit(text, text_rect)
 
     # Spawn initial boxes
@@ -441,9 +467,15 @@ def pygame_mainloop():
             if status_cmd[0] == 'get_status':
                 current_status = get_current_status(stacks)
                 reply_queue.put(current_status)
+            elif status_cmd[0] == 'check_free_stack':
+                free_stack = find_free_stack()
+                if free_stack is not None:
+                    reply_queue.put(f"Free stack available at stack {free_stack}.")
+                else:
+                    reply_queue.put("No free stack available.")
                
 
-        # Processing Commands           ANPASSEN AN NEUE STACK und UNSTACK FUNKTIONEN MIT LETTER ARGUMENT
+        # Processing Commands
         while not command_queue.empty():
             cmd = command_queue.get()
             if cmd[0] == 'pick_up':
