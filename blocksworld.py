@@ -535,11 +535,17 @@ def pygame_mainloop():
     os._exit(0)
 
 # Run the Flask app and Pygame loop in separate threads
+def run_flask():
+    app.run(port=5001, host='127.0.0.1', use_reloader=False, threaded=True)
+
 if __name__ == "__main__":
-    t = threading.Thread(target=pygame_mainloop)
-    t.daemon = True
-    t.start()
-    app.run(port=5001)
+    # Start Flask in a separate thread
+    flask_thread = threading.Thread(target=run_flask)
+    flask_thread.daemon = True
+    flask_thread.start()
+    
+    # Run pygame on the main thread (required for macOS)
+    pygame_mainloop()
 
 
 # Example usage of the REST API:               
