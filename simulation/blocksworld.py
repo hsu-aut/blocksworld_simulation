@@ -170,3 +170,5 @@ if __name__ == "__main__":
 
 # Example usage of the REST API:               
 # r = requests.post(f"http://localhost:5001/unstack", json={"block1": 'A', "block2": 'B'}, timeout=2)
+# to test this with curl:
+# curl -X POST -H "Content-Type: application/json" -d '{"block1": "A", "block2": "B"}' http://localhost:5001/unstack

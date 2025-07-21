@@ -43,6 +43,8 @@ There are the following 5 commands:
 
 5. `get_status()` - returns the current status from the robot as well as the current positions of each block
 
+For detailed information about the available REST API endpoints and example requests, see the [API documentation](./simulation/rest-api.md).
+
 ### Controlling the Robot via MCP
 
 There is also an MCP server [`mcp_server.py`](./mcp/mcp_server.py) that provides tools to control the robot via the REST API using the commands mentioned. 
