@@ -1,4 +1,3 @@
-# Blocksworld_Robot_Actions_Server.py
 from mcp.server.fastmcp import FastMCP
 import requests
 
