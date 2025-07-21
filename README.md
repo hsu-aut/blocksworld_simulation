@@ -35,4 +35,5 @@ There are the following 5 commands:
 5. getstatus():
     returns the current status from the robot as well as the current positions of each block
 
-There is also an MCP server that provides tools to control the robot via the REST API using the commands mentioned. The tools of the MCP server interact directly with the REST endpoints and thus also enable an AI or external programs to control the robot and receive feedback.
+**MCP-Server**
+There is also an MCP server (MCP-Server.py) that provides tools to control the robot via the REST API using the commands mentioned. The tools of the MCP server interact directly with the REST endpoints and thus also enable an AI or external programs to control the robot and receive feedback.
