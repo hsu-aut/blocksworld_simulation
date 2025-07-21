@@ -12,7 +12,7 @@ A minimal 2D grid environment built with Pygame. It serves as a simple testbed f
 ```bash
 python blocksworld.py
 
-### Control:
+## Control:
 
 Controlling the Robot with Keyboard:
 Press the letter of a corresponding block to pick it up. (When controlling via the keyboard, there's no distinction made between unstack and pickup)
