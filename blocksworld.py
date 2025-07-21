@@ -326,6 +326,7 @@ def pygame_mainloop():
         'Stack 1': STACK_X_POSITIONS[0],
         'Stack 2': STACK_X_POSITIONS[1],
         'Stack 3': STACK_X_POSITIONS[2],
+        'Stack 4': STACK_X_POSITIONS[3]
     }
 
     def get_current_status(stacks):
