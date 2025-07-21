@@ -5,6 +5,7 @@ from flask import Flask, request, jsonify
 import threading
 import queue
 
+
 app=Flask(__name__)
 command_queue = queue.Queue()
 status_queue = queue.Queue()
@@ -33,6 +34,14 @@ def stack():
     block2 = data.get('block2')
     command_queue.put(('stack', block1, block2))
     return jsonify({"result": f"Command stack {block1} on {block2} queued."})
+
+@app.route('/unstack', methods=['POST'])
+def unstack():
+    data = request.get_json()
+    block1 = data.get('block1')
+    block2 = data.get('block2')
+    command_queue.put(('unstack', block1, block2))
+    return jsonify({"result": f"Command unstack {block1} from {block2} queued."})
 
 @app.route('/get_status', methods=['POST'])
 def get_status():
@@ -146,44 +155,111 @@ def pygame_mainloop():
 
         def _get_stack_top_y(self, x):
             return GROUND_Y - len(stacks[x]) * BOX_HEIGHT
+              
+################################################################################
+# REST API Control Functions
         
-        #Pickup a box with a specific letter
-        def pickup_by_letter(self, letter):
+         #Pickup a box with a specific letter from the ground (only for control with Rest API)
+        def pick_up(self, letter):
             if self.state == "idle" and self.box is None:
                 stack_x = find_box_by_letter(letter)
-                if stack_x is not None:
-                    return self.pickup(stack_x)
-                print(f" Block {letter} is not available!")
+                if stack_x is not None and len(stacks[stack_x])<= 1:  # Ensure the box is on the ground
+                    return self.pickup_stack(stack_x)
+                print(f" Block {letter} is not available or is not on the ground!")
                 return False
             print("Cannot pickup.")
             return False
         
-        # Put down a box on a Box with a specific letter
+
+        #Pickup a box with a specific letter (only for control with REST API)
+        def unstack(self, letter, lower_letter):
+            if self.state == "idle" and self.box is None:
+                stack_x = find_box_by_letter(letter)
+                if stack_x is not None and stacks[stack_x][-2].letter.upper() == lower_letter.upper():
+                    return self.pickup_stack(stack_x)
+                print(f" Block {letter} is not available or wrong unstack letter {lower_letter}!")
+                return False
+            print("Cannot pickup.")
+            return False
+        
+        
+        # Stack: Put down a specific box on a Box with a specific letter (Only for control via REST API)
+        def stack(self, letter, target_letter):
+            if self.state == "holding":
+                if self.box.letter.upper() == letter.upper():
+                    stack_x = find_box_by_letter(target_letter)
+                    if stack_x is not None:
+                        return self.put_down_stack(stack_x)
+                    else:
+                        print(f"Block {target_letter} is not free!")
+                        return False
+                else:
+                    print(f"Block {letter.upper()} is not held!")
+                    return False
+            print("No block is held!")
+            return False
+        
+
+        # Put down a box on the ground (Only for control via REST API)
+        def put_down(self, letter):
+            if self.state == "holding":
+                if self.box.letter.upper() == letter.upper():
+                    stack_x = find_free_stack()
+                    if stack_x is not None:
+                        return self.put_down_stack(stack_x)
+                    else:
+                        print("No free Stack!")
+                        return False
+                else:
+                    print(f"Block {letter.upper()} is not held!")
+                    return False
+            print("No block is held!")
+            return False
+
+################################################################################
+#Keyboard Control Functions
+
+        #Pickup a box with a specific letter (only for control with Keyboard / pickup from ground)
+        def pickup_by_letter(self, letter):
+            if self.state == "idle" and self.box is None:
+                stack_x = find_box_by_letter(letter)
+                if stack_x is not None:
+                    return self.pickup_stack(stack_x)
+                print(f" Block {letter} is not available!")
+                return False
+            print("Cannot pickup.")
+            return False
+
+
+# Put down a box on a Box with a specific letter (Only used for control with Keyboard)
         def put_down_on_letter(self, target_letter):
             if self.state == "holding" and self.box is not None:
                 stack_x = find_box_by_letter(target_letter)
                 if stack_x is not None:
-                    return self.put_down(stack_x)
+                    return self.put_down_stack(stack_x)
                 else:
                     print(f"Block {target_letter} is not free!")
                     return False
             print("No block is held!")
             return False
         
-        # Put down a box on the ground
+        # Put down a box on the ground (Only for control with Keyboard)
         def put_down_on_ground(self):
             if self.state == "holding" and self.box is not None:
                 stack_x = find_free_stack()
                 if stack_x is not None:
-                    return self.put_down(stack_x)
+                    return self.put_down_stack(stack_x)
                 else:
                     print("No free Stack!")
                     return False
             print("No block is held!")
             return False
 
+
+################################################################################
+#Control Functions for the Robot Arm depending on the stack:
         # Pickup a box from a specific stack
-        def pickup(self, from_x):
+        def pickup_stack(self, from_x):
             if self.state == "idle" and self.box is None and stacks[from_x]:
                 self.from_x = from_x
                 self.to_x = from_x
@@ -197,7 +273,7 @@ def pygame_mainloop():
             return False
 
         # Put down a box to a specific stack
-        def put_down(self, to_x):
+        def put_down_stack(self, to_x):
             if self.state == "holding" and self.box is not None:
                 self.from_x = None
                 self.to_x = to_x
@@ -207,6 +283,7 @@ def pygame_mainloop():
                 return True
             print("Cannot put down.")
             return False
+################################################################################
 
         # Updates the robot arm's state and position (like state machine)
         def update(self):
@@ -311,7 +388,7 @@ def pygame_mainloop():
                 self.box.draw(screen)
 
     def spawn_initial_boxes():
-        letters = ['A', 'B', 'C', 'D']
+        letters = ['A', 'B', 'C', 'D', 'E', 'F']
         random.shuffle(letters)
         # Pick distinct colors for boxes without repetition
         used_colors = []
@@ -333,6 +410,7 @@ def pygame_mainloop():
         status = {}
         status['robot'] = robot.state
         status['holding'] = robot.box.letter if robot.box else None
+        status['total number of stacks'] = len(STACK_X_POSITIONS)
         for stack_name, x_pos in stack_name_to_pos.items():
             boxes = stacks.get(x_pos, [])  # Note: stacks keys are x positions, not 'stack0' strings
             box_letters = [box.letter for box in boxes]  # Extract letters from Box objects
@@ -356,7 +434,6 @@ def pygame_mainloop():
     running = True
     while running:
         screen.fill(WHITE)
-
   
         # Processing Status Queries
         while not status_queue.empty():
@@ -366,17 +443,17 @@ def pygame_mainloop():
                 reply_queue.put(current_status)
                
 
-        # Processing Commands
+        # Processing Commands           ANPASSEN AN NEUE STACK und UNSTACK FUNKTIONEN MIT LETTER ARGUMENT
         while not command_queue.empty():
             cmd = command_queue.get()
             if cmd[0] == 'pick_up':
-                robot.pickup_by_letter(cmd[1])
+                robot.pick_up(cmd[1])
             elif cmd[0] == 'unstack':
-                robot.pickup_by_letter(cmd[1])
+                robot.unstack(cmd[1], cmd[2])
             elif cmd[0] == 'put_down':
-                robot.put_down_on_ground()
+                robot.put_down(cmd[1])
             elif cmd[0] == 'stack':
-                robot.put_down_on_letter(cmd[2])
+                robot.stack(cmd[1], cmd[2])
             
 
         for event in pygame.event.get():
@@ -431,3 +508,7 @@ if __name__ == "__main__":
     t.daemon = True
     t.start()
     app.run(port=5001)
+
+
+# Example usage of the REST API:               
+# r = requests.post(f"http://localhost:5001/unstack", json={"block1": 'A', "block2": 'B'}, timeout=2)
