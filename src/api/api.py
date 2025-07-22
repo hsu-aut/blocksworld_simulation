@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import queue
+import threading
 
 app = Flask(__name__)
 command_queue = queue.Queue()
@@ -56,3 +57,8 @@ def check_free_stack():
 
 def run_flask():
     app.run(port=5001, host='127.0.0.1', use_reloader=False, threaded=True)
+
+def start_flask_thread():
+    flask_thread = threading.Thread(target=run_flask)
+    flask_thread.daemon = True
+    flask_thread.start()
