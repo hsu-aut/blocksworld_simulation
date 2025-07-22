@@ -6,18 +6,11 @@ The graphical simulation is based on Pygame and several actions can be controlle
 
 ## How to run
 
-The project uses the [Poetry](https://python-poetry.org/docs/#installation) dependency management.
-Clone the repository and execute:
+The project uses the [uv package management](https://docs.astral.sh/uv/).
+To run the simulation, clone the repository and execute:
 
 ```bash
-poetry install
-```
-
-to install the required packages.
-Then, run the simulation by executing: 
-
-```bash
-poetry run python blocksworld.py
+uv run blocksworld.py
 ```
 
 ## Control
@@ -43,7 +36,7 @@ There are the following 5 commands:
 
 5. `get_status()` - returns the current status from the robot as well as the current positions of each block
 
-For detailed information about the available REST API endpoints and example requests, see the [API documentation](./simulation/rest-api.md).
+For detailed information about the available REST API endpoints and example requests, see the [API documentation](./docs/rest-api.md).
 
 ### Controlling the Robot via MCP
 
