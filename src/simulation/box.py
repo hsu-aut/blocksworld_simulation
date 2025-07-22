@@ -1,5 +1,5 @@
 import pygame
-from . import simulation_settings as settings
+from . import settings as settings
 
 class Box:
     
