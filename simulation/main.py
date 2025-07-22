@@ -2,10 +2,10 @@ import pygame
 import os
 import random
 import threading
-from box import Box
-from robot_arm import RobotArm
-from api import command_queue, status_queue, reply_queue, run_flask
-import simulation_settings as settings
+from src.simulation.box import Box
+from src.simulation.robot_arm import RobotArm
+from src.api.api import command_queue, status_queue, reply_queue, run_flask
+import src.simulation.simulation_settings as settings
 
 # Main function to run the Pygame loop
 def pygame_mainloop():

@@ -1,5 +1,5 @@
 import pygame
-import simulation_settings as settings
+from . import simulation_settings as settings
 
 class RobotArm:
 

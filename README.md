@@ -3,22 +3,21 @@
 In this project, a simulation is provided with which the classic Blocksworld problem can be represented / simulated. 
 For this purpose, a robot arm is simulated that can place and move colored boxes on different stacks.  
 The graphical simulation is based on Pygame and several actions can be controlled either via keyboard input or conveniently via a REST API with Flask.
+The simulation can be found in the [`simulation`](./simulation/) directory.
 
-## How to run
+The repository also includes an MCP server definition, allowing the simulation's REST API to be accessed by any MCP-capable AI framework. 
+For more details, see [MCP Server](#mcp-server).
 
-The project uses the [Poetry](https://python-poetry.org/docs/#installation) dependency management.
-Clone the repository and execute:
+## How to run the simulation
 
-```bash
-poetry install
-```
+The project uses the [uv package management](https://docs.astral.sh/uv/).
+To run the simulation:
 
-to install the required packages.
-Then, run the simulation by executing: 
+1. Clone the repository
 
-```bash
-poetry run python blocksworld.py
-```
+2. `cd` into the [`simulation`](./simulation/) directory
+
+3. Execute `uv run main.py`
 
 ## Control
 
@@ -43,9 +42,9 @@ There are the following 5 commands:
 
 5. `get_status()` - returns the current status from the robot as well as the current positions of each block
 
-For detailed information about the available REST API endpoints and example requests, see the [API documentation](./simulation/rest-api.md).
+For detailed information about the available REST API endpoints and example requests, see the [API documentation](./docs/rest-api.md).
 
-### Controlling the Robot via MCP
+## MCP Server
 
-There is also an MCP server [`mcp_server.py`](./mcp/mcp_server.py) that provides tools to control the robot via the REST API using the commands mentioned. 
-The tools of the MCP server interact directly with the REST endpoints and thus also enable an AI or external programs to control the robot and receive feedback.
+There is also an MCP server definiton [`mcp_server.py`](./mcp/mcp_server.py) that provides tools to control the robot via the REST API using the commands mentioned. 
+The tools of the MCP server interact directly with the REST endpoints and thus also enable a MCP-capable AI to control the robot and receive feedback.
