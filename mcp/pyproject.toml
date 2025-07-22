@@ -1,0 +1,14 @@
+[project]
+name = "blocksworld-simulation-mcp-server"
+version = "0.0.1"
+description = "A MCP server definition to control a blocks world simulation"
+authors = [
+    {name = "Jayanth Somashekaraiah", email = "jayanth.somashekaraiah@hsu-hh.de"},
+    {name = "Niklas Jobs", email = "niklas.jobs@hsu-hh.de"},
+    {name = "Maximilian Weigand", email = "maximilian.weigand@hsu-hh.de"}
+]
+requires-python = ">=3.13"
+dependencies = [
+    "fastmcp (>=2.10.6,<3.0.0)",
+    "requests (>=2.32.4,<3.0.0)"
+]
