@@ -45,13 +45,13 @@ def unstack():
     result = api_out_queue.get()
     return return_api(result)
 
-@app.route('/get_status', methods=['POST'])
+@app.route('/get_status', methods=['GET'])
 def get_status():
     api_in_queue.put(('get_status',))
     result = api_out_queue.get()
     return return_api(result)
 
-@app.route('/check_free_stack', methods=['POST'])
+@app.route('/check_free_stack', methods=['GET'])
 def check_free_stack():
     api_in_queue.put(('check_free_stack',))
     result = api_out_queue.get()
