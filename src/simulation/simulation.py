@@ -3,7 +3,7 @@ import os
 import random
 from .box import Box
 from .robot_arm import RobotArm
-from src.api.api import command_queue, status_queue, reply_queue
+from src.api.api import api_in_queue, api_out_queue
 from . import settings
 
 # Main function to run the Pygame loop
@@ -42,30 +42,29 @@ def start_pygame_mainloop():
             text_rect = text.get_rect(center=(x, settings.GROUND_Y+20))
             screen.blit(text, text_rect)
 
-    def process_status_queries():
-        while not status_queue.empty():
-            status_cmd = status_queue.get()
-            if status_cmd[0] == 'get_status':
+    def process_api_queues():
+        if not api_in_queue.empty():
+            # get the item in the queue
+            api_cmd = api_in_queue.get()
+            if api_cmd[0] == 'get_status':
                 current_status = get_current_status(stacks)
-                reply_queue.put(current_status)
-            elif status_cmd[0] == 'check_free_stack':
+                api_out_queue.put(current_status)
+            elif api_cmd[0] == 'check_free_stack':
                 free_stack = robot.find_free_stack()
                 if free_stack is not None:
-                    reply_queue.put(f"Free stack available at stack {free_stack}.")
+                    api_out_queue.put(f"Free stack available at stack {free_stack}.")
                 else:
-                    reply_queue.put("No free stack available.")
-
-    def process_commands():
-        while not command_queue.empty():
-            cmd = command_queue.get()
-            if cmd[0] == 'pick_up':
-                robot.pick_up(cmd[1])
-            elif cmd[0] == 'unstack':
-                robot.unstack(cmd[1], cmd[2])
-            elif cmd[0] == 'put_down':
-                robot.put_down(cmd[1])
-            elif cmd[0] == 'stack':
-                robot.stack(cmd[1], cmd[2])
+                    api_out_queue.put("No free stack available.")
+            # when command is for robot, pass api_out_queue to robot
+            # in order to get the result back
+            elif api_cmd[0] == 'pick_up':
+                robot.pick_up(api_out_queue, api_cmd[1])
+            elif api_cmd[0] == 'unstack':
+                robot.unstack(api_out_queue, api_cmd[1], api_cmd[2])
+            elif api_cmd[0] == 'put_down':
+                robot.put_down(api_out_queue, api_cmd[1])
+            elif api_cmd[0] == 'stack':
+                robot.stack(api_out_queue, api_cmd[1], api_cmd[2])
 
     def handle_pygame_events():
         nonlocal running
@@ -144,8 +143,7 @@ def start_pygame_mainloop():
         screen.fill(settings.WHITE)
   
         # Process API requests and pygame events
-        process_status_queries()
-        process_commands()
+        process_api_queues()
         handle_pygame_events()
 
         # Update and draw all game elements

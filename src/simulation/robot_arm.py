@@ -1,5 +1,7 @@
 import pygame
 from . import settings as settings
+import queue
+
 
 class RobotArm:
 
@@ -15,6 +17,11 @@ class RobotArm:
         self.target_y = None
         self.stacks = stacks or {}
         self.falling_boxes = falling_boxes or []
+        # queues for API commands
+        self.pick_up_queue = queue.Queue()
+        self.unstack_queue = queue.Queue()
+        self.stack_queue = queue.Queue()
+        self.put_down_queue = queue.Queue()
 
     def get_stack_top_y(self, x):
         if not self.stacks:
@@ -36,58 +43,71 @@ class RobotArm:
                 return x
         return None
 
-    def pick_up(self, letter):
+    def pick_up(self, api_out_queue, letter):
+        """ API-compatible pick up method """
         if self.state == "idle" and self.box is None:
             stack_x = self.find_box_by_letter(letter)
             if stack_x is not None and len(self.stacks[stack_x]) <= 1:
+                # init pick up and put item on pick up queue
+                self.pick_up_queue.put((letter, api_out_queue))
                 return self.pickup_stack(stack_x)
-            print(f" Block {letter} is not available or is not on the ground!")
+            api_out_queue.put(f" Block {letter} is not available or is not on the ground!")
             return False
-        print("Cannot pickup.")
+        api_out_queue.put("Cannot pickup.")
         return False
 
-    def unstack(self, letter, lower_letter):
+    def unstack(self, api_out_queue, letter, lower_letter):
+        """ API-compatible unstack method """
         if self.state == "idle" and self.box is None:
             stack_x = self.find_box_by_letter(letter)
             if (stack_x is not None and len(self.stacks[stack_x]) >= 2 
                 and self.stacks[stack_x][-2].letter.upper() == lower_letter.upper()):
+                # init unstack and put item on unstack queue
+                self.unstack_queue.put((letter, lower_letter, api_out_queue))
                 return self.pickup_stack(stack_x)
-            print(f" Block {letter} is not available or wrong unstack letter {lower_letter}!")
+            api_out_queue.put(f" Block {letter} is not available or wrong unstack letter {lower_letter}!")
             return False
-        print("Cannot pickup.")
+        api_out_queue.put("Cannot pickup.")
         return False
 
-    def stack(self, letter, target_letter):
+    def stack(self, api_out_queue, letter, target_letter):
+        """ API-compatible stack method """
         if self.state == "holding":
             if self.box.letter.upper() == letter.upper():
                 stack_x = self.find_box_by_letter(target_letter)
                 if stack_x is not None:
+                    # init stack and put item on stack queue
+                    self.stack_queue.put((letter, target_letter, api_out_queue))
                     return self.put_down_stack(stack_x)
                 else:
-                    print(f"Block {target_letter} is not free!")
+                    api_out_queue.put(f"Block {target_letter} is not free!")
                     return False
             else:
-                print(f"Block {letter.upper()} is not held!")
+                api_out_queue.put(f"Block {letter.upper()} is not held!")
                 return False
-        print("No block is held!")
+        api_out_queue.put("No block is held!")
         return False
 
-    def put_down(self, letter):
+    def put_down(self, api_out_queue, letter):
+        """ API-compatible put down method """
         if self.state == "holding":
             if self.box.letter.upper() == letter.upper():
                 stack_x = self.find_free_stack()
                 if stack_x is not None:
+                    # init put down and put item on put down queue
+                    self.put_down_queue.put((letter, api_out_queue))
                     return self.put_down_stack(stack_x)
                 else:
-                    print("No free stack!")
+                    api_out_queue.put("No free stack!")
                     return False
             else:
-                print(f"Block {letter.upper()} is not held!")
+                api_out_queue.put(f"Block {letter.upper()} is not held!")
                 return False
-        print("No block is held!")
+        api_out_queue.put("No block is held!")
         return False
 
     def pickup_by_letter(self, letter):
+        """ Keyboard-input compatible pickup method """
         if self.state == "idle" and self.box is None:
             stack_x = self.find_box_by_letter(letter)
             if stack_x is not None:
@@ -98,6 +118,7 @@ class RobotArm:
         return False
 
     def put_down_on_letter(self, target_letter):
+        """ Keyboard-input compatible put down method """
         if self.state == "holding" and self.box is not None:
             stack_x = self.find_box_by_letter(target_letter)
             if stack_x is not None:
@@ -109,6 +130,7 @@ class RobotArm:
         return False
 
     def put_down_on_ground(self):
+        """ Keyboard-input compatible put down method """
         if self.state == "holding" and self.box is not None:
             stack_x = self.find_free_stack()
             if stack_x is not None:
@@ -120,6 +142,7 @@ class RobotArm:
         return False
 
     def pickup_stack(self, from_x):
+        """ Actual pickup method, triggered by API or keyboard input """
         if self.state == "idle" and self.box is None and self.stacks[from_x]:
             self.from_x = from_x
             self.to_x = from_x
@@ -133,6 +156,7 @@ class RobotArm:
         return False
 
     def put_down_stack(self, to_x):
+        """ Actual put down method, triggered by API or keyboard input """
         if self.state == "holding" and self.box is not None:
             self.from_x = None
             self.to_x = to_x
@@ -183,6 +207,20 @@ class RobotArm:
             else:
                 self.robot_y = settings.ROBOT_BASE_Y
                 self.state = "holding"
+                # if pick up queue is not empty
+                if not self.pick_up_queue.empty():
+                    item = self.pick_up_queue.get()
+                    letter = item[0]
+                    api_out_queue = item[1]
+                    api_out_queue.put(f"Picked up block {letter}.")
+                # if unstack queue is not empty
+                if not self.unstack_queue.empty():
+                    item = self.unstack_queue.get()
+                    letter = item[0]
+                    lower_letter = item[1]
+                    api_out_queue = item[2]
+                    api_out_queue.put(f"Unstacked block {letter} from {lower_letter}.")
+
             return
 
         if self.state == "moving_to_place":
@@ -217,12 +255,25 @@ class RobotArm:
                 self.box = None
                 self.from_x = None
                 self.to_x = None
-
             if self.robot_y > settings.ROBOT_BASE_Y:
                 self.robot_y -= self.speed
             else:
                 self.robot_y = settings.ROBOT_BASE_Y
                 self.state = "idle"
+                # if put down queue is not empty
+                if not self.put_down_queue.empty():
+                    item = self.put_down_queue.get()
+                    letter = item[0]
+                    api_out_queue = item[1]
+                    api_out_queue.put(f"Put down block {letter}.")
+                # if stack queue is not empty
+                if not self.stack_queue.empty():
+                    item = self.stack_queue.get()
+                    letter = item[0]
+                    target_letter = item[1]
+                    api_out_queue = item[2]
+                    api_out_queue.put(f"Stacked block {letter} on {target_letter}.")
+            return
 
     def draw(self, screen):
         
