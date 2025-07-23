@@ -5,11 +5,46 @@ import threading
 app = Flask(__name__)
 api_in_queue = queue.Queue()
 api_out_queue = queue.Queue()
+simulation_thread = None
 
 def return_api(result):
     """Helper function to format API responses and print before returning."""
     print(f" API <-- {result}")
     return jsonify({"result": result})
+
+@app.route('/start_simulation', methods=['POST'])
+def start_simulation():
+    """Start the pygame simulation with optional configuration."""
+    data = request.get_json(silent=True) or {}
+    initial_stacks = data.get('initial_stacks')
+    box_number = data.get('box_number')
+
+    from blocksworld_simulation.simulation.simulation import start_pygame_mainloop
+
+    global simulation_thread
+    if simulation_thread and simulation_thread.is_alive():
+        return return_api('Simulation already running.')
+
+    simulation_thread = threading.Thread(
+        target=start_pygame_mainloop,
+        kwargs={'initial_setup': initial_stacks, 'num_boxes': box_number}
+    )
+    simulation_thread.daemon = True
+    simulation_thread.start()
+    return return_api('Simulation started.')
+
+@app.route('/stop_simulation', methods=['POST'])
+def stop_simulation():
+    """Stop the pygame simulation."""
+    global simulation_thread
+    from blocksworld_simulation.simulation import simulation
+    if simulation_thread and simulation_thread.is_alive():
+        # This is a placeholder; actual implementation to stop pygame is needed
+        simulation.stop_simulation = True
+        simulation_thread.join(timeout=5)
+        return return_api('Simulation stopped.')
+    
+    return return_api('No simulation running.')
 
 @app.route('/pick_up', methods=['POST'])
 def pick_up():
@@ -58,9 +93,4 @@ def check_free_stack():
     return return_api(result)
 
 def run_flask():
-    app.run(port=5001, host='127.0.0.1', use_reloader=False, threaded=True)
-
-def start_flask_thread():
-    flask_thread = threading.Thread(target=run_flask)
-    flask_thread.daemon = True
-    flask_thread.start()
+    app.run(port=5001, host='127.0.0.1', use_reloader=False)
