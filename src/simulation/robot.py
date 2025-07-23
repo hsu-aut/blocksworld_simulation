@@ -1,3 +1,4 @@
+import pygame
 from enum import Enum
 from . import settings as settings
 from .robot_drawer import RobotDrawer
