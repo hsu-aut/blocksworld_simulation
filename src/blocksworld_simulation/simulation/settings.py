@@ -49,14 +49,8 @@ BOX_WIDTH = 100
 BOX_HEIGHT = 50
 
 # Stack settings
-STACK_NUMBER = 3
 STACK_X_POSITION_LEFT = 100
 STACK_X_POSITION_RIGHT = 900
-# calculate stack positions based on the number of stacks
-STACK_X_POSITIONS = [
-    STACK_X_POSITION_LEFT + i * (STACK_X_POSITION_RIGHT - STACK_X_POSITION_LEFT) // (STACK_NUMBER - 1)
-    for i in range(STACK_NUMBER)
-]
 
 # Ground settings
 GROUND_Y = HEIGHT - 40
@@ -71,6 +65,4 @@ MAIN_FONT_SIZE = 28
 LABEL_FONT_SIZE = 20
 
 # Initial boxes
-BOX_NUMBER = 4
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-INITIAL_BOX_LETTERS = [LETTERS[i % len(LETTERS)] for i in range(BOX_NUMBER)]
