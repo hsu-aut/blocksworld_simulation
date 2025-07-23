@@ -3,7 +3,7 @@ from . import settings as settings
 import queue
 
 
-class RobotArm:
+class Robot:
 
     def __init__(self, stack_positions=None, stacks=None, falling_boxes=None):
         self.stack_positions = stack_positions or settings.STACK_X_POSITIONS

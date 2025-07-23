@@ -2,7 +2,7 @@ import pygame
 import os
 import random
 from .box import Box
-from .robot_arm import RobotArm
+from .robot import Robot
 from src.api.api import api_in_queue, api_out_queue
 from . import settings
 
@@ -88,7 +88,7 @@ def start_pygame_mainloop():
                         robot.put_down_on_ground()
 
     def update_and_draw():
-        # Update robot arm
+        # Update robot
         robot.update()
 
         # Update falling boxes
@@ -135,7 +135,7 @@ def start_pygame_mainloop():
     # Spawn initial boxes
     spawn_initial_boxes()
 
-    robot = RobotArm(settings.STACK_X_POSITIONS, stacks, falling_boxes)
+    robot = Robot(settings.STACK_X_POSITIONS, stacks, falling_boxes)
 
     # Main loop
     running = True
