@@ -118,12 +118,7 @@ curl -X POST http://127.0.0.1:5001/unstack \
 ### 5. Get Status
 Returns the current status from the robot and current positions of each block.
 
-**Endpoint:** `POST /get_status`
-
-**Request Body:** Empty JSON object
-```json
-{}
-```
+**Endpoint:** `GET /get_status`
 
 **Response:**
 ```json
@@ -141,20 +136,13 @@ Returns the current status from the robot and current positions of each block.
 
 **cURL Example:**
 ```bash
-curl -X POST http://127.0.0.1:5001/get_status \
-  -H "Content-Type: application/json" \
-  -d '{}'
+curl -X GET http://127.0.0.1:5001/get_status 
 ```
 
 ### 6. Check Free Stack
 Checks for available free stack positions.
 
-**Endpoint:** `POST /check_free_stack`
-
-**Request Body:** Empty JSON object
-```json
-{}
-```
+**Endpoint:** `GET /check_free_stack`
 
 **Response:**
 ```json
@@ -172,7 +160,5 @@ Checks for available free stack positions.
 
 **cURL Example:**
 ```bash
-curl -X POST http://127.0.0.1:5001/check_free_stack \
-  -H "Content-Type: application/json" \
-  -d '{}'
+curl -X GET http://127.0.0.1:5001/check_free_stack 
 ```
