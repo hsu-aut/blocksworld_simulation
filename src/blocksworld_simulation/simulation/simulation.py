@@ -3,7 +3,7 @@ import os
 import random
 from .box import Box
 from .robot import Robot
-from src.api.api import api_in_queue, api_out_queue
+from blocksworld_simulation.api.api import api_in_queue, api_out_queue
 from . import settings
 from .robot import RobotState
 
