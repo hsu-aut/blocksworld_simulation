@@ -7,11 +7,35 @@ from blocksworld_simulation.api.api import api_in_queue, api_out_queue
 from . import settings
 from .robot import RobotState
 
+stop_simulation = False
+stack_x_positions = []
+
 # Main function to run the Pygame loop
-def start_pygame_mainloop():
+def start_pygame_mainloop(initial_setup=None, num_boxes=None):
+    
+    # calculate stack positions based on the number of stacks
+    def calculate_stack_positions():
+        stack_number = len(initial_setup) if initial_setup else random.randint(2, 5)
+        global stack_x_positions 
+        stack_x_positions = [settings.STACK_X_POSITION_LEFT + i * (settings.STACK_X_POSITION_RIGHT - settings.STACK_X_POSITION_LEFT) // (stack_number - 1)
+                    for i in range(stack_number)]
     
     def spawn_initial_boxes():
-        letters = settings.INITIAL_BOX_LETTERS.copy()
+        
+        # Use provided stack setup if available
+        if initial_setup:
+            for idx, letters in initial_setup.items():
+                x_pos = stack_x_positions[int(idx)]
+                for letter in letters:
+                    color = random.choice(settings.COLOR_LIST)
+                    box = Box(x_pos, letter=letter, color=color, stacks=stacks)
+                    falling_boxes.append(box)
+            return
+        
+        # otherwise spawn random boxes using number provided or default
+        count = num_boxes if num_boxes is not None else random.randint(2, 5)
+        letters = [settings.LETTERS[i % len(settings.LETTERS)] for i in range(count)]
+
         random.shuffle(letters)
         # Pick distinct colors for boxes without repetition
         used_colors = []
@@ -19,7 +43,7 @@ def start_pygame_mainloop():
             available_colors = [c for c in settings.COLOR_LIST if c not in used_colors]
             color = random.choice(available_colors)
             used_colors.append(color)
-            x_pos = random.choice(settings.STACK_X_POSITIONS)
+            x_pos = random.choice(stack_x_positions)
             box = Box(x_pos, letter=letter, color=color, stacks=stacks)
             falling_boxes.append(box)
 
@@ -27,7 +51,7 @@ def start_pygame_mainloop():
         status = {}
         status['robot'] = robot.state.value
         status['holding'] = robot.box.letter if robot.box else None
-        status['total number of stacks'] = len(settings.STACK_X_POSITIONS)
+        status['total number of stacks'] = len(stack_x_positions)
         for stack_name, x_pos in stack_name_to_pos.items():
             boxes = stacks.get(x_pos, [])  # Note: stacks keys are x positions, not 'stack0' strings
             box_letters = [box.letter for box in boxes]  # Extract letters from Box objects
@@ -38,7 +62,7 @@ def start_pygame_mainloop():
 
     def draw_stack_labels():
         labels = list(stack_name_to_pos.keys())
-        for x, label in zip(settings.STACK_X_POSITIONS, labels):
+        for x, label in zip(stack_x_positions, labels):
             text = label_font.render(label, True, settings.TEXT_COLOR)
             text_rect = text.get_rect(center=(x, settings.GROUND_Y+20))
             screen.blit(text, text_rect)
@@ -110,6 +134,9 @@ def start_pygame_mainloop():
         # Draw stack labels below columns
         draw_stack_labels()
 
+    global stop_simulation
+    stop_simulation = False
+
     # Initialize Pygame
     pygame.init()
 
@@ -118,7 +145,8 @@ def start_pygame_mainloop():
     pygame.display.set_caption(settings.CAPTION)
 
     # State
-    stacks = {x: [] for x in settings.STACK_X_POSITIONS}
+    calculate_stack_positions() 
+    stacks = {x: [] for x in stack_x_positions}
     falling_boxes = []
 
     # Init clock
@@ -130,19 +158,19 @@ def start_pygame_mainloop():
 
     # Map stack names to their x positions
     stack_name_to_pos = {
-        f'stack {i+1}': pos for i, pos in enumerate(settings.STACK_X_POSITIONS)
+        f'stack {i+1}': pos for i, pos in enumerate(stack_x_positions)
     }
 
     # Spawn initial boxes
     spawn_initial_boxes()
 
-    robot = Robot(settings.STACK_X_POSITIONS, stacks, falling_boxes)
+    robot = Robot(stack_x_positions, stacks, falling_boxes)
 
     # Main loop
     running = True
-    while running:
+    while running and not stop_simulation:
         screen.fill(settings.WHITE)
-  
+
         # Process API requests and pygame events
         process_api_queues()
         handle_pygame_events()
@@ -155,4 +183,4 @@ def start_pygame_mainloop():
         clock.tick(settings.FPS)
 
     pygame.quit()
-    os._exit(0)
+    # os._exit(0)
