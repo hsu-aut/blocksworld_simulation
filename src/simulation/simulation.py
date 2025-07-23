@@ -5,6 +5,7 @@ from .box import Box
 from .robot import Robot
 from src.api.api import api_in_queue, api_out_queue
 from . import settings
+from .robot import RobotState
 
 # Main function to run the Pygame loop
 def start_pygame_mainloop():
@@ -24,7 +25,7 @@ def start_pygame_mainloop():
 
     def get_current_status(stacks):
         status = {}
-        status['robot'] = robot.state
+        status['robot'] = robot.state.value
         status['holding'] = robot.box.letter if robot.box else None
         status['total number of stacks'] = len(settings.STACK_X_POSITIONS)
         for stack_name, x_pos in stack_name_to_pos.items():
@@ -73,14 +74,14 @@ def start_pygame_mainloop():
                 running = False
 
             elif event.type == pygame.KEYDOWN:
-                if robot.state != "idle" and robot.state != "holding":
+                if robot.state != RobotState.IDLE and robot.state != RobotState.HOLDING:
                     continue
                 # Pickup block with letters: 'A', 'B', 'C', 'D', ...
-                if robot.state == "idle" and robot.box is None:
+                if robot.state == RobotState.IDLE and robot.box is None:
                     if pygame.K_a <= event.key <= pygame.K_z:
                         letter = chr(event.key).upper()
                         robot.pickup_by_letter(letter)
-                elif robot.state == "holding" and robot.box is not None:
+                elif robot.state == RobotState.HOLDING and robot.box is not None:
                     if pygame.K_a <= event.key <= pygame.K_z:
                         letter = chr(event.key).upper()
                         robot.put_down_on_letter(letter)
