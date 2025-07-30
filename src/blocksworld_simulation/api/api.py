@@ -1,95 +1,93 @@
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 import queue
-import threading
+import logging
+
+from ..simulation.simulation_input import (
+    GetStatusInput, StartInput, StopInput, PickUpInput, PutDownInput, StackInput, UnstackInput
+)
+from .request_validation import (
+    validate_request, StartSimulationRequest, PickUpRequest, PutDownRequest,
+    StackRequest, UnstackRequest
+)
 
 app = Flask(__name__)
-api_in_queue = queue.Queue()
-api_out_queue = queue.Queue()
-simulation_thread = None
+api_to_sim_queue = queue.Queue()
+sim_to_api_queue = queue.Queue()
+logger = logging.getLogger(__name__)
 
 def return_api(result):
     """Helper function to format API responses and print before returning."""
-    print(f" API <-- {result}")
-    return jsonify({"result": result})
+    success, message = result
+    if success:
+        logger.info(f" API 200 <-- {message}")
+    else:
+        logger.warning(f" API 4xx <-- {message}")
+    return jsonify({"result": message}), 200 if success else 400
 
 @app.route('/start_simulation', methods=['POST'])
-def start_simulation():
+@validate_request(StartSimulationRequest)
+def start_simulation(validated_data: StartSimulationRequest):
     """Start the pygame simulation with optional configuration."""
-    data = request.get_json(silent=True) or {}
-    initial_stacks = data.get('initial_stacks')
-    box_number = data.get('box_number')
-
-    from blocksworld_simulation.simulation.simulation import start_pygame_mainloop
-
-    global simulation_thread
-    if simulation_thread and simulation_thread.is_alive():
-        return return_api('Simulation already running.')
-
-    simulation_thread = threading.Thread(
-        target=start_pygame_mainloop,
-        kwargs={'initial_setup': initial_stacks, 'num_boxes': box_number}
-    )
-    simulation_thread.daemon = True
-    simulation_thread.start()
-    return return_api('Simulation started.')
+    api_to_sim_queue.put(StartInput(
+        reply_queue=sim_to_api_queue,
+        stack_config=validated_data.initial_stacks
+    ))
+    result = sim_to_api_queue.get()
+    return return_api(result)
 
 @app.route('/stop_simulation', methods=['POST'])
 def stop_simulation():
     """Stop the pygame simulation."""
-    global simulation_thread
-    from blocksworld_simulation.simulation import simulation
-    if simulation_thread and simulation_thread.is_alive():
-        # This is a placeholder; actual implementation to stop pygame is needed
-        simulation.stop_simulation = True
-        simulation_thread.join(timeout=5)
-        return return_api('Simulation stopped.')
-    
-    return return_api('No simulation running.')
+    api_to_sim_queue.put(StopInput(reply_queue=sim_to_api_queue))
+    result = sim_to_api_queue.get()
+    return return_api(result)
 
 @app.route('/pick_up', methods=['POST'])
-def pick_up():
-    data = request.get_json()
-    block = data.get('block')
-    api_in_queue.put(('pick_up', block))
-    result = api_out_queue.get()
+@validate_request(PickUpRequest)
+def pick_up(validated_data: PickUpRequest):
+    api_to_sim_queue.put(PickUpInput(
+        reply_queue=sim_to_api_queue,
+        block_name=validated_data.block
+    ))
+    result = sim_to_api_queue.get()
     return return_api(result)
 
 @app.route('/put_down', methods=['POST'])
-def put_down():
-    data = request.get_json()
-    block = data.get('block')
-    api_in_queue.put(('put_down', block))
-    result = api_out_queue.get()
+@validate_request(PutDownRequest)
+def put_down(validated_data: PutDownRequest):
+    api_to_sim_queue.put(PutDownInput(
+        reply_queue=sim_to_api_queue,
+        block_name=validated_data.block 
+    ))
+    result = sim_to_api_queue.get()
     return return_api(result)
 
 @app.route('/stack', methods=['POST'])
-def stack():
-    data = request.get_json()
-    block1 = data.get('block1')
-    block2 = data.get('block2')
-    api_in_queue.put(('stack', block1, block2))
-    result = api_out_queue.get()
+@validate_request(StackRequest)
+def stack(validated_data: StackRequest):
+    api_to_sim_queue.put(StackInput(
+        reply_queue=sim_to_api_queue,
+        block_name=validated_data.block1, 
+        target_block_name=validated_data.block2
+    ))
+    result = sim_to_api_queue.get()
     return return_api(result)
 
 @app.route('/unstack', methods=['POST'])
-def unstack():
-    data = request.get_json()
-    block1 = data.get('block1')
-    block2 = data.get('block2')
-    api_in_queue.put(('unstack', block1, block2))
-    result = api_out_queue.get()
+@validate_request(UnstackRequest)
+def unstack(validated_data: UnstackRequest):
+    api_to_sim_queue.put(UnstackInput(
+        reply_queue=sim_to_api_queue,
+        block_name=validated_data.block1, 
+        block_below_name=validated_data.block2
+    ))
+    result = sim_to_api_queue.get()
     return return_api(result)
 
 @app.route('/get_status', methods=['GET'])
 def get_status():
-    api_in_queue.put(('get_status',))
-    result = api_out_queue.get()
-    return return_api(result)
-
-@app.route('/check_free_stack', methods=['GET'])
-def check_free_stack():
-    api_in_queue.put(('check_free_stack',))
-    result = api_out_queue.get()
+    api_to_sim_queue.put(GetStatusInput(reply_queue=sim_to_api_queue))
+    result = sim_to_api_queue.get()
     return return_api(result)
 
 def run_flask():
