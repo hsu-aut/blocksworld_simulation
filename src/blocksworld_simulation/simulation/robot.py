@@ -1,8 +1,28 @@
-import pygame
+import logging
 from enum import Enum
-from . import settings as settings
-from .robot_drawer import RobotDrawer
-import queue
+
+import pygame
+
+from .simulation_action import RobotAction, PickUpAction, PutDownAction, StackAction, UnstackAction
+from .block import Block
+
+logger = logging.getLogger(__name__)
+
+# Constants for robot 
+SPEED = 10
+""" speed of the robot movement (vertical and horizontal) """
+TOP_GRIP_HEIGHT = 100
+""" the uppermost robot y position """
+# Constants for visual appearance
+ROBOT_COLORS = [(150, 150, 150), (200, 200, 200)]
+ROBOT_BORDER_RADIUS = 8
+ROBOT_BASE_WIDTH = 100
+ROBOT_BASE_HEIGHT = 30
+ROBOT_ARM_WIDTH = 20
+ROBOT_GRIP_WIDTH = 100
+ROBOT_GRIP_HEIGHT = 20
+ROBOT_FINGER_WIDTH = 10
+ROBOT_FINGER_HEIGHT = ROBOT_GRIP_HEIGHT + 20
 
 # define robot states as enum
 class RobotState(Enum):
@@ -16,276 +36,123 @@ class RobotState(Enum):
         RELEASING = "releasing"
 
 class Robot:
+    """Represents the robot arm that can manipulate blocks.
+    Handles a "state machine", the moving logic and the visual apperance of the robot."""
 
-    def __init__(self, stack_positions=None, stacks=None, falling_boxes=None):
-        self.stack_positions = stack_positions or settings.STACK_X_POSITIONS
-        self.robot_x = self.stack_positions[0]
-        self.robot_y = settings.ROBOT_BASE_Y
-        self.speed = settings.ROBOT_SPEED
-        self.state = RobotState.IDLE
-        self.box = None
-        self.from_x = None
-        self.to_x = None
-        self.target_y = None
-        self.stacks = stacks or {}
-        self.falling_boxes = falling_boxes or []
-        # drawer for the robot
-        self.drawer = RobotDrawer()
-        # queues for API commands
-        self.pick_up_queue = queue.Queue()
-        self.unstack_queue = queue.Queue()
-        self.stack_queue = queue.Queue()
-        self.put_down_queue = queue.Queue()
+    def __init__(self):
+        self._x = 500
+        self._y = TOP_GRIP_HEIGHT
+        self._target_x = 700
+        self._target_y = 300
+        self._state = RobotState.IDLE
+        self._held_block: Block = None
+        self._action_in_progress: RobotAction = None
 
-    def get_stack_top_y(self, x):
-        if not self.stacks:
-            return settings.GROUND_Y
-        ground_y = settings.GROUND_Y
-        box_height = settings.BOX_HEIGHT
-        return ground_y - len(self.stacks[x]) * box_height
+    def get_state(self) -> RobotState:
+        """Get the current state of the robot"""
+        return self._state
+    
+    def get_held_block(self) -> Block:
+        """Get the block currently held by the robot, if any"""
+        return self._held_block
 
-    def find_box_by_letter(self, letter):
-        for stack_x in self.stacks:
-            stack = self.stacks[stack_x]
-            if stack and stack[-1].letter.upper() == letter.upper():
-                return stack_x
-        return None
+    def set_action(self, action: RobotAction):
+        """Set a new action for the robot to execute"""
+        self._action_in_progress = action
 
-    def find_free_stack(self):
-        for x in self.stacks:
-            if not self.stacks[x]:
-                return x
-        return None
+    def to_dict(self) -> dict:
+        """Convert the robot to a dictionary representation"""
+        out_dict: dict = {
+            "state": self._state.value,
+            "held_block": self._held_block.to_dict() if self._held_block is not None else None
+        }
+        return out_dict
 
-    def pick_up(self, api_out_queue, letter):
-        """ API-compatible pick up method """
-        if self.state == RobotState.IDLE and self.box is None:
-            stack_x = self.find_box_by_letter(letter)
-            if stack_x is not None and len(self.stacks[stack_x]) <= 1:
-                # init pick up and put item on pick up queue
-                self.pick_up_queue.put((letter, api_out_queue))
-                return self.pickup_stack(stack_x)
-            api_out_queue.put(f" Block {letter} is not available or is not on the ground!")
-            return False
-        api_out_queue.put("Cannot pickup.")
-        return False
-
-    def unstack(self, api_out_queue, letter, lower_letter):
-        """ API-compatible unstack method """
-        if self.state == RobotState.IDLE and self.box is None:
-            stack_x = self.find_box_by_letter(letter)
-            if (stack_x is not None and len(self.stacks[stack_x]) >= 2 
-                and self.stacks[stack_x][-2].letter.upper() == lower_letter.upper()):
-                # init unstack and put item on unstack queue
-                self.unstack_queue.put((letter, lower_letter, api_out_queue))
-                return self.pickup_stack(stack_x)
-            api_out_queue.put(f" Block {letter} is not available or wrong unstack letter {lower_letter}!")
-            return False
-        api_out_queue.put("Cannot pickup.")
-        return False
-
-    def stack(self, api_out_queue, letter, target_letter):
-        """ API-compatible stack method """
-        if self.state == RobotState.HOLDING:
-            if self.box.letter.upper() == letter.upper():
-                stack_x = self.find_box_by_letter(target_letter)
-                if stack_x is not None:
-                    # init stack and put item on stack queue
-                    self.stack_queue.put((letter, target_letter, api_out_queue))
-                    return self.put_down_stack(stack_x)
-                else:
-                    api_out_queue.put(f"Block {target_letter} is not free!")
-                    return False
-            else:
-                api_out_queue.put(f"Block {letter.upper()} is not held!")
-                return False
-        api_out_queue.put("No block is held!")
-        return False
-
-    def put_down(self, api_out_queue, letter):
-        """ API-compatible put down method """
-        if self.state == RobotState.HOLDING:
-            if self.box.letter.upper() == letter.upper():
-                stack_x = self.find_free_stack()
-                if stack_x is not None:
-                    # init put down and put item on put down queue
-                    self.put_down_queue.put((letter, api_out_queue))
-                    return self.put_down_stack(stack_x)
-                else:
-                    api_out_queue.put("No free stack!")
-                    return False
-            else:
-                api_out_queue.put(f"Block {letter.upper()} is not held!")
-                return False
-        api_out_queue.put("No block is held!")
-        return False
-
-    def pickup_by_letter(self, letter):
-        """ Keyboard-input compatible pickup method """
-        if self.state == RobotState.IDLE and self.box is None:
-            stack_x = self.find_box_by_letter(letter)
-            if stack_x is not None:
-                return self.pickup_stack(stack_x)
-            print(f" Block {letter} is not available!")
-            return False
-        print("Cannot pickup.")
-        return False
-
-    def put_down_on_letter(self, target_letter):
-        """ Keyboard-input compatible put down method """
-        if self.state == RobotState.HOLDING and self.box is not None:
-            stack_x = self.find_box_by_letter(target_letter)
-            if stack_x is not None:
-                return self.put_down_stack(stack_x)
-            else:
-                print(f"Block {target_letter} is not free!")
-                return False
-        print("No block is held!")
-        return False
-
-    def put_down_on_ground(self):
-        """ Keyboard-input compatible put down method """
-        if self.state == RobotState.HOLDING and self.box is not None:
-            stack_x = self.find_free_stack()
-            if stack_x is not None:
-                return self.put_down_stack(stack_x)
-            else:
-                print("No free stack!")
-                return False
-        print("No block is held!")
-        return False
-
-    def pickup_stack(self, from_x):
-        """ Actual pickup method, triggered by API or keyboard input """
-        if self.state == RobotState.IDLE and self.box is None and self.stacks[from_x]:
-            self.from_x = from_x
-            self.to_x = from_x
-            self.box = self.stacks[from_x].pop()
-            self.box.landed = False
-            self.state = RobotState.MOVING_TO_PICK
-            self.target_y = self.get_stack_top_y(from_x) - settings.BOX_HEIGHT - 20
-            print(f"Picked up box from {from_x}")
-            return True
-        print("Cannot pickup.")
-        return False
-
-    def put_down_stack(self, to_x):
-        """ Actual put down method, triggered by API or keyboard input """
-        if self.state == RobotState.HOLDING and self.box is not None:
-            self.from_x = None
-            self.to_x = to_x
-            self.state = RobotState.MOVING_TO_PLACE
-            self.target_y = self.get_stack_top_y(to_x) - settings.BOX_HEIGHT - 20
-            print(f"Putting down box to {to_x}")
-            return True
-        print("Cannot put down.")
-        return False
-
-    def update(self):
-        if self.state == RobotState.IDLE:
+    def update_state(self):
+        """Update the robot's state"""
+        # if robot is idle, check for new pick up and put down commands
+        if self._state == RobotState.IDLE:
+            if self._action_in_progress is None:
+                return
+            elif isinstance(self._action_in_progress, PickUpAction) or isinstance(self._action_in_progress, UnstackAction):
+                self._target_x = self._action_in_progress.get_target()[0]
+                self._target_y = self._action_in_progress.get_target()[1]
+                self._state = RobotState.MOVING_TO_PICK
+                return
             return
-
-        if self.state == RobotState.HOLDING:
-            if self.robot_y > settings.ROBOT_BASE_Y:
-                self.robot_y -= self.speed
-                if self.box:
-                    self.box.y = self.robot_y + 20
-                    self.box.x = self.robot_x
-            else:
-                self.robot_y = settings.ROBOT_BASE_Y
+        # if robot is holding a block, check for put down (or stack) commands
+        if self._state == RobotState.HOLDING:
+            if self._action_in_progress is None:
+                return
+            elif isinstance(self._action_in_progress, PutDownAction) or isinstance(self._action_in_progress, StackAction):
+                self._target_x = self._action_in_progress.get_target()[0]
+                self._target_y = self._action_in_progress.get_target()[1]
+                self._state = RobotState.MOVING_TO_PLACE
+                return
             return
-
-        if self.state == RobotState.MOVING_TO_PICK:
-            target_x = self.from_x
-            if abs(self.robot_x - target_x) > self.speed:
-                self.robot_x += self.speed if self.robot_x < target_x else - self.speed
+        # if moving to pick up a block, move until target x is reached, then transition to picking
+        if self._state == RobotState.MOVING_TO_PICK:
+            if abs(self._x - self._target_x) > SPEED:
+                self._x += SPEED if self._x < self._target_x else -SPEED
             else:
-                self.robot_x = target_x
-                self.state = RobotState.PICKING
+                self._x = self._target_x
+                self._state = RobotState.PICKING
             return
-
-        if self.state == RobotState.PICKING:
-            if self.robot_y < self.target_y:
-                self.robot_y += self.speed
+        # if picking, move until target y is reached, then transition to LIFTING
+        if self._state == RobotState.PICKING:
+            if abs(self._y - self._target_y) > SPEED:
+                self._y += SPEED 
             else:
-                self.robot_y = self.target_y
-                self.state = RobotState.LIFTING
+                self._y = self._target_y
+                self._held_block = self._action_in_progress.get_block()
+                self._action_in_progress.get_stack().remove_top_block()
+                self._state = RobotState.LIFTING
             return
-
-        if self.state == RobotState.LIFTING:
-            if self.robot_y > settings.ROBOT_BASE_Y:
-                self.robot_y -= self.speed
-                if self.box:
-                    self.box.y = self.robot_y + 20
-                    self.box.x = self.robot_x
+        # if lifting, move until top grip height is reached, then transition to HOLDING
+        if self._state == RobotState.LIFTING:
+            if abs(self._y - TOP_GRIP_HEIGHT) > SPEED:
+                self._y -= SPEED
+                self._held_block.set_position_on_robot(self._x, self._y)
             else:
-                self.robot_y = settings.ROBOT_BASE_Y
-                self.state = RobotState.HOLDING
-                # if pick up queue is not empty
-                if not self.pick_up_queue.empty():
-                    item = self.pick_up_queue.get()
-                    letter = item[0]
-                    api_out_queue = item[1]
-                    api_out_queue.put(f"Picked up block {letter}.")
-                # if unstack queue is not empty
-                if not self.unstack_queue.empty():
-                    item = self.unstack_queue.get()
-                    letter = item[0]
-                    lower_letter = item[1]
-                    api_out_queue = item[2]
-                    api_out_queue.put(f"Unstacked block {letter} from {lower_letter}.")
+                self._y = TOP_GRIP_HEIGHT
+                self._held_block.set_position_on_robot(self._x, self._y)
+                # send success feedback and clear the action
+                self._action_in_progress.reply_success()
+                self._action_in_progress = None
+                self._state = RobotState.HOLDING
             return
-
-        if self.state == RobotState.MOVING_TO_PLACE:
-            target_x = self.to_x
-            if abs(self.robot_x - target_x) > self.speed:
-                direction = self.speed if self.robot_x < target_x else -self.speed
-                self.robot_x += direction
-                if self.box:
-                    self.box.x = self.robot_x
-                    self.box.y = self.robot_y + 20
+        # if robot is moving to place a block, move until target x is reached, then transition to LOWERING
+        if self._state == RobotState.MOVING_TO_PLACE:
+            if abs(self._x - self._target_x) > SPEED:
+                self._x += SPEED if self._x < self._target_x else -SPEED
+                self._held_block.set_position_on_robot(self._x, self._y)
             else:
-                self.robot_x = target_x
-                self.state = RobotState.LOWERING
-                self.target_y = self.get_stack_top_y(self.to_x) - settings.BOX_HEIGHT - 20
+                self._x = self._target_x
+                self._held_block.set_position_on_robot(self._x, self._y)
+                self._state = RobotState.LOWERING
             return
-
-        if self.state == RobotState.LOWERING:
-            if self.robot_y < self.target_y:
-                self.robot_y += self.speed
-                if self.box:
-                    self.box.y = self.robot_y + 20
-                    self.box.x = self.robot_x
+        # if robot is lowering, move until target y is reached, then transition to RELEASING
+        if self._state == RobotState.LOWERING:
+            if abs(self._y - self._target_y) > SPEED:
+                self._y += SPEED
+                self._held_block.set_position_on_robot(self._x, self._y)
             else:
-                self.robot_y = self.target_y
-                self.state = RobotState.RELEASING
+                self._y = self._target_y
+                self._held_block.set_position_on_robot(self._x, self._y)
+                self._action_in_progress.get_stack().add_block(self._held_block)
+                self._held_block = None
+                self._state = RobotState.RELEASING
             return
-
-        if self.state == RobotState.RELEASING:
-            if self.box is not None:
-                self.box.vy = 0
-                self.falling_boxes.append(self.box)
-                self.box = None
-                self.from_x = None
-                self.to_x = None
-            if self.robot_y > settings.ROBOT_BASE_Y:
-                self.robot_y -= self.speed
+        # if robot is releasing, move until top grip height is reached, then transition to IDLE
+        if self._state == RobotState.RELEASING:
+            if abs(self._y - TOP_GRIP_HEIGHT) > SPEED:
+                self._y -= SPEED
             else:
-                self.robot_y = settings.ROBOT_BASE_Y
-                self.state = RobotState.IDLE
-                # if put down queue is not empty
-                if not self.put_down_queue.empty():
-                    item = self.put_down_queue.get()
-                    letter = item[0]
-                    api_out_queue = item[1]
-                    api_out_queue.put(f"Put down block {letter}.")
-                # if stack queue is not empty
-                if not self.stack_queue.empty():
-                    item = self.stack_queue.get()
-                    letter = item[0]
-                    target_letter = item[1]
-                    api_out_queue = item[2]
-                    api_out_queue.put(f"Stacked block {letter} on {target_letter}.")
+                self._y = TOP_GRIP_HEIGHT
+                self._state = RobotState.IDLE
+                # send success feedback and clear the action
+                self._action_in_progress.reply_success()
+                self._action_in_progress = None
             return
 
     def draw(self, surface):
