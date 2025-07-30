@@ -288,5 +288,29 @@ class Robot:
                     api_out_queue.put(f"Stacked block {letter} on {target_letter}.")
             return
 
-    def draw(self, screen):
-        self.drawer.draw(screen, self.robot_x, self.robot_y, self.box)
+    def draw(self, surface):
+        """Draw the robot on the given surface"""
+        # Draw the robot base
+        base_rect = pygame.Rect(self._x - ROBOT_BASE_WIDTH // 2, 0, ROBOT_BASE_WIDTH, ROBOT_BASE_HEIGHT)
+        pygame.draw.rect(
+            surface, ROBOT_COLORS[0], base_rect, 
+            border_bottom_left_radius=ROBOT_BORDER_RADIUS, border_bottom_right_radius=ROBOT_BORDER_RADIUS)
+        # Draw the robot arm
+        arm_rect = pygame.Rect(
+            self._x - ROBOT_ARM_WIDTH // 2, ROBOT_BASE_HEIGHT, 
+            ROBOT_ARM_WIDTH, self._y - ROBOT_GRIP_HEIGHT - ROBOT_BASE_HEIGHT
+        )
+        pygame.draw.rect(surface, ROBOT_COLORS[1], arm_rect)
+        # Draw the robot grip
+        grip_rect = pygame.Rect(
+            self._x - ROBOT_GRIP_WIDTH // 2, self._y - ROBOT_GRIP_HEIGHT, 
+            ROBOT_GRIP_WIDTH, ROBOT_GRIP_HEIGHT
+        )
+        pygame.draw.rect(
+            surface, ROBOT_COLORS[0], grip_rect,
+            border_top_left_radius=ROBOT_BORDER_RADIUS, border_top_right_radius=ROBOT_BORDER_RADIUS
+        )
+        # draw held block (if any)
+        if self._held_block is not None:
+            self._held_block.draw(surface)
+        return
