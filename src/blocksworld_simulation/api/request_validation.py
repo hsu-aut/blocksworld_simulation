@@ -110,10 +110,12 @@ class UnstackRequest(BaseModel):
             raise ValueError('Block name must be a single uppercase letter A-Z')
         return v
 
-def validate_request(request_model):
+def validate_request(request_model, allow_empty_body=False):
     """Decorator to validate JSON requests using Pydantic models."""
     def decorator(func):
         def wrapper(*args, **kwargs):
+            if allow_empty_body and request.content_length == 0:
+                return func(None, *args, **kwargs)
             try:
                 data = request.get_json()
                 if data is None:
