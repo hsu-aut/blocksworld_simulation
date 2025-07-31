@@ -1,5 +1,21 @@
 from typing import Optional, Tuple
 import pygame
+import random
+from pydantic import BaseModel, Field
+import re
+
+DEFAULT_BLOCK_SIZE_X = 100
+DEFAULT_BLOCK_SIZE_Y = 60
+COLOR_LIST = [
+    (255, 140, 140), (140, 255, 140), (140, 140, 255), (255, 215, 140), 
+    (200, 140, 255), (140, 255, 255), (255, 255, 140), (255, 140, 255), 
+    (140, 255, 200), (255, 200, 140), (255, 140, 200), (200, 255, 140),
+    (140, 200, 255), (200, 140, 200), (140, 200, 140), (200, 200, 255), 
+    (215, 255, 140), (140, 255, 215), (255, 140, 215), (215, 140, 255), 
+    (140, 215, 255), (255, 255, 200), (200, 255, 255), (255, 200, 255),
+    (255, 215, 215), (215, 255, 215)
+]
+"""Predefined list of colors for blocks in RGB format"""
 
 
 class BlockModel(BaseModel):
@@ -18,28 +34,28 @@ class Block:
     def __init__(
             self, 
             name: str, 
-            color: Tuple[int, int, int],
-            x_size: int, 
-            y_size: int, 
-            weight: int,
-            type: str,
+            color_index: Optional[int] = None,
+            x_size: Optional[int] = DEFAULT_BLOCK_SIZE_X, 
+            y_size: Optional[int] = DEFAULT_BLOCK_SIZE_Y, 
+            weight: Optional[int] = None,
+            type: Optional[str] = None,
             x_init: Optional[int] = 0, 
             y_init: Optional[int] = 0
             ):
         self._name = name
         """Block's name (usually a single letter A-Z)"""
-        self._color = color
-        """Block's color in RGB format"""
+        self._color = COLOR_LIST[color_index] if color_index is not None else COLOR_LIST[random.randint(0, len(COLOR_LIST) - 1)]
+        """Block's color given as the index of COLOR_LIST - will be randomly selected if not provided"""
         self._x = x_init
         """Block's x position (center of the block)"""
         self._y = y_init
         """Block's y position (top of the block)"""
-        self._width = x_size
+        self._width = x_size if x_size is not None else DEFAULT_BLOCK_SIZE_X
         """Block's width"""
-        self._height = y_size
+        self._height = y_size if y_size is not None else DEFAULT_BLOCK_SIZE_Y
         """Block's height"""
         self._weight = weight
-        """Block's weightr"""
+        """Block's weight"""
         self._type = type
         """Block's type"""
 
