@@ -2,20 +2,7 @@ from flask import request, jsonify
 from pydantic import BaseModel, ValidationError, field_validator, model_validator
 from typing import List, Optional, Union
 import re
-
-class BlockModel(BaseModel):
-    name: str
-    x_size: int
-    y_size: int
-    weight: int
-    type: str
-    
-    @field_validator('name')
-    @classmethod
-    def validate_block_name(cls, v):
-        if not re.match(r'^[A-Z]$', v):
-            raise ValueError('Block name must be a single uppercase letter A-Z')
-        return v
+from ..simulation.block import BlockModel
 
 class StartSimulationRequest(BaseModel):
     """Pydantic model for starting the simulation.

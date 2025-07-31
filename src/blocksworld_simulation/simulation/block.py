@@ -2,6 +2,15 @@ from typing import Optional, Tuple
 import pygame
 
 
+class BlockModel(BaseModel):
+    """shared class for the input data that has to be provided for creating blocks"""
+    name: str = Field(..., pattern=r'^[A-Z]$')
+    x_size: Optional[int] = None
+    y_size: Optional[int] = None
+    weight: Optional[int] = None
+    type: Optional[str] = None
+
+
 class Block:
     """Represents a single block in the simulation.
     Handles the blocks properties and its visual apperance."""
