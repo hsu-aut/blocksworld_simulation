@@ -37,7 +37,8 @@ class StartAction(SimulationAction):
     
     def reply_success(self):
         """Send a success reply back to the reply queue"""
-        self._reply_queue.put((True, "Simulation started with given stack configuration: " + str(self._stack_config)))
+        config_str = f"given stack config: {self._stack_config}" if self._stack_config is not None else "random stacks"
+        self._reply_queue.put((True, f"Simulation started with {config_str}"))
 
 
 class StopAction(SimulationAction):
