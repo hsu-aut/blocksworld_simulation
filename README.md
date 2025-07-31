@@ -6,8 +6,19 @@ The graphical simulation is based on Pygame and several actions can be controlle
 
 ## How to run the simulation
 
-The project uses the [uv package management](https://docs.astral.sh/uv/).
-To run the simulation, execute `uv run main.py`
+The project uses the [poetry](https://python-poetry.org/docs/#installation) dependency management.
+Clone the repository and execute:
+
+```bash
+poetry install
+```
+
+to install the required packages.
+Then, run the simulation by executing: 
+
+```bash
+poetry run blocksworld-simulation
+```
 
 ## Control
 
