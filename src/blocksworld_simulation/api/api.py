@@ -25,12 +25,12 @@ def return_api(result):
     return jsonify({"result": message}), 200 if success else 400
 
 @app.route('/start_simulation', methods=['POST'])
-@validate_request(StartSimulationRequest)
+@validate_request(StartSimulationRequest, allow_empty_body=True)
 def start_simulation(validated_data: StartSimulationRequest):
     """Start the pygame simulation with optional configuration."""
     api_to_sim_queue.put(StartInput(
         reply_queue=sim_to_api_queue,
-        stack_config=validated_data.initial_stacks
+        stack_config=validated_data.initial_stacks if validated_data else None
     ))
     result = sim_to_api_queue.get()
     return return_api(result)

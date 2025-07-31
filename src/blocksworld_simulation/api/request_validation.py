@@ -2,20 +2,7 @@ from flask import request, jsonify
 from pydantic import BaseModel, ValidationError, field_validator, model_validator
 from typing import List, Optional, Union
 import re
-
-class BlockModel(BaseModel):
-    name: str
-    x_size: int
-    y_size: int
-    weight: int
-    type: str
-    
-    @field_validator('name')
-    @classmethod
-    def validate_block_name(cls, v):
-        if not re.match(r'^[A-Z]$', v):
-            raise ValueError('Block name must be a single uppercase letter A-Z')
-        return v
+from ..simulation.block import BlockModel
 
 class StartSimulationRequest(BaseModel):
     """Pydantic model for starting the simulation.
@@ -110,10 +97,12 @@ class UnstackRequest(BaseModel):
             raise ValueError('Block name must be a single uppercase letter A-Z')
         return v
 
-def validate_request(request_model):
+def validate_request(request_model, allow_empty_body=False):
     """Decorator to validate JSON requests using Pydantic models."""
     def decorator(func):
         def wrapper(*args, **kwargs):
+            if allow_empty_body and request.content_length == 0:
+                return func(None, *args, **kwargs)
             try:
                 data = request.get_json()
                 if data is None:
