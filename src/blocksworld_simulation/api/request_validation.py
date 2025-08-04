@@ -5,10 +5,19 @@ import re
 from ..simulation.block import BlockModel
 
 class StartSimulationRequest(BaseModel):
-    """Pydantic model for starting the simulation.
-    Request body should contain initial stacks or empty for default.
-    If Initial stacks are provided, the request body should look like:
+    """Pydantic model for starting the simulation with custom initial stacks.
+    
+    Examples:
     ```
+    // Start with predefined scenario (query parameter)
+    POST /start_simulation?scenario=tower_building_challenge
+    // Body: {} or empty
+    ```
+    
+    ```
+    // Start with custom initial stacks (simple format)
+    POST /start_simulation
+    // Body:
     { 
         "initial_stacks": 
             [
@@ -18,8 +27,11 @@ class StartSimulationRequest(BaseModel):
             ]
     }
     ```
-    or, fully defined:
+    
     ```
+    // Start with custom initial stacks (detailed format)
+    POST /start_simulation
+    // Body:
     { 
         "initial_stacks": 
             [
@@ -45,6 +57,7 @@ class StartSimulationRequest(BaseModel):
     
     @model_validator(mode='after')
     def validate_unique_block_names(self):
+        # Validate unique block names if initial_stacks provided
         if self.initial_stacks:
             block_names = []
             for stack in self.initial_stacks:

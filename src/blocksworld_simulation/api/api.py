@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import queue
 import logging
 
@@ -9,6 +9,7 @@ from .request_validation import (
     validate_request, StartSimulationRequest, PickUpRequest, PutDownRequest,
     StackRequest, UnstackRequest
 )
+from ..scenarios.scenario_manager import scenario_manager
 
 app = Flask(__name__)
 api_to_sim_queue = queue.Queue()
@@ -27,12 +28,43 @@ def return_api(result):
 @app.route('/start_simulation', methods=['POST'])
 @validate_request(StartSimulationRequest, allow_empty_body=True)
 def start_simulation(validated_data: StartSimulationRequest):
-    """Start the pygame simulation with optional configuration."""
+    """Start the pygame simulation with optional scenario (query param) or custom initial stacks (body)."""
+    scenario = None
+    stack_config = None
+    
+    # Get scenario from query parameter
+    scenario_identifier = request.args.get('scenario')
+    
+    # Check for conflicting parameters
+    if scenario_identifier and validated_data and validated_data.initial_stacks:
+        return jsonify({"error": "Cannot specify both scenario parameter and initial_stacks in body. Choose one or the other."}), 400
+    
+    if scenario_identifier:
+        # Load scenario from query parameter
+        scenario = scenario_manager.get_scenario(scenario_identifier)
+        if not scenario:
+            return jsonify({"error": f"Scenario '{scenario_identifier}' not found"}), 404
+        stack_config = scenario.initial_state.stacks
+    elif validated_data and validated_data.initial_stacks:
+        # Use custom initial_stacks from body
+        stack_config = validated_data.initial_stacks
+    
     api_to_sim_queue.put(StartInput(
         reply_queue=sim_to_api_queue,
-        stack_config=validated_data.initial_stacks if validated_data else None
+        stack_config=stack_config
     ))
     result = sim_to_api_queue.get()
+    
+    if scenario and result[0]:  # If scenario was used and simulation started successfully
+        return jsonify({
+            "result": result[1],
+            "scenario": {
+                "name": scenario.name,
+                "description": scenario.description,
+                "goal": scenario.goal.model_dump()
+            }
+        }), 200
+    
     return return_api(result)
 
 @app.route('/stop_simulation', methods=['POST'])
@@ -83,6 +115,25 @@ def unstack(validated_data: UnstackRequest):
     ))
     result = sim_to_api_queue.get()
     return return_api(result)
+
+@app.route('/scenarios', methods=['GET'])
+def list_scenarios():
+    """Get list of all available scenarios."""
+    scenarios = []
+    for name in scenario_manager.get_scenario_names():
+        scenario = scenario_manager.get_scenario(name)
+        if scenario:
+            scenarios.append(scenario.model_dump())
+    return jsonify({"scenarios": scenarios}), 200
+
+@app.route('/scenarios/<scenario_name>', methods=['GET'])
+def get_scenario_details(scenario_name: str):
+    """Get detailed information about a specific scenario."""
+    scenario = scenario_manager.get_scenario(scenario_name)
+    if not scenario:
+        return jsonify({"error": f"Scenario '{scenario_name}' not found"}), 404
+
+    return jsonify(scenario.model_dump()), 200
 
 @app.route('/get_status', methods=['GET'])
 def get_status():
