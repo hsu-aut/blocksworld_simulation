@@ -1,5 +1,4 @@
 import json
-import os
 from pathlib import Path
 from typing import Dict, List, Optional
 import logging
@@ -29,7 +28,7 @@ class ScenarioManager:
                     scenario_data = json.load(f)
                     scenario = Scenario(**scenario_data)
                     self._scenarios_cache[scenario.name] = scenario
-                    logger.info(f"Loaded scenario: {scenario.name}")
+                    logger.info(f"Loaded scenario: {scenario.name} (ID: {scenario.id})")
             except Exception as e:
                 logger.error(f"Failed to load scenario from {file_path}: {e}")
     
@@ -37,13 +36,27 @@ class ScenarioManager:
         """Get list of all available scenario names."""
         return list(self._scenarios_cache.keys())
     
-    def get_scenario(self, name: str) -> Optional[Scenario]:
-        """Get a specific scenario by name."""
-        return self._scenarios_cache.get(name)
+    def get_scenario(self, identifier: str) -> Optional[Scenario]:
+        """Get a specific scenario by name or ID."""
+        # First try by ID 
+        for scenario in self._scenarios_cache.values():
+            if scenario.id == identifier:
+                return scenario
+            
+        # Then try by name (backward compatibility)
+        scenario = self._scenarios_cache.get(identifier)
+        if scenario:
+            return scenario
+        
+        return None
     
-    def scenario_exists(self, name: str) -> bool:
-        """Check if a scenario exists."""
-        return name in self._scenarios_cache
+    def scenario_exists(self, identifier: str) -> bool:
+        """Check if a scenario exists by name or ID."""
+        return self.get_scenario(identifier) is not None
+    
+    def get_scenario_ids(self) -> List[str]:
+        """Get list of all available scenario IDs."""
+        return [scenario.id for scenario in self._scenarios_cache.values()]
     
     def reload_scenarios(self):
         """Reload all scenarios from disk."""
