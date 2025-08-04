@@ -1,0 +1,27 @@
+{
+  "name": "Unstacking Challenge", 
+  "description": "Separate a 3-block tower into individual stacks",
+  "initial_state": {
+    "stacks": [
+      ["A", "B", "C"],
+      [],
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Place each block on separate stacks: A alone, B alone, C alone",
+    "target_stacks": [
+      ["A"],
+      ["B"],
+      ["C"]
+    ]
+  },
+  "metadata": {
+    "difficulty": "0",
+    "min_steps": 4,
+    "num_blocks": 3,
+    "num_stacks": 3
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Stacking Challenge", 
+  "description": "Stack 3 individual blocks into a single tower",
+  "initial_state": {
+    "stacks": [
+      ["A"],
+      ["B"],
+      ["C"]
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build tower A-B-C on first stack, leave other stacks empty",
+    "target_stacks": [
+      ["A", "B", "C"], 
+      [],
+      []
+    ]
+  },
+  "metadata": {
+    "difficulty": "0",
+    "min_steps": 4,
+    "num_blocks": 3,
+    "num_stacks": 3
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Tower Building Challenge",
+  "description": "Rearrange blocks from 2 stacks to build tower B-A-C",
+  "initial_state": {
+    "stacks": [
+      ["A", "B"],
+      ["C"], 
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build tower B-A-C on third stack, leave other stacks empty",
+    "target_stacks": [
+      [],
+      [],
+      ["B", "A", "C"]
+    ]
+  },
+  "metadata": {
+    "difficulty": "0",
+    "min_steps": 6,
+    "num_blocks": 3,
+    "num_stacks": 3
+  }
+}
