@@ -11,7 +11,7 @@ class InitialState(BaseModel):
 
 class Goal(BaseModel):
     description: str
-    target_stacks: List[List[str]]
+    target_configurations: List[List[str]]
     
     
 class Scenario(BaseModel):

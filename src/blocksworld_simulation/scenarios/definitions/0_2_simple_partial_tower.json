@@ -11,11 +11,9 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build tower C-B-A on second stack, leave other stacks empty",
-    "target_stacks": [
-      [],
-      ["C", "B", "A"],
-      []
+    "description": "Build tower C-B-A",
+    "target_configurations": [
+      ["C", "B", "A"]
     ]
   },
   "metadata": {

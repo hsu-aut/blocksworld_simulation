@@ -11,8 +11,8 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Place each block on separate stacks: A alone, B alone, C alone",
-    "target_stacks": [
+    "description": "Place each block alone",
+    "target_configurations": [
       ["A"],
       ["B"],
       ["C"]
