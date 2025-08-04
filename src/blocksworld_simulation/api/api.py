@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import queue
 import logging
 
@@ -28,21 +28,26 @@ def return_api(result):
 @app.route('/start_simulation', methods=['POST'])
 @validate_request(StartSimulationRequest, allow_empty_body=True)
 def start_simulation(validated_data: StartSimulationRequest):
-    """Start the pygame simulation with optional scenario or individual stack configuration."""
+    """Start the pygame simulation with optional scenario (query param) or custom initial stacks (body)."""
     scenario = None
     stack_config = None
     
-    if validated_data:
-        if validated_data.scenario:
-            scenario = scenario_manager.get_scenario(validated_data.scenario)
-            if not scenario:
-                return jsonify({"error": f"Scenario '{validated_data.scenario}' not found"}), 404
-            
-            # Use provided initial_stacks if given, otherwise use scenario's initial state
-            stack_config = validated_data.initial_stacks if validated_data.initial_stacks else scenario.initial_state.stacks
-        else:
-            # Only initial_stacks provided (no scenario)
-            stack_config = validated_data.initial_stacks
+    # Get scenario from query parameter
+    scenario_identifier = request.args.get('scenario')
+    
+    # Check for conflicting parameters
+    if scenario_identifier and validated_data and validated_data.initial_stacks:
+        return jsonify({"error": "Cannot specify both scenario parameter and initial_stacks in body. Choose one or the other."}), 400
+    
+    if scenario_identifier:
+        # Load scenario from query parameter
+        scenario = scenario_manager.get_scenario(scenario_identifier)
+        if not scenario:
+            return jsonify({"error": f"Scenario '{scenario_identifier}' not found"}), 404
+        stack_config = scenario.initial_state.stacks
+    elif validated_data and validated_data.initial_stacks:
+        # Use custom initial_stacks from body
+        stack_config = validated_data.initial_stacks
     
     api_to_sim_queue.put(StartInput(
         reply_queue=sim_to_api_queue,
