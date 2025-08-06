@@ -49,9 +49,15 @@ class Stack:
     
     def to_dict(self) -> dict:
         """Convert the stack to a dictionary representation"""
+        blocks_with_positions = []
+        for position, block in enumerate(self._blocks):
+            block_dict = block.to_dict()
+            block_dict["position"] = position
+            blocks_with_positions.append(block_dict)
+        
         out_dict: dict = {
             "number": self.get_number(),
-            "blocks": [block.to_dict() for block in self._blocks]
+            "blocks": blocks_with_positions
         }
         return out_dict
 
