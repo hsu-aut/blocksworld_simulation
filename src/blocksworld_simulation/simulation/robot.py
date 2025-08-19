@@ -64,7 +64,7 @@ class Robot:
         """Convert the robot to a dictionary representation"""
         out_dict: dict = {
             "state": self._state.value,
-            "held_block": self._held_block.to_dict() if self._held_block is not None else None
+            "holding": self._held_block.to_dict() if self._held_block is not None else "None"
         }
         return out_dict
 

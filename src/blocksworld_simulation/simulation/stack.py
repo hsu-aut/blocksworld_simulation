@@ -52,12 +52,12 @@ class Stack:
         blocks_with_positions = []
         for position, block in enumerate(self._blocks):
             block_dict = block.to_dict()
-            block_dict["position"] = position
-            blocks_with_positions.append(block_dict)
+            # block_dict["position"] = position
+            blocks_with_positions.append(block_dict["block_name"])
         
         out_dict: dict = {
-            "number": self.get_number(),
-            "blocks": blocks_with_positions
+            "Stack number": self.get_number(),
+            "blocks_order_from_bottom ": ["empty_stack"] if len(blocks_with_positions)== 0 else  blocks_with_positions,
         }
         return out_dict
 

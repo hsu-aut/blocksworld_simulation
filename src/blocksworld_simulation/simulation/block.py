@@ -82,9 +82,9 @@ class Block:
     def to_dict(self) -> dict:
         """Convert the block to a dictionary representation"""
         out_dict: dict = {
-            "name": self._name,
-            "x_size": self._width,
-            "y_size": self._height
+            "block_name": self._name,
+            # "x_size": self._width,
+            # "y_size": self._height
         }
         if self._weight is not None:
             out_dict["weight"] = self._weight

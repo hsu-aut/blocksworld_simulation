@@ -58,8 +58,8 @@ class GetStatusAction(SimulationAction):
 
     def _get_simulation_status(self, stacks: List [Stack], robot):
         status = {
-            "stacks": [stack.to_dict() for stack in stacks],
-            "robot": robot.to_dict()
+            "stacks_status": [stack.to_dict() for stack in stacks],
+            "robot_status": robot.to_dict()
         }
         return status
 
