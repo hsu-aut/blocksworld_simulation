@@ -1,0 +1,26 @@
+{
+  "name": "Impossible: Non-existent Block",
+  "description": "IMPOSSIBLE - Goal references block 'Z' that doesn't exist in initial state",
+  "initial_state": {
+    "stacks": [
+      ["A", "B"],
+      ["C"],
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build tower A-Z-B",
+    "target_configurations": [
+      ["A", "Z", "B"]
+    ]
+  },
+  "metadata": {
+    "difficulty": "0",
+    "min_steps": -1,
+    "num_blocks": 3,
+    "num_stacks": 3,
+    "impossible_reason": "Goal references block 'Z' that does not exist in initial state"
+  }
+}

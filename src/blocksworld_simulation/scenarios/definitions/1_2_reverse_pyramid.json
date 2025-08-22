@@ -12,7 +12,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build reversed tower E-D-C-B-A",
+    "description": "Build tower E-D-C-B-A",
     "target_configurations": [
       ["E", "D", "C", "B", "A"]
     ]

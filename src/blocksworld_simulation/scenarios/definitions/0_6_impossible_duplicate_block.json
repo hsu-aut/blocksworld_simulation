@@ -1,0 +1,27 @@
+{
+  "name": "Impossible: Duplicate Block",
+  "description": "IMPOSSIBLE - Block A appears in multiple stacks simultaneously",
+  "initial_state": {
+    "stacks": [
+      ["A", "B"],
+      ["C"],
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build two towers A-B and A-C",
+    "target_configurations": [
+      ["A", "B"],
+      ["A", "C"]
+    ]
+  },
+  "metadata": {
+    "difficulty": "0",
+    "min_steps": -1,
+    "num_blocks": 3,
+    "num_stacks": 3,
+    "impossible_reason": "Block A appears in multiple target stacks simultaneously"
+  }
+}

@@ -12,7 +12,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build ultimate tower H-G-F-E-D-C-B-A",
+    "description": "Build tower H-G-F-E-D-C-B-A",
     "target_configurations": [
       ["H", "G", "F", "E", "D", "C", "B", "A"]
     ]

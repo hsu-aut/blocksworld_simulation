@@ -11,7 +11,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build tower with C on bottom, A and D in middle, B on top",
+    "description": "Build tower C-A-D-B",
     "target_configurations": [
       ["C", "A", "D", "B"]
     ]

@@ -12,7 +12,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build alternating tower A-C-E-B-D",
+    "description": "Build tower A-C-E-B-D",
     "target_configurations": [
       ["A", "C", "E", "B", "D"]
     ]

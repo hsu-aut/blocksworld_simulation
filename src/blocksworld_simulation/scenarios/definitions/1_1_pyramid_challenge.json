@@ -12,7 +12,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Create two 2-block stacks side by side",
+    "description": "Create two 2-block stacks A-C and B-D side by side",
     "target_configurations": [
       ["A", "C"],
       ["B", "D"]

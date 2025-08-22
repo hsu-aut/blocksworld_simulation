@@ -12,7 +12,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Create four 2-block stacks in perfect order",
+    "description": "Create four 2-block stacks with A-E, B-F, C-G, D-H",
     "target_configurations": [
       ["A", "E"],
       ["B", "F"],

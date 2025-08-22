@@ -12,7 +12,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build merged tower F-E-D-C-B-A",
+    "description": "Build tower F-E-D-C-B-A",
     "target_configurations": [
       ["F", "E", "D", "C", "B", "A"]
     ]
