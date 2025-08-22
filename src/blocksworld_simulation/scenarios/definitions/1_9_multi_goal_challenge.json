@@ -1,0 +1,27 @@
+{
+  "name": "Multi-Goal Challenge",
+  "description": "Create two specific towers from mixed arrangement: A-C-E-G and B-D-F",
+  "initial_state": {
+    "stacks": [
+      ["A", "B", "C"],
+      ["D", "E"],
+      ["F", "G"],
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build two towers: A-C-E-G and B-D-F",
+    "target_configurations": [
+      ["A", "C", "E", "G"],
+      ["B", "D", "F"]
+    ]
+  },
+  "metadata": {
+    "difficulty": "1",
+    "min_steps": 14,
+    "num_blocks": 7,
+    "num_stacks": 4
+  }
+}

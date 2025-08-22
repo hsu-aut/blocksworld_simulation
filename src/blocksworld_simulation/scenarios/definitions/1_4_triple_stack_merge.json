@@ -1,0 +1,26 @@
+{
+  "name": "Triple Stack Merge Challenge",
+  "description": "Merge three 2-block stacks into one 6-block tower F-E-D-C-B-A",
+  "initial_state": {
+    "stacks": [
+      ["A", "B"],
+      ["C", "D"],
+      ["E", "F"],
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build merged tower F-E-D-C-B-A",
+    "target_configurations": [
+      ["F", "E", "D", "C", "B", "A"]
+    ]
+  },
+  "metadata": {
+    "difficulty": "1",
+    "min_steps": 12,
+    "num_blocks": 6,
+    "num_stacks": 4
+  }
+}

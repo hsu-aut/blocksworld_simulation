@@ -1,0 +1,26 @@
+{
+  "name": "Cross-Stack Sorting Challenge",
+  "description": "Sort mixed stacks A,C and B,D into sequential tower A-B-C-D",
+  "initial_state": {
+    "stacks": [
+      ["A", "C"],
+      ["B", "D"],
+      [],
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build sequential tower A-B-C-D",
+    "target_configurations": [
+      ["A", "B", "C", "D"]
+    ]
+  },
+  "metadata": {
+    "difficulty": "1",
+    "min_steps": 10,
+    "num_blocks": 4,
+    "num_stacks": 4
+  }
+}

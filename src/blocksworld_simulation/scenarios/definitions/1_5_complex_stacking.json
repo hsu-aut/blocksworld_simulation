@@ -1,0 +1,25 @@
+{
+  "name": "Complex Stacking",
+  "description": "Basic scenario with 4 blocks to build a tower C-A-D-B",
+  "initial_state": {
+    "stacks": [
+      ["A", "B"],
+      ["C"], 
+      ["D"]
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build tower with C on bottom, A and D in middle, B on top",
+    "target_configurations": [
+      ["C", "A", "D", "B"]
+    ]
+  },
+  "metadata": {
+    "difficulty": "1",
+    "min_steps": 10,
+    "num_blocks": 4,
+    "num_stacks": 3
+  }
+}

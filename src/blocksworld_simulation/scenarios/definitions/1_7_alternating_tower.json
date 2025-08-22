@@ -1,0 +1,26 @@
+{
+  "name": "Alternating Tower Challenge",
+  "description": "Build alternating pattern tower A-C-E-B-D from mixed stacks",
+  "initial_state": {
+    "stacks": [
+      ["A", "B"],
+      ["C", "D"],
+      ["E"],
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build alternating tower A-C-E-B-D",
+    "target_configurations": [
+      ["A", "C", "E", "B", "D"]
+    ]
+  },
+  "metadata": {
+    "difficulty": "1",
+    "min_steps": 12,
+    "num_blocks": 5,
+    "num_stacks": 4
+  }
+}

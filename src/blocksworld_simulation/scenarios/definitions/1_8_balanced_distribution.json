@@ -1,0 +1,27 @@
+{
+  "name": "Balanced Distribution Challenge",
+  "description": "Redistribute 6-block tower into two balanced 3-block stacks",
+  "initial_state": {
+    "stacks": [
+      ["A", "B", "C", "D", "E", "F"],
+      [],
+      [],
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Create two balanced stacks A-C-E and B-D-F",
+    "target_configurations": [
+      ["A", "C", "E"],
+      ["B", "D", "F"]
+    ]
+  },
+  "metadata": {
+    "difficulty": "1",
+    "min_steps": 18,
+    "num_blocks": 6,
+    "num_stacks": 4
+  }
+}

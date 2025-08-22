@@ -1,0 +1,27 @@
+{
+  "name": "Pyramid Challenge",
+  "description": "Build a pyramid formation: A-B on bottom, C-D on top",
+  "initial_state": {
+    "stacks": [
+      ["A"],
+      ["B"],
+      ["C"],
+      ["D"]
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Create two 2-block stacks side by side",
+    "target_configurations": [
+      ["A", "C"],
+      ["B", "D"]
+    ]
+  },
+  "metadata": {
+    "difficulty": "1",
+    "min_steps": 4,
+    "num_blocks": 4,
+    "num_stacks": 4
+  }
+}

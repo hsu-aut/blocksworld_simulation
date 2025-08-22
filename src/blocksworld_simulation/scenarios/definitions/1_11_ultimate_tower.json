@@ -1,0 +1,26 @@
+{
+  "name": "Ultimate Tower Challenge",
+  "description": "Build the ultimate 8-block tower H-G-F-E-D-C-B-A from maximum chaos",
+  "initial_state": {
+    "stacks": [
+      ["A", "E"],
+      ["B", "F"],
+      ["C", "G"],
+      ["D", "H"]
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build ultimate tower H-G-F-E-D-C-B-A",
+    "target_configurations": [
+      ["H", "G", "F", "E", "D", "C", "B", "A"]
+    ]
+  },
+  "metadata": {
+    "difficulty": "1",
+    "min_steps": 22,
+    "num_blocks": 8,
+    "num_stacks": 4
+  }
+}
