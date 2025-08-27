@@ -6,8 +6,6 @@ from blocksworld_simulation.simulation.simulation import BlocksWorldSimulation
 from blocksworld_simulation.api.api import api_to_sim_queue, sim_to_api_queue, run_flask
 
 
-logger = logging.getLogger(__name__)
-
 def main():
     """Main entry point"""
     # Parse args
@@ -29,7 +27,6 @@ def main():
     simulation = BlocksWorldSimulation(api_to_sim_queue, sim_to_api_queue)
     simulation.run()
     # if we reach here, it means the app should quit
-    logger.info("Application quitting")
     sys.exit(0)
     
 if __name__ == '__main__':
