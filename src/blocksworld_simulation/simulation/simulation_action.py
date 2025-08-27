@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 class SimulationAction(ABC):
     """Base class for actions in the simulation.
     Actions can be created by user input or by the API.
-    They are created in an unvalidated state and then validated by the input processor."""
+    They are created in an unvalidated state and then validated by the constraint manager."""
 
     def __init__(self, reply_queue: Queue):
         self._reply_queue: Queue = reply_queue
