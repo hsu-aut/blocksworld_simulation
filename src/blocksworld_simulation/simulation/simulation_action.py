@@ -2,32 +2,45 @@ from typing import Tuple
 from .stack import Stack
 from .block import Block
 from queue import Queue
+from abc import ABC, abstractmethod
 
-
-class SimulationAction:
+class SimulationAction(ABC):
     """Base class for actions in the simulation.
     Actions can be created by user input or by the API.
     They are created in an unvalidated state and then validated by the input processor."""
 
     def __init__(self, reply_queue: Queue):
         self._reply_queue: Queue = reply_queue
-        self._is_validated: bool = False
+        self._is_valid: bool | None = None
 
-    def is_validated(self) -> bool:
-        """Check if the action has been validated"""
-        return self._is_validated
+    def is_valid(self) -> bool | None:
+        """Check if the action has been validated. Returns True if valid, False if invalid, None if not yet validated."""
+        return self._is_valid
     
-    def set_validated(self):
+    def set_valid(self):
         """Mark the action as validated"""
-        self._is_validated = True
+        self._is_valid = True
 
-    def reply(self, success: bool, message: str):
-        """Send a reply back to the reply queue"""
-        self._reply_queue.put((success, message))
+    def set_invalid(self, invalid_reason: str):
+        """Mark the action as invalidated"""
+        self._is_valid = False
+        self._reply_queue.put((False, self._failure_message() + " - " + invalid_reason))
 
     def reply_success(self):
-        # must be implemented by subclasses to send a success reply
-        raise NotImplementedError("Subclasses must implement reply_success method")
+        """Send a success reply back to the reply queue"""
+        self._reply_queue.put((True, self._success_message()))
+
+    @abstractmethod
+    def _success_message(self) -> str:
+        """Defines the success message to be sent back to the reply queue if action was successfully executed.
+        Must be implemented by subclasses to send a success reply"""
+        pass
+
+    @abstractmethod
+    def _failure_message(self) -> str:
+        """Defines the failure message to be sent back to the reply queue if action was not successfully executed.
+        Must be implemented by subclasses to send a failure reply"""
+        pass
 
 
 class QuitAction(SimulationAction):
@@ -36,9 +49,11 @@ class QuitAction(SimulationAction):
     def __init__(self, reply_queue: Queue):
         super().__init__(reply_queue)
 
-    def reply_success(self):
-        """Send a success reply back to the reply queue"""
-        self._reply_queue.put((True, "Application is quitting"))
+    def _success_message(self):
+        return "Application is quitting"
+
+    def _failure_message(self) -> str:
+        return "Application could not be quit"
 
 
 class StartAction(SimulationAction):
@@ -52,11 +67,12 @@ class StartAction(SimulationAction):
         """Get the stack configuration for the simulation"""
         return self._stack_config
     
-    def reply_success(self):
-        """Send a success reply back to the reply queue"""
+    def _success_message(self):
         config_str = f"given stack config: {self._stack_config}" if self._stack_config is not None else "random stacks"
-        self._reply_queue.put((True, f"Simulation started with {config_str}"))
+        return f"Simulation started with {config_str}"
 
+    def _failure_message(self) -> str:
+        return "Simulation could not be started"
 
 class StopAction(SimulationAction):
     """Action for stopping the simulation."""
@@ -64,20 +80,28 @@ class StopAction(SimulationAction):
     def __init__(self, reply_queue: Queue):
         super().__init__(reply_queue)
 
-    def reply_success(self):
-        """Send a success reply back to the reply queue"""
-        self._reply_queue.put((True, "Simulation stopped"))
+    def _success_message(self):
+        return "Simulation stopped"
 
-    
+    def _failure_message(self) -> str:
+        return "Simulation could not be stopped"
+
 class GetStatusAction(SimulationAction):
     """Action for getting the status of the simulation."""
 
     def __init__(self, reply_queue: Queue):
         super().__init__(reply_queue)
+        self._status_dict: dict = None
 
-    def reply_success(self, status_dict: dict):
-        """Send status dict back to reply queue"""
-        self._reply_queue.put((True, status_dict))
+    def set_status_dict(self, status_dict: dict):
+        self._status_dict = status_dict
+
+    def _success_message(self):
+        status_string = str(self._status_dict)
+        return status_string
+
+    def _failure_message(self) -> str:
+        return "Simulation status could not be retrieved"
 
 
 class RobotAction(SimulationAction):
@@ -86,9 +110,10 @@ class RobotAction(SimulationAction):
     def __init__(self, reply_queue: Queue):
         super().__init__(reply_queue)
     
+    @abstractmethod
     def get_target(self) -> Tuple[int, int]:
         """Get the target position for the action. Must be implemented by subclasses."""
-        raise NotImplementedError("Subclasses must implement get_target method")
+        pass
 
 
 class PickUpAction(RobotAction):
@@ -125,9 +150,11 @@ class PickUpAction(RobotAction):
     def get_target(self) -> Tuple[int, int]:
         return (self._stack.get_x(), self._stack.get_top_y())
 
-    def reply_success(self):
-        """Send a success reply back to the reply queue"""
-        self._reply_queue.put((True, f"Block {self._block.get_name()} picked up successfully from stack {self._stack.get_number()}"))
+    def _success_message(self):
+        return f"Block {self._block.get_name()} picked up successfully from stack {self._stack.get_number()}"
+
+    def _failure_message(self) -> str:
+        return "Block could not be picked up"
 
 
 class PutDownAction(RobotAction):
@@ -164,9 +191,11 @@ class PutDownAction(RobotAction):
     def get_target(self) -> Tuple[int, int]:
         return (self._stack.get_x(), self._stack.get_top_y() - self._block.get_size()[1])
 
-    def reply_success(self):
-        """Send a success reply back to the reply queue"""
-        self._reply_queue.put((True, f"Block {self._block.get_name()} put down successfully on stack {self._stack.get_number()}"))
+    def _success_message(self):
+        return f"Block {self._block.get_name()} put down successfully on stack {self._stack.get_number()}"
+    
+    def _failure_message(self) -> str:
+        return "Block could not be put down"
 
 
 class StackAction(RobotAction):
@@ -218,10 +247,11 @@ class StackAction(RobotAction):
     def get_target(self) -> Tuple[int, int]:
         return (self._stack.get_x(), self._stack.get_top_y() - self._block.get_size()[1])
 
-    def reply_success(self):
-        """Send a success reply back to the reply queue"""
-        self._reply_queue.put((True, f"Block {self._block.get_name()} stacked successfully on block {self._target_block.get_name()} in stack {self._stack.get_number()}"))
+    def _success_message(self):
+        return f"Block {self._block.get_name()} stacked successfully on block {self._target_block.get_name()} in stack {self._stack.get_number()}"
 
+    def _failure_message(self) -> str:
+        return "Block could not be stacked"
 
 class UnstackAction(RobotAction):
     """Action for unstacking a block from another block."""
@@ -272,6 +302,8 @@ class UnstackAction(RobotAction):
     def get_target(self) -> Tuple[int, int]:
         return (self._stack.get_x(), self._stack.get_top_y())
     
-    def reply_success(self):
-        """Send a success reply back to the reply queue"""
-        self._reply_queue.put((True, f"Block {self._block.get_name()} unstacked successfully from block {self._block_below.get_name()} in stack {self._stack.get_number()}"))
+    def _success_message(self):
+        return f"Block {self._block.get_name()} unstacked successfully from block {self._block_below.get_name()} in stack {self._stack.get_number()}"
+
+    def _failure_message(self) -> str:
+        return "Block could not be unstacked"

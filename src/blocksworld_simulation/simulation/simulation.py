@@ -3,7 +3,7 @@ import pygame
 import logging
 
 from .user_input_handler import handle_user_inputs
-from .action_processor import process_action
+from blocksworld_simulation.constraints.constraint_manager import ConstraintManager
 from .stack_creator import create_stacks
 from .robot import Robot
 from .simulation_action import SimulationAction, QuitAction, StartAction, StopAction, RobotAction, GetStatusAction
@@ -38,6 +38,8 @@ class BlocksWorldSimulation:
         self._local_reply_queue = Queue()
         self._api_to_sim_queue = api_to_sim_queue
         self._sim_to_api_queue = sim_to_api_queue
+        # Constraint manager for validating actions
+        self._constraint_manager = ConstraintManager()
 
     def _init_simulation(self, stack_config = None):
         """Initialize the simulation (randomly or with given stacks)"""
@@ -50,13 +52,15 @@ class BlocksWorldSimulation:
     
     def _handle_action(self, action: SimulationAction):
         """Handle the given action"""
+        # If action is None or action is invalid, do nothing
+        if action is None or not action.is_valid():
+            return
         # If the action is a QuitAction, stop the application by setting _app_running flag
         if isinstance(action, QuitAction):
             self._app_running = False
             action.reply_success()
         # If the action is a StartAction, initialize the simulation with the given stack configuration
         elif isinstance(action, StartAction):
-            logger.info("Starting simulation with stacks: %s", action.get_stack_config())
             self._init_simulation(stack_config=action.get_stack_config())
             action.reply_success()
         # If the action is a StopAction, stop the simulation by setting _simulation_running flag
@@ -65,9 +69,9 @@ class BlocksWorldSimulation:
             action.reply_success()
         # If the action is a GetStatusAction, reply with the current status of the simulation
         elif isinstance(action, GetStatusAction):
-            action.reply_success(self._simulation_state.to_dict())
-        # If the action is a PickUpAction, PutDownAction, StackAction or UnstackAction,
-        # i.e. a subclass of RobotAction, pass the action to the robot
+            action.set_status_dict(self._simulation_state.to_dict())
+            action.reply_success()
+        # If the action is a RobotAction, pass the action to the robot
         elif isinstance(action, RobotAction):
             self._simulation_state.get_robot().set_action(action)
         return
@@ -101,16 +105,13 @@ class BlocksWorldSimulation:
         while self._app_running:
             # check user inputs
             input_action = handle_user_inputs(self._local_reply_queue, self._simulation_state)
-            # only if no input from user is received, check for API inputs, i.e. user input has priority
-            if input_action is None and not self._api_to_sim_queue.empty():
-                input_action = self._api_to_sim_queue.get()
-            # process input (if any)
-            validated_action: SimulationAction = None
-            if input_action is not None:
-                validated_action = process_action(input_action, self._simulation_state)
+            # check for API inputs, overwriting user input if both are present
+            input_action = self._api_to_sim_queue.get() if not self._api_to_sim_queue.empty() else input_action
+            # process input action (if any)
+            self._constraint_manager.validate_action(input_action, self._simulation_state) if input_action else None
             # handle action (if any)
-            self._handle_action(validated_action) if validated_action is not None else None
-            # update robot state
+            self._handle_action(input_action)
+            # update robot state (if simulation is running)
             self._simulation_state.get_robot().update_state() if self._simulation_state.get_simulation_running() else None
             # log local reply queue
             self._log_local_reply_queue()
