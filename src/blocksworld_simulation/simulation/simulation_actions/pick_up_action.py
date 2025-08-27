@@ -1,5 +1,4 @@
 from typing import Tuple
-from queue import Queue
 from .robot_action import RobotAction
 from ..stack import Stack
 from ..block import Block
@@ -9,8 +8,8 @@ from ...api.request_models import PickUpRequest
 class PickUpAction(RobotAction):
     """Action for picking up a block."""
 
-    def __init__(self, reply_queue: Queue, request: PickUpRequest):
-        super().__init__(reply_queue)
+    def __init__(self, request: PickUpRequest):
+        super().__init__()
         self._block_name = request.block
         self._block: Block = None
         self._stack: Stack = None

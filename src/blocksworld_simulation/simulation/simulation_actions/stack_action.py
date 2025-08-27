@@ -1,5 +1,4 @@
 from typing import Tuple
-from queue import Queue
 from .robot_action import RobotAction
 from ..stack import Stack
 from ..block import Block
@@ -9,8 +8,8 @@ from ...api.request_models import StackRequest
 class StackAction(RobotAction):
     """Action for stacking a block on another block."""
 
-    def __init__(self, reply_queue: Queue, request: StackRequest):
-        super().__init__(reply_queue)
+    def __init__(self, request: StackRequest):
+        super().__init__()
         self._block_name = request.block1
         self._block: Block = None
         self._target_block_name = request.block2

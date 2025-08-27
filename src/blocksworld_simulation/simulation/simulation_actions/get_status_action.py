@@ -1,13 +1,11 @@
-from queue import Queue
 from .simulation_action import SimulationAction
-from ...api.request_models import GetStatusRequest
 
 
 class GetStatusAction(SimulationAction):
     """Action for getting the status of the simulation."""
 
-    def __init__(self, reply_queue: Queue, request: GetStatusRequest):
-        super().__init__(reply_queue)
+    def __init__(self):
+        super().__init__()
         self._status_dict: dict = None
 
     def set_status_dict(self, status_dict: dict):

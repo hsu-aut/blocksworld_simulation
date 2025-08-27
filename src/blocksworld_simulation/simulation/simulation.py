@@ -118,9 +118,12 @@ class BlocksWorldSimulation:
         self._app_running = True
         while self._app_running:
             # check user inputs
-            input_action = handle_user_inputs(self._local_reply_queue, self._simulation_state)
+            input_action = handle_user_inputs(self._simulation_state)
+            input_action.set_reply_queue(self._local_reply_queue) if input_action else None
             # check for API inputs, overwriting user input if both are present
-            input_action = self._api_to_sim_queue.get() if not self._api_to_sim_queue.empty() else input_action
+            if not self._api_to_sim_queue.empty():
+                input_action: SimulationAction = self._api_to_sim_queue.get()
+                input_action.set_reply_queue(self._sim_to_api_queue)
             # process input action (if any)
             constraint_manager.validate_action(input_action, self._simulation_state) if input_action else None
             # handle action (if any)

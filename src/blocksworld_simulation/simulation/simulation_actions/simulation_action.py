@@ -7,9 +7,12 @@ class SimulationAction(ABC):
     Actions can be created by user input or by the API.
     They are created in an unvalidated state and then validated by the constraint manager."""
 
-    def __init__(self, reply_queue: Queue):
-        self._reply_queue: Queue = reply_queue
+    def __init__(self):
+        self._reply_queue: Queue = None
         self._is_valid: bool | None = None
+
+    def set_reply_queue(self, reply_queue: Queue):
+        self._reply_queue = reply_queue
 
     def is_valid(self) -> bool | None:
         """Check if the action has been validated. Returns True if valid, False if invalid, None if not yet validated."""

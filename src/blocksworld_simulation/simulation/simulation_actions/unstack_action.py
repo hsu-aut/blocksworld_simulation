@@ -1,5 +1,4 @@
 from typing import Tuple
-from queue import Queue
 from .robot_action import RobotAction
 from ..stack import Stack
 from ..block import Block
@@ -9,8 +8,8 @@ from ...api.request_models import UnstackRequest
 class UnstackAction(RobotAction):
     """Action for unstacking a block from another block."""
 
-    def __init__(self, reply_queue: Queue, request: UnstackRequest):
-        super().__init__(reply_queue)
+    def __init__(self, request: UnstackRequest):
+        super().__init__()
         self._block_name = request.block1
         self._block: Block = None
         self._block_below_name = request.block2

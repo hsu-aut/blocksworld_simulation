@@ -1,4 +1,3 @@
-from queue import Queue
 from .simulation_action import SimulationAction
 from .start_action import StartAction
 from ...api.request_models import StartSimulationRequest
@@ -7,8 +6,8 @@ from ...api.request_models import StartSimulationRequest
 class PreStartAction(SimulationAction):
     """Action for changing the constraint set before starting the simulation with a StartAction."""
 
-    def __init__(self, reply_queue: Queue, request: StartSimulationRequest):
-        super().__init__(reply_queue)
+    def __init__(self, request: StartSimulationRequest):
+        super().__init__()
         self._stack_config = request.initial_stacks
         self._scenario_id = request.scenario_id
         self._constraint_set = request.constraint_set
@@ -35,12 +34,13 @@ class PreStartAction(SimulationAction):
 
     def create_start_action(self) -> StartAction:
         """Create a StartAction with the current parameters."""
-        return StartAction(
-            reply_queue=self._reply_queue,
+        start_action = StartAction(
             stack_config=self._stack_config,
             scenario_id=self._scenario_id,
             constraint_set=self._constraint_set
         )
+        start_action.set_reply_queue(self._reply_queue)
+        return start_action
 
     def _success_message(self):
         return f"Constraint set changed to {self._constraint_set}"

@@ -1,5 +1,4 @@
 from typing import Tuple
-from queue import Queue
 from abc import abstractmethod
 from .simulation_action import SimulationAction
 
@@ -7,8 +6,8 @@ from .simulation_action import SimulationAction
 class RobotAction(SimulationAction):
     """Base class for robot actions in the simulation."""
 
-    def __init__(self, reply_queue: Queue):
-        super().__init__(reply_queue)
+    def __init__(self):
+        super().__init__()
     
     @abstractmethod
     def get_target(self) -> Tuple[int, int]:

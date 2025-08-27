@@ -44,7 +44,7 @@ class BaseConstraintSet(ConstraintSet):
             SimulationRunning()
         ])
         # GET SCENARIOS: No constraints
-        self._get_scenarios_constraints.extend([])
+        self._get_scenario_constraints.extend([])
         # PICK UP: SimulationRunning, RobotIdle, BlockExists, BlockOnGroundOnly, BlockOnTopOfStack
         self._pick_up_constraints.extend([
             SimulationRunning(),

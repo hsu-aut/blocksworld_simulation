@@ -1,12 +1,11 @@
-from queue import Queue
 from .simulation_action import SimulationAction
 
 
 class StartAction(SimulationAction):
     """Action for starting the simulation."""
 
-    def __init__(self, reply_queue: Queue, stack_config=None, scenario_id=None, constraint_set=None):
-        super().__init__(reply_queue)
+    def __init__(self, stack_config=None, scenario_id=None, constraint_set=None):
+        super().__init__()
         self._stack_config = stack_config
         self._scenario_id = scenario_id
         self._constraint_set = constraint_set

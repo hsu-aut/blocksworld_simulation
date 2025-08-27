@@ -1,30 +1,22 @@
-from blocksworld_simulation.simulation.simulation_state import SimulationState
 import pygame
 from typing import List
 import logging
-from queue import Queue
 
-from .simulation_actions import (
-    SimulationAction, QuitAction, StartAction, 
-    StopAction, PickUpAction, PutDownAction, 
-    StackAction, UnstackAction
+from blocksworld_simulation.simulation.simulation_actions import (
+    SimulationAction,
+    QuitAction, PreStartAction, StopAction, StartAction,
+    PickUpAction, PutDownAction, StackAction, UnstackAction
 )
+from blocksworld_simulation.simulation.simulation_state import SimulationState
 from ..api.request_models import (
-    StartSimulationRequest, StopSimulationRequest,
-    PickUpRequest, PutDownRequest, StackRequest, UnstackRequest,
-    GetScenarioRequest, GetStatusRequest, GetRulesRequest
+    StartSimulationRequest, PickUpRequest, PutDownRequest, StackRequest, UnstackRequest
 )
-
-
 from .robot import Robot, RobotState
 from .stack import Stack
 
 logger = logging.getLogger(__name__)
 
-def handle_user_inputs(
-        reply_queue: Queue,
-        simulation_state: SimulationState
-    ) -> SimulationAction | None:
+def handle_user_inputs(simulation_state: SimulationState) -> SimulationAction | None:
     """Handle pygame inputs by the user. Returns a SimulationAction or None.
     This method only checks basic conditions and constraints.
     Other checks are done in the input processor (which is also responsible for API inputs)."""
@@ -36,26 +28,20 @@ def handle_user_inputs(
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             logger.info("Quit input received")
-            return QuitAction(reply_queue)
+            return QuitAction()
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 logger.info("<SPACE> key pressed")
                 if simulation_running:
                     # if <SPACE> is pressed and simulation is running, create a put down action
-                    return PutDownAction(
-                        reply_queue=reply_queue,
-                        request=PutDownRequest(block=robot.get_held_block().get_name() if robot.get_held_block() else None)
-                    )
+                    return PutDownAction(PutDownRequest(block=robot.get_held_block().get_name())) if robot.get_held_block() else None
                 else:
                     # if <SPACE> is pressed and simulation is not running, create a start action
-                    return StartAction(reply_queue=reply_queue)
+                    return StartAction(scenario_id=None, stack_config=None, constraint_set=None)
             elif event.key == pygame.K_ESCAPE:
                 logger.info("<ESCAPE> key pressed")
                 # if <ESCAPE> is pressed, create a stop action
-                return StopAction(
-                    reply_queue=reply_queue,
-                    request=StopSimulationRequest()
-                )
+                return StopAction()
             else:
                 key_name = pygame.key.name(event.key)
                 if len(key_name) == 1 and key_name.isalpha() and simulation_running:
@@ -69,32 +55,15 @@ def handle_user_inputs(
                                     block_below = stack.get_blocks()[i_block - 1] if i_block > 0 else None
                                     # if robot is idle and a <KEY> is pressed and block <KEY> is in the first position of a stack, create a pick up action
                                     if i_block == 0:
-                                        return PickUpAction(
-                                            reply_queue=reply_queue,
-                                            request=PickUpRequest(
-                                                block=key_name.upper()
-                                            )
-                                        )
+                                        return PickUpAction(PickUpRequest(block=key_name.upper()))
                                     # if robot is idle and a <KEY> is pressed and block <KEY> is on another block, create a unstack action
                                     else:
-                                        return UnstackAction(
-                                            reply_queue=reply_queue,
-                                            request=UnstackRequest(
-                                                block1=key_name.upper(),
-                                                block2=block_below.get_name() if block_below else None
-                                            )
-                                        )
+                                        return UnstackAction(UnstackRequest(block1=key_name.upper(), block2=block_below.get_name() if block_below else None))
                     elif robot.get_state() == RobotState.HOLDING:
                         logger.info(f"<{key_name.upper()}> key pressed")
                         # if a <KEY> is pressed and robot is holding a block, create a stack action, 
                         # block currently being held on block <KEY>
-                        return StackAction(
-                            reply_queue=reply_queue,
-                            request=StackRequest(
-                                block1=robot.get_held_block().get_name(),
-                                block2=key_name.upper()
-                            )
-                        )
+                        return StackAction(StackRequest(block1=robot.get_held_block().get_name(), block2=key_name.upper()))
                     else:
                         logger.warning(f"<{key_name.upper()}> key pressed but robot is not idle or holding a block")
                         return None

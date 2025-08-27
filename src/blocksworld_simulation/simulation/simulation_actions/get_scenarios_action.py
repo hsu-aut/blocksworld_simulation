@@ -1,14 +1,13 @@
-from queue import Queue
+from typing import Optional
 from .simulation_action import SimulationAction
-from ...api.request_models import GetScenarioRequest
 
 
 class GetScenarioAction(SimulationAction):
     """Action for getting scenario information."""
 
-    def __init__(self, reply_queue: Queue, request: GetScenarioRequest):
-        super().__init__(reply_queue)
-        self._scenario_name = request.scenario_name
+    def __init__(self, scenario_name: Optional[str] = None):
+        super().__init__()
+        self._scenario_name = scenario_name
         self._result_data = None
 
     def get_scenario_name(self) -> str:
