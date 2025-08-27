@@ -6,7 +6,7 @@ from ...api.request_models import GetStatusRequest
 class GetStatusAction(SimulationAction):
     """Action for getting the status of the simulation."""
 
-    def __init__(self, reply_queue: Queue, _request: GetStatusRequest):
+    def __init__(self, reply_queue: Queue, request: GetStatusRequest):
         super().__init__(reply_queue)
         self._status_dict: dict = None
 

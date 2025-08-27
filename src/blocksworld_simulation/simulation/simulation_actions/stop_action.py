@@ -6,7 +6,7 @@ from ...api.request_models import StopSimulationRequest
 class StopAction(SimulationAction):
     """Action for stopping the simulation."""
 
-    def __init__(self, reply_queue: Queue, _request: StopSimulationRequest):
+    def __init__(self, reply_queue: Queue, request: StopSimulationRequest):
         super().__init__(reply_queue)
 
     def _success_message(self):
