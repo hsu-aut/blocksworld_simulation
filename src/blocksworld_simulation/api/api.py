@@ -7,7 +7,7 @@ from ..simulation.simulation_actions import (
 )
 from .request_validation import validate_request
 from .request_models import (
-    StartSimulationRequest, StopSimulationRequest,
+    StartSimulationRequest, StopSimulationRequest, QuitApplicationRequest,
     PickUpRequest, PutDownRequest, StackRequest, UnstackRequest,
     GetScenarioRequest, GetStatusRequest, GetRulesRequest
 )
@@ -31,6 +31,12 @@ def return_api(result):
 def start_simulation(validated_data: StartSimulationRequest):
     """Start the pygame simulation with scenario or custom configuration."""
     api_to_sim_queue.put(PreStartAction(sim_to_api_queue, validated_data))
+    result = sim_to_api_queue.get()
+    return return_api(result)
+
+@app.route('/quit', methods=['POST'])
+def quit_simulation():
+    api_to_sim_queue.put(QuitAction(sim_to_api_queue, QuitApplicationRequest()))
     result = sim_to_api_queue.get()
     return return_api(result)
 

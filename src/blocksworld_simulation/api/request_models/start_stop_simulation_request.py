@@ -69,6 +69,12 @@ class StartSimulationRequest(BaseModel):
     ] = None
     constraint_set: Optional[str] = None
     
+
 class StopSimulationRequest(BaseModel):
     """Request model for stopping the simulation."""
+    pass
+
+
+class QuitApplicationRequest(BaseModel):
+    """Request model for quitting the entire application."""
     pass
