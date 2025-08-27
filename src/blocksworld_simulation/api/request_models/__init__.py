@@ -1,6 +1,7 @@
 from .start_stop_simulation_request import (
     StartSimulationRequest,
-    StopSimulationRequest
+    StopSimulationRequest,
+    QuitApplicationRequest
 )
 from .robot_action_requests import (
     PickUpRequest,
@@ -9,7 +10,7 @@ from .robot_action_requests import (
     UnstackRequest
 )
 from .info_requests import (
-    ScenarioRequest,
+    GetScenarioRequest,
     GetStatusRequest,
     GetRulesRequest
 )

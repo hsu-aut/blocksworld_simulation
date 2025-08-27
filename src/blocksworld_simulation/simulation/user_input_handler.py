@@ -12,7 +12,7 @@ from .simulation_actions import (
 from ..api.request_models import (
     StartSimulationRequest, StopSimulationRequest,
     PickUpRequest, PutDownRequest, StackRequest, UnstackRequest,
-    ScenarioRequest, GetStatusRequest, GetRulesRequest
+    GetScenarioRequest, GetStatusRequest, GetRulesRequest
 )
 
 

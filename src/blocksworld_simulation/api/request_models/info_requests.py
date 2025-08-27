@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 
 
-class ScenarioRequest(BaseModel):
+class GetScenarioRequest(BaseModel):
     """Request model for scenario-related operations."""
     scenario_name: Optional[str] = None
 

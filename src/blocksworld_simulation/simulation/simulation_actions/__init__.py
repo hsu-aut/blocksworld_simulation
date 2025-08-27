@@ -9,7 +9,7 @@ from .pick_up_action import PickUpAction
 from .put_down_action import PutDownAction
 from .stack_action import StackAction
 from .unstack_action import UnstackAction
-from .get_scenarios_action import GetScenariosAction
+from .get_scenarios_action import GetScenarioAction
 from .get_rules_action import GetRulesAction
 
 __all__ = [
@@ -24,6 +24,6 @@ __all__ = [
     'PutDownAction',
     'StackAction',
     'UnstackAction',
-    'GetScenariosAction',
+    'GetScenarioAction',
     'GetRulesAction'
 ]

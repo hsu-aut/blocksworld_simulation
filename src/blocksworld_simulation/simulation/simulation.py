@@ -10,7 +10,7 @@ from .robot import Robot
 from .simulation_actions import (
     PreStartAction, SimulationAction, QuitAction, 
     StartAction, StopAction, RobotAction, GetStatusAction, 
-    GetRulesAction, GetScenariosAction
+    GetRulesAction, GetScenarioAction
 )
 from .simulation_state import SimulationState
 
@@ -75,7 +75,7 @@ class BlocksWorldSimulation:
         elif isinstance(action, StopAction):
             self._simulation_state.set_simulation_running(False)
             action.reply_success()
-        elif isinstance(action, GetScenariosAction):
+        elif isinstance(action, GetScenarioAction):
             action.set_result_data(scenario_manager.get_scenario_info(action.get_scenario_name()))
             action.reply_success()
         # If the action is a GetStatusAction, reply with the current status of the simulation

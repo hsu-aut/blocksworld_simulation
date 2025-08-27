@@ -3,13 +3,13 @@ import queue
 import logging
 
 from ..simulation.simulation_actions import (
-    GetRulesAction, GetStatusAction, PreStartAction, StopAction, PickUpAction, PutDownAction, StackAction, UnstackAction, GetScenariosAction
+    GetRulesAction, GetStatusAction, PreStartAction, StopAction, PickUpAction, PutDownAction, StackAction, UnstackAction, GetScenarioAction
 )
 from .request_validation import validate_request
 from .request_models import (
     StartSimulationRequest, StopSimulationRequest,
     PickUpRequest, PutDownRequest, StackRequest, UnstackRequest,
-    ScenarioRequest, GetStatusRequest, GetRulesRequest
+    GetScenarioRequest, GetStatusRequest, GetRulesRequest
 )
 
 app = Flask(__name__)
@@ -72,13 +72,13 @@ def unstack(validated_data: UnstackRequest):
 
 @app.route('/scenarios', methods=['GET'])
 def list_scenarios():
-    api_to_sim_queue.put(GetScenariosAction(sim_to_api_queue, ScenarioRequest()))
+    api_to_sim_queue.put(GetScenarioAction(sim_to_api_queue, GetScenarioRequest()))
     result = sim_to_api_queue.get()
     return return_api(result)
 
 @app.route('/scenarios/<scenario_name>', methods=['GET'])
 def get_scenario_details(scenario_name: str):
-    api_to_sim_queue.put(GetScenariosAction(sim_to_api_queue, ScenarioRequest(scenario_name=scenario_name)))
+    api_to_sim_queue.put(GetScenarioAction(sim_to_api_queue, GetScenarioRequest(scenario_name=scenario_name)))
     result = sim_to_api_queue.get()
     return return_api(result)
 
