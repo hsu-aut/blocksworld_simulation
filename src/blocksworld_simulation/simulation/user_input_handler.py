@@ -1,3 +1,4 @@
+from blocksworld_simulation.simulation.simulation_state import SimulationState
 import pygame
 from typing import List
 import logging
@@ -12,13 +13,15 @@ logger = logging.getLogger(__name__)
 
 def handle_user_inputs(
         reply_queue: Queue,
-        simulation_running: bool,
-        robot: Robot,
-        stacks: List[Stack]
+        simulation_state: SimulationState
     ) -> SimulationInput | None:
     """Handle pygame inputs by the user. Returns a SimulationInput or None.
     This method only checks basic conditions and constraints.
     Other checks are done in the input processor (which is also respronsible for API inputs)."""
+    # get values
+    simulation_running: bool = simulation_state.get_simulation_running()
+    robot: Robot = simulation_state.get_robot()
+    stacks: List[Stack] = simulation_state.get_stacks()
     # check for pygame events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

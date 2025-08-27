@@ -1,3 +1,4 @@
+from blocksworld_simulation.simulation.simulation_state import SimulationState
 from .robot import RobotState, Robot
 from .block import Block
 from .stack import Stack
@@ -11,15 +12,16 @@ logger = logging.getLogger(__name__)
 
 def process_input(
         simulation_input: SimulationInput,
-        simulation_running: bool,
-        robot: Robot,
-        stacks: List[Stack]
+        simulation_state: SimulationState
     ) -> SimulationAction | str:
     """Process inputs from the user or API and return a SimulationAction object.
     This method checks all relevant conditions/constraints and returns an appropriate action only if it is executable.
     In any other case, it returns None."""
 
     # get values
+    simulation_running: bool = simulation_state.get_simulation_running()
+    robot: Robot = simulation_state.get_robot()
+    stacks: List[Stack] = simulation_state.get_stacks()
     robot_held_block: Block = robot.get_held_block() if robot is not None else None
     blocks: List[Block] = [block for stack in stacks for block in stack.get_blocks()] if stacks else []
     blocks.append(robot_held_block if robot_held_block else None) 

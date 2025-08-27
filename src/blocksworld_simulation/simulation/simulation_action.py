@@ -1,12 +1,16 @@
-from typing import Tuple, List
+from typing import Tuple
+
+from blocksworld_simulation.simulation.simulation_state import SimulationState
 from .stack import Stack
 from .block import Block
 from queue import Queue
+
 
 class SimulationAction:
     """Base class for actions in the simulation.
     SimulationActions are created from SimulationInputs (by the input processor only!),
     when the SimulationInput is valid and executable."""
+
     def __init__(self, reply_queue: Queue):
         self._reply_queue: Queue = reply_queue
 
@@ -17,6 +21,7 @@ class SimulationAction:
 
 class QuitAction(SimulationAction):
     """Action for quitting the application."""
+
     def __init__(self, reply_queue: Queue):
         super().__init__(reply_queue)
 
@@ -27,6 +32,7 @@ class QuitAction(SimulationAction):
 
 class StartAction(SimulationAction):
     """Action for starting the simulation."""
+
     def __init__(self, reply_queue: Queue, stack_config = None):
         super().__init__(reply_queue)
         self._stack_config = stack_config
@@ -43,6 +49,7 @@ class StartAction(SimulationAction):
 
 class StopAction(SimulationAction):
     """Action for stopping the simulation."""
+
     def __init__(self, reply_queue: Queue):
         super().__init__(reply_queue)
 
@@ -52,24 +59,23 @@ class StopAction(SimulationAction):
 
     
 class GetStatusAction(SimulationAction):
-    """Action for stopping the simulation."""
+    """Action for getting the status of the simulation."""
+
     def __init__(self, reply_queue: Queue):
         super().__init__(reply_queue)
 
-    def _get_simulation_status(self, stacks: List [Stack], robot):
-        status = {
-            "stacks": [stack.to_dict() for stack in stacks],
-            "robot": robot.to_dict()
-        }
-        return status
-
-    def reply_success(self, stacks: List[Stack], robot):
+    def reply_success(self, simulation_state: SimulationState):
         """Send a success reply back to the reply queue"""
-        self._reply_queue.put((True, self._get_simulation_status(stacks, robot)))
+        status = {
+            "stacks": [stack.to_dict() for stack in simulation_state.get_stacks()],
+            "robot": simulation_state.get_robot().to_dict()
+        }
+        self._reply_queue.put((True, status))
 
 
 class RobotAction(SimulationAction):
     """Base class for robot actions in the simulation."""
+
     def __init__(self, reply_queue: Queue, block: Block, stack: Stack):
         super().__init__(reply_queue)
         self._block = block
@@ -88,6 +94,7 @@ class RobotAction(SimulationAction):
 
 class PickUpAction(RobotAction):
     """Action for picking up a block."""
+
     def __init__(self, reply_queue: Queue, block: Block, stack: Stack):
         super().__init__(reply_queue, block, stack)
 
@@ -101,6 +108,7 @@ class PickUpAction(RobotAction):
 
 class PutDownAction(RobotAction):
     """Action for putting down a block."""
+
     def __init__(self, reply_queue: Queue, block: Block, stack: Stack):
         super().__init__(reply_queue, block, stack)
 
@@ -114,6 +122,7 @@ class PutDownAction(RobotAction):
 
 class StackAction(RobotAction):
     """Action for stacking a block on another block."""
+
     def __init__(self, reply_queue: Queue, block: Block, stack: Stack, target_block: Block):
         super().__init__(reply_queue, block, stack)
         self._target_block = target_block
@@ -128,6 +137,7 @@ class StackAction(RobotAction):
 
 class UnstackAction(RobotAction):
     """Action for unstacking a block from another block."""
+
     def __init__(self, reply_queue: Queue, block: Block, stack: Stack, block_below: Block):
         super().__init__(reply_queue, block, stack)
         self._block_below = block_below
@@ -138,4 +148,3 @@ class UnstackAction(RobotAction):
 
     def get_target(self) -> Tuple[int, int]:
         return (self._stack.get_x(), self._stack.get_top_y())
-
