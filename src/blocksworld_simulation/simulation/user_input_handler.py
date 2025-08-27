@@ -4,7 +4,17 @@ from typing import List
 import logging
 from queue import Queue
 
-from .simulation_actions import SimulationAction, QuitAction, StartAction, StopAction, PickUpAction, PutDownAction, StackAction, UnstackAction
+from .simulation_actions import (
+    SimulationAction, QuitAction, StartAction, 
+    StopAction, PickUpAction, PutDownAction, 
+    StackAction, UnstackAction
+)
+from ..api.request_models import (
+    StartSimulationRequest, StopSimulationRequest,
+    PickUpRequest, PutDownRequest, StackRequest, UnstackRequest,
+    ScenarioRequest, GetStatusRequest, GetRulesRequest
+)
+
 
 from .robot import Robot, RobotState
 from .stack import Stack
@@ -26,7 +36,7 @@ def handle_user_inputs(
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             logger.info("Quit input received")
-            return QuitAction(reply_queue=reply_queue)
+            return QuitAction(reply_queue)
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 logger.info("<SPACE> key pressed")
@@ -34,14 +44,18 @@ def handle_user_inputs(
                     # if <SPACE> is pressed and simulation is running, create a put down action
                     return PutDownAction(
                         reply_queue=reply_queue,
-                        block_name=robot.get_held_block().get_name() if robot.get_held_block() else None)
+                        request=PutDownRequest(block=robot.get_held_block().get_name() if robot.get_held_block() else None)
+                    )
                 else:
                     # if <SPACE> is pressed and simulation is not running, create a start action
                     return StartAction(reply_queue=reply_queue)
             elif event.key == pygame.K_ESCAPE:
                 logger.info("<ESCAPE> key pressed")
                 # if <ESCAPE> is pressed, create a stop action
-                return StopAction(reply_queue=reply_queue)
+                return StopAction(
+                    reply_queue=reply_queue,
+                    request=StopSimulationRequest()
+                )
             else:
                 key_name = pygame.key.name(event.key)
                 if len(key_name) == 1 and key_name.isalpha() and simulation_running:
@@ -57,14 +71,18 @@ def handle_user_inputs(
                                     if i_block == 0:
                                         return PickUpAction(
                                             reply_queue=reply_queue,
-                                            block_name=key_name.upper()
+                                            request=PickUpRequest(
+                                                block=key_name.upper()
+                                            )
                                         )
                                     # if robot is idle and a <KEY> is pressed and block <KEY> is on another block, create a unstack action
                                     else:
                                         return UnstackAction(
                                             reply_queue=reply_queue,
-                                            block_name=key_name.upper(),
-                                            block_below_name=block_below.get_name() if block_below else None
+                                            request=UnstackRequest(
+                                                block1=key_name.upper(),
+                                                block2=block_below.get_name() if block_below else None
+                                            )
                                         )
                     elif robot.get_state() == RobotState.HOLDING:
                         logger.info(f"<{key_name.upper()}> key pressed")
@@ -72,8 +90,10 @@ def handle_user_inputs(
                         # block currently being held on block <KEY>
                         return StackAction(
                             reply_queue=reply_queue,
-                            block_name=robot.get_held_block().get_name(),
-                            target_block_name=key_name.upper()
+                            request=StackRequest(
+                                block1=robot.get_held_block().get_name(),
+                                block2=key_name.upper()
+                            )
                         )
                     else:
                         logger.warning(f"<{key_name.upper()}> key pressed but robot is not idle or holding a block")
