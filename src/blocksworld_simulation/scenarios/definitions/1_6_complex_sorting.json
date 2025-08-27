@@ -1,0 +1,27 @@
+{
+  "name": "Complex Sorting Challenge",
+  "description": "Sort 7 blocks from chaotic arrangement into perfect sequence G-F-E-D-C-B-A",
+  "initial_state": {
+    "stacks": [
+      ["A", "D", "G"],
+      ["B", "E"],
+      ["C", "F"],
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build tower G-F-E-D-C-B-A",
+    "target_configurations": [
+      ["G", "F", "E", "D", "C", "B", "A"]
+    ]
+  },
+  "constraint_set": "base",
+  "metadata": {
+    "difficulty": "1",
+    "min_steps": 14,
+    "num_blocks": 7,
+    "num_stacks": 4
+  }
+}

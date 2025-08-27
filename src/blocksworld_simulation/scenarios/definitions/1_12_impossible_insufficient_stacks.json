@@ -1,0 +1,31 @@
+{
+  "name": "Impossible: Insufficient Stacks",
+  "description": "IMPOSSIBLE - Goal requires 5 separate stacks but only 3 are available",
+  "initial_state": {
+    "stacks": [
+      ["A", "B", "C", "D", "E"],
+      [],
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Place each block in its own stack",
+    "target_configurations": [
+      ["A"],
+      ["B"],
+      ["C"],
+      ["D"],
+      ["E"]
+    ]
+  },
+  "constraint_set": "base",
+  "metadata": {
+    "difficulty": "impossible",
+    "min_steps": -1,
+    "num_blocks": 5,
+    "num_stacks": 3,
+    "impossible_reason": "Goal requires 5 stacks but only 3 are available in the environment"
+  }
+}

@@ -13,8 +13,8 @@ SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 600
 STACK_BASE_HEIGHT = 20
 STACK_BASE_WIDTH = 100
-DEFAULT_N_BLOCKS = 3
-DEFAULT_N_STACKS = 2
+DEFAULT_N_BLOCKS = 4
+DEFAULT_N_STACKS = 3
 
 def create_empty_stacks(n_stacks: int) -> List[Stack]:
     """Create a list of empty stacks for the simulation"""

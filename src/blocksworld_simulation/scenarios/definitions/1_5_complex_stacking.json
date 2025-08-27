@@ -1,26 +1,26 @@
 {
-  "name": "Tower Building Challenge",
-  "description": "Rearrange blocks from 2 stacks to build tower B-A-C",
+  "name": "Complex Stacking",
+  "description": "Basic scenario with 4 blocks to build a tower C-A-D-B",
   "initial_state": {
     "stacks": [
       ["A", "B"],
       ["C"], 
-      []
+      ["D"]
     ],
     "holding": null,
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build tower B-A-C",
+    "description": "Build tower C-A-D-B",
     "target_configurations": [
-      ["B", "A", "C"]
+      ["C", "A", "D", "B"]
     ]
   },
   "constraint_set": "base",
   "metadata": {
-    "difficulty": "0",
-    "min_steps": 6,
-    "num_blocks": 3,
+    "difficulty": "1",
+    "min_steps": 10,
+    "num_blocks": 4,
     "num_stacks": 3
   }
 }
