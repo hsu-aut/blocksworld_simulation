@@ -11,7 +11,7 @@ from blocksworld_simulation.constraints.contraint_sets.base.block_on_top_of_stac
 from blocksworld_simulation.constraints.contraint_sets.base.free_stack_available import FreeStackAvailable
 from blocksworld_simulation.constraints.contraint_sets.base.blocks_on_same_stack import BlocksOnSameStack
 from blocksworld_simulation.constraints.contraint_sets.base.block_below_relationship import BlockBelowRelationship
-
+from blocksworld_simulation.constraints.contraint_sets.base.valid_start_data import ValidStartData
 
 class BaseConstraintSet(ConstraintSet):
     """Constraint set for the basic blocks world problem."""
@@ -20,6 +20,11 @@ class BaseConstraintSet(ConstraintSet):
         super().__init__()
         # QUIT: No constraints
         self._quit_constraints.extend([])
+        # PRE START: SimulationNotRunning, ValidStartData
+        self._pre_start_constraints.extend([
+            SimulationNotRunning(),
+            ValidStartData()
+        ])
         # START: SimulationNotRunning
         self._start_constraints.extend([
             SimulationNotRunning()

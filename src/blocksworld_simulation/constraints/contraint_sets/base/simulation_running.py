@@ -13,6 +13,6 @@ class SimulationRunning(Constraint):
             return False
         # if the action is a GetStatusAction, set the status info
         if isinstance(action, GetStatusAction):
-            action.set_status_info(state.get_status_info())
+            action.set_status_dict(state.to_dict())
         # return True in no invalidation reason could be found
         return True

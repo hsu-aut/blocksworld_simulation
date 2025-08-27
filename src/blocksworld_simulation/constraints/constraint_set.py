@@ -3,7 +3,7 @@ from typing import List
 from blocksworld_simulation.simulation.simulation_state import SimulationState
 
 from blocksworld_simulation.constraints.constraint import Constraint
-from blocksworld_simulation.simulation.simulation_action import SimulationAction, StartAction, StopAction, QuitAction, PickUpAction, PutDownAction, StackAction, UnstackAction, GetStatusAction
+from blocksworld_simulation.simulation.simulation_action import PreStartAction, SimulationAction, StartAction, StopAction, QuitAction, PickUpAction, PutDownAction, StackAction, UnstackAction, GetStatusAction
 
 
 class ConstraintSet(ABC):
@@ -12,6 +12,7 @@ class ConstraintSet(ABC):
     def __init__(self):
         # the constructor defines these fields, they have to be extended by implementing classes
         self._quit_constraints: List[Constraint] = []
+        self._pre_start_constraints: List[Constraint] = []
         self._start_constraints: List[Constraint] = []
         self._stop_constraints: List[Constraint] = []
         self._get_status_constraints: List[Constraint] = []
@@ -24,6 +25,8 @@ class ConstraintSet(ABC):
         """Get the appropriate constraint list based on action type."""
         if isinstance(action, QuitAction):
             return self._quit_constraints
+        elif isinstance(action, PreStartAction):
+            return self._pre_start_constraints
         elif isinstance(action, StartAction):
             return self._start_constraints
         elif isinstance(action, StopAction):

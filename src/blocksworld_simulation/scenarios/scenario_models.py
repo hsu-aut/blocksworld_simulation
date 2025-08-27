@@ -1,10 +1,12 @@
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Union
 from pydantic import BaseModel, Field
 import uuid
 
+from blocksworld_simulation.simulation.block import BlockModel
+
 
 class InitialState(BaseModel):
-    stacks: List[List[str]]
+    stacks: List[List[Union[str, BlockModel]]] 
     holding: Optional[str] = None
     robot_status: str = "idle"
 
@@ -20,4 +22,5 @@ class Scenario(BaseModel):
     description: str
     initial_state: InitialState
     goal: Goal
+    constraint_set: str
     metadata: Optional[Dict[str, Any]] = None

@@ -3,10 +3,10 @@ import pygame
 import logging
 
 from .user_input_handler import handle_user_inputs
-from blocksworld_simulation.constraints.constraint_manager import ConstraintManager
+from blocksworld_simulation.constraints.constraint_manager import constraint_manager
 from .stack_creator import create_stacks
 from .robot import Robot
-from .simulation_action import SimulationAction, QuitAction, StartAction, StopAction, RobotAction, GetStatusAction
+from .simulation_action import PreStartAction, SimulationAction, QuitAction, StartAction, StopAction, RobotAction, GetStatusAction
 from .simulation_state import SimulationState
 
 
@@ -38,8 +38,6 @@ class BlocksWorldSimulation:
         self._local_reply_queue = Queue()
         self._api_to_sim_queue = api_to_sim_queue
         self._sim_to_api_queue = sim_to_api_queue
-        # Constraint manager for validating actions
-        self._constraint_manager = ConstraintManager()
 
     def _init_simulation(self, stack_config = None):
         """Initialize the simulation (randomly or with given stacks)"""
@@ -59,17 +57,21 @@ class BlocksWorldSimulation:
         if isinstance(action, QuitAction):
             self._app_running = False
             action.reply_success()
-        # If the action is a StartAction, initialize the simulation with the given stack configuration
+        # If the action is a StartAction, handle startup configuration
         elif isinstance(action, StartAction):
-            self._init_simulation(stack_config=action.get_stack_config())
+            self._init_simulation(action.get_stack_config())
             action.reply_success()
+        # If the action is a PreStartAction, set constraint set and create the StartAction
+        # do not reply success, this will be done by the StartAction
+        elif isinstance(action, PreStartAction):
+            constraint_manager.set_constraint_set(action.get_constraint_set())
+            self._api_to_sim_queue.put(action.create_start_action())
         # If the action is a StopAction, stop the simulation by setting _simulation_running flag
         elif isinstance(action, StopAction):
             self._simulation_state.set_simulation_running(False)
             action.reply_success()
         # If the action is a GetStatusAction, reply with the current status of the simulation
         elif isinstance(action, GetStatusAction):
-            action.set_status_dict(self._simulation_state.to_dict())
             action.reply_success()
         # If the action is a RobotAction, pass the action to the robot
         elif isinstance(action, RobotAction):
@@ -108,7 +110,7 @@ class BlocksWorldSimulation:
             # check for API inputs, overwriting user input if both are present
             input_action = self._api_to_sim_queue.get() if not self._api_to_sim_queue.empty() else input_action
             # process input action (if any)
-            self._constraint_manager.validate_action(input_action, self._simulation_state) if input_action else None
+            constraint_manager.validate_action(input_action, self._simulation_state) if input_action else None
             # handle action (if any)
             self._handle_action(input_action)
             # update robot state (if simulation is running)

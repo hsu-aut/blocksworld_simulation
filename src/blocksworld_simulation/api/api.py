@@ -3,7 +3,7 @@ import queue
 import logging
 
 from ..simulation.simulation_action import (
-    GetStatusAction, StartAction, StopAction, PickUpAction, PutDownAction, StackAction, UnstackAction
+    GetStatusAction, PreStartAction, StopAction, PickUpAction, PutDownAction, StackAction, UnstackAction
 )
 from .request_validation import (
     validate_request, StartSimulationRequest, PickUpRequest, PutDownRequest,
@@ -28,43 +28,14 @@ def return_api(result):
 @app.route('/start_simulation', methods=['POST'])
 @validate_request(StartSimulationRequest, allow_empty_body=True)
 def start_simulation(validated_data: StartSimulationRequest):
-    """Start the pygame simulation with optional scenario (query param) or custom initial stacks (body)."""
-    scenario = None
-    stack_config = None
-    
-    # Get scenario from query parameter
-    scenario_identifier = request.args.get('scenario')
-    
-    # Check for conflicting parameters
-    if scenario_identifier and validated_data and validated_data.initial_stacks:
-        return jsonify({"error": "Cannot specify both scenario parameter and initial_stacks in body. Choose one or the other."}), 400
-    
-    if scenario_identifier:
-        # Load scenario from query parameter
-        scenario = scenario_manager.get_scenario(scenario_identifier)
-        if not scenario:
-            return jsonify({"error": f"Scenario '{scenario_identifier}' not found"}), 404
-        stack_config = scenario.initial_state.stacks
-    elif validated_data and validated_data.initial_stacks:
-        # Use custom initial_stacks from body
-        stack_config = validated_data.initial_stacks
-    
-    api_to_sim_queue.put(StartAction(
+    """Start the pygame simulation with scenario or custom configuration."""
+    api_to_sim_queue.put(PreStartAction(
         reply_queue=sim_to_api_queue,
-        stack_config=stack_config
+        stack_config=validated_data.initial_stacks,
+        scenario_id=validated_data.scenario_id,
+        constraint_set=validated_data.constraint_set
     ))
     result = sim_to_api_queue.get()
-    
-    if scenario and result[0]:  # If scenario was used and simulation started successfully
-        return jsonify({
-            "result": result[1],
-            "scenario": {
-                "name": scenario.name,
-                "description": scenario.description,
-                "goal": scenario.goal.model_dump()
-            }
-        }), 200
-    
     return return_api(result)
 
 @app.route('/stop_simulation', methods=['POST'])

@@ -1,23 +1,40 @@
-from blocksworld_simulation.simulation.simulation_state import SimulationState
-from blocksworld_simulation.simulation.simulation_action import SimulationAction
 from blocksworld_simulation.constraints.constraint_set import ConstraintSet
 from blocksworld_simulation.constraints.contraint_sets.base.base import BaseConstraintSet
+from blocksworld_simulation.constraints.contraint_sets.hanoi_towers.hanoi_towers import HanoiTowersConstraintSet
+from blocksworld_simulation.simulation.simulation_action import SimulationAction
+from blocksworld_simulation.simulation.simulation_state import SimulationState
 
 
 class ConstraintManager:
-    """Manager for validating simulation actions using configurable constraint sets."""
-    
-    def __init__(self, constraint_set: ConstraintSet = None):
-        """Initialize the constraint manager with a specific constraint set."""
-        self._constraint_set = constraint_set or BaseConstraintSet()
-    
-    def validate_action(self, simulation_action: SimulationAction, simulation_state: SimulationState):
-        """Validate a simulation action against the currently active constraint set.
-        This actually just passes the action to the currently active constraint set for validation."""
-        self._constraint_set.validate(simulation_state, simulation_action)
-        return
-    
-    def set_constraint_set(self, constraint_set: ConstraintSet):
-        """Change the constraint set used for validation.
-        """
-        self._constraint_set = constraint_set
+    def __init__(self):
+        self._active_constraint_set: ConstraintSet = BaseConstraintSet()
+        self._constraint_sets: dict[str, ConstraintSet] = {
+            "base": BaseConstraintSet(),
+            "hanoi_towers": HanoiTowersConstraintSet(),
+        }
+
+    def _find_set_by_name(self, name: str) -> ConstraintSet | None:
+        """Get a constraint set instance by name."""
+        constraint_set: ConstraintSet | None = self._constraint_sets.get(name)
+        if constraint_set:
+            return constraint_set
+        return None
+
+    def constraint_set_exists(self, name: str) -> bool:
+        """Check if a constraint set exists by name."""
+        return name in self._constraint_sets
+
+    def set_constraint_set(self, name: str):
+        """Set the active constraint set by name."""
+        constraint_set = self._find_set_by_name(name)
+        self._active_constraint_set = constraint_set
+
+    def get_constraint_set(self) -> ConstraintSet:
+        """Get the active constraint set."""
+        return self._active_constraint_set
+
+    def validate_action(self, action: SimulationAction, state: SimulationState):
+        """Validate an action against the active constraint set."""
+        return self._active_constraint_set.validate(state, action)
+
+constraint_manager = ConstraintManager()

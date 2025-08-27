@@ -1,4 +1,5 @@
 from blocksworld_simulation.constraints.contraint_sets.base.base import BaseConstraintSet
+from blocksworld_simulation.constraints.contraint_sets.hanoi_towers.valid_start_config import ValidStartConfig
 from blocksworld_simulation.constraints.contraint_sets.hanoi_towers.block_below_wider import BlockBelowWider
 
 
@@ -10,7 +11,9 @@ class HanoiTowersConstraintSet(BaseConstraintSet):
         # QUIT: No additional constraints
         self._quit_constraints.extend([])
         # START: No additional constraints
-        self._start_constraints.extend([])
+        self._start_constraints.extend([
+            ValidStartConfig()
+        ])
         # STOP: No additional constraints
         self._stop_constraints.extend([])
         # GET STATUS: No additional constraints

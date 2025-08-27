@@ -5,26 +5,38 @@ import re
 from ..simulation.block import BlockModel
 
 class StartSimulationRequest(BaseModel):
-    """Pydantic model for starting the simulation with custom initial stacks.
+    """Pydantic model for starting the simulation.
+    
+    Two modes supported:
+    1. Direct configuration with custom stacks and optional constraint set
+    2. Scenario-based configuration (constraint set from scenario)
     
     Examples:
     ```
-    // Start with predefined scenario (query parameter)
-    POST /start_simulation?scenario=tower_building_challenge
-    // Body: {} or empty
-    ```
-    
-    ```
-    // Start with custom initial stacks (simple format)
+    // Start with predefined scenario
     POST /start_simulation
     // Body:
     { 
-        "initial_stacks": 
-            [
-                ["A", "B"], 
-                [], 
-                ["C"]
-            ]
+        "scenario_id": "unstacking_challenge"
+    }
+    ```
+    
+    ```
+    // Start with custom initial stacks (defaults to base constraint set)
+    POST /start_simulation
+    // Body:
+    { 
+        "initial_stacks": [["A", "B"], [], ["C"]]
+    }
+    ```
+    
+    ```
+    // Start with custom initial stacks and specific constraint set
+    POST /start_simulation
+    // Body:
+    { 
+        "initial_stacks": [["A", "B"], [], ["C"]],
+        "constraint_set": "hanoi_towers"
     }
     ```
     
@@ -34,19 +46,21 @@ class StartSimulationRequest(BaseModel):
     // Body:
     { 
         "initial_stacks": 
+        [
             [
-                [
-                    {"name": "A", "x_size": 50, "y_size": 30, "weight": 10, "type": "X"},
-                    {"name": "B", "x_size": 50, "y_size": 30, "weight": 10, "type": "X2"}
-                ],
-                [],
-                [
-                    {"name": "C", "x_size": 50, "y_size": 30, "weight": 10, "type": "s98"}
-                ]
-            ]
+                {"name": "D", "x_size": 100, "y_size": 30},
+                {"name": "C", "x_size": 80, "y_size": 30},
+                {"name": "B", "x_size": 60, "y_size": 30},
+                {"name": "A", "x_size": 40, "y_size": 30}
+            ],
+            [],
+            []
+        ],
+        "constraint_set": "hanoi_towers"
     }
     ```
-        """
+    """
+    scenario_id: Optional[str] = None
     initial_stacks: Optional[
         List[
             List[
@@ -54,6 +68,7 @@ class StartSimulationRequest(BaseModel):
             ]
         ]
     ] = None
+    constraint_set: Optional[str] = None
     
     @model_validator(mode='after')
     def validate_unique_block_names(self):
