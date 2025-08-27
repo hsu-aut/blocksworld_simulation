@@ -99,7 +99,7 @@ class Robot:
                 self._state = RobotState.PICKING
             return
         # if picking, move until target y is reached, then transition to LIFTING
-        if self._state == RobotState.PICKING:
+        if self._state == RobotState.PICKING and isinstance(self._action_in_progress, (UnstackAction, PickUpAction)):
             if abs(self._y - self._target_y) > SPEED:
                 self._y += SPEED 
             else:
@@ -132,7 +132,7 @@ class Robot:
                 self._state = RobotState.LOWERING
             return
         # if robot is lowering, move until target y is reached, then transition to RELEASING
-        if self._state == RobotState.LOWERING:
+        if self._state == RobotState.LOWERING and isinstance(self._action_in_progress, (StackAction, PutDownAction)):
             if abs(self._y - self._target_y) > SPEED:
                 self._y += SPEED
                 self._held_block.set_position_on_robot(self._x, self._y)

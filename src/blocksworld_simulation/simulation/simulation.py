@@ -3,7 +3,7 @@ import pygame
 import logging
 
 from .user_input_handler import handle_user_inputs
-from .input_processor import process_input
+from .action_processor import process_action
 from .stack_creator import create_stacks
 from .robot import Robot
 from .simulation_action import SimulationAction, QuitAction, StartAction, StopAction, RobotAction, GetStatusAction
@@ -100,16 +100,16 @@ class BlocksWorldSimulation:
         self._app_running = True
         while self._app_running:
             # check user inputs
-            input = handle_user_inputs(self._local_reply_queue, self._simulation_state)
+            input_action = handle_user_inputs(self._local_reply_queue, self._simulation_state)
             # only if no input from user is received, check for API inputs, i.e. user input has priority
-            if input is None and not self._api_to_sim_queue.empty():
-                input = self._api_to_sim_queue.get()
+            if input_action is None and not self._api_to_sim_queue.empty():
+                input_action = self._api_to_sim_queue.get()
             # process input (if any)
-            action: SimulationAction = None
-            if input is not None:
-                action = process_input(input, self._simulation_state)
+            validated_action: SimulationAction = None
+            if input_action is not None:
+                validated_action = process_action(input_action, self._simulation_state)
             # handle action (if any)
-            self._handle_action(action) if action is not None else None
+            self._handle_action(validated_action) if validated_action is not None else None
             # update robot state
             self._simulation_state.get_robot().update_state() if self._simulation_state.get_simulation_running() else None
             # log local reply queue

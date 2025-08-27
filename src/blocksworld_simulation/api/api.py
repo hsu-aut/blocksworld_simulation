@@ -2,8 +2,8 @@ from flask import Flask, jsonify, request
 import queue
 import logging
 
-from ..simulation.simulation_input import (
-    GetStatusInput, StartInput, StopInput, PickUpInput, PutDownInput, StackInput, UnstackInput
+from ..simulation.simulation_action import (
+    GetStatusAction, StartAction, StopAction, PickUpAction, PutDownAction, StackAction, UnstackAction
 )
 from .request_validation import (
     validate_request, StartSimulationRequest, PickUpRequest, PutDownRequest,
@@ -49,7 +49,7 @@ def start_simulation(validated_data: StartSimulationRequest):
         # Use custom initial_stacks from body
         stack_config = validated_data.initial_stacks
     
-    api_to_sim_queue.put(StartInput(
+    api_to_sim_queue.put(StartAction(
         reply_queue=sim_to_api_queue,
         stack_config=stack_config
     ))
@@ -70,14 +70,14 @@ def start_simulation(validated_data: StartSimulationRequest):
 @app.route('/stop_simulation', methods=['POST'])
 def stop_simulation():
     """Stop the pygame simulation."""
-    api_to_sim_queue.put(StopInput(reply_queue=sim_to_api_queue))
+    api_to_sim_queue.put(StopAction(reply_queue=sim_to_api_queue))
     result = sim_to_api_queue.get()
     return return_api(result)
 
 @app.route('/pick_up', methods=['POST'])
 @validate_request(PickUpRequest)
 def pick_up(validated_data: PickUpRequest):
-    api_to_sim_queue.put(PickUpInput(
+    api_to_sim_queue.put(PickUpAction(
         reply_queue=sim_to_api_queue,
         block_name=validated_data.block
     ))
@@ -87,7 +87,7 @@ def pick_up(validated_data: PickUpRequest):
 @app.route('/put_down', methods=['POST'])
 @validate_request(PutDownRequest)
 def put_down(validated_data: PutDownRequest):
-    api_to_sim_queue.put(PutDownInput(
+    api_to_sim_queue.put(PutDownAction(
         reply_queue=sim_to_api_queue,
         block_name=validated_data.block 
     ))
@@ -97,7 +97,7 @@ def put_down(validated_data: PutDownRequest):
 @app.route('/stack', methods=['POST'])
 @validate_request(StackRequest)
 def stack(validated_data: StackRequest):
-    api_to_sim_queue.put(StackInput(
+    api_to_sim_queue.put(StackAction(
         reply_queue=sim_to_api_queue,
         block_name=validated_data.block1, 
         target_block_name=validated_data.block2
@@ -108,7 +108,7 @@ def stack(validated_data: StackRequest):
 @app.route('/unstack', methods=['POST'])
 @validate_request(UnstackRequest)
 def unstack(validated_data: UnstackRequest):
-    api_to_sim_queue.put(UnstackInput(
+    api_to_sim_queue.put(UnstackAction(
         reply_queue=sim_to_api_queue,
         block_name=validated_data.block1, 
         block_below_name=validated_data.block2
@@ -137,7 +137,7 @@ def get_scenario_details(scenario_name: str):
 
 @app.route('/get_status', methods=['GET'])
 def get_status():
-    api_to_sim_queue.put(GetStatusInput(reply_queue=sim_to_api_queue))
+    api_to_sim_queue.put(GetStatusAction(reply_queue=sim_to_api_queue))
     result = sim_to_api_queue.get()
     return return_api(result)
 
