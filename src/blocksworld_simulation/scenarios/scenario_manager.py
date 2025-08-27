@@ -62,7 +62,7 @@ class ScenarioManager:
         """Reload all scenarios from disk."""
         self._load_scenarios()
     
-    def handle_scenario_request(self, scenario_name: Optional[str] = None):
+    def get_scenario_info(self, scenario_name: Optional[str] = None):
         """Handle scenario requests - returns all scenarios if no name provided, specific scenario otherwise."""
         if scenario_name is None:
             # Return all scenarios

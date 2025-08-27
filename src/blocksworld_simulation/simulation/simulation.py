@@ -4,11 +4,13 @@ import logging
 
 from .user_input_handler import handle_user_inputs
 from blocksworld_simulation.constraints.constraint_manager import constraint_manager
+from blocksworld_simulation.scenarios.scenario_manager import scenario_manager
 from .stack_creator import create_stacks
 from .robot import Robot
 from .simulation_actions import (
     PreStartAction, SimulationAction, QuitAction, 
-    StartAction, StopAction, RobotAction, GetStatusAction, GetRulesAction
+    StartAction, StopAction, RobotAction, GetStatusAction, 
+    GetRulesAction, GetScenariosAction
 )
 from .simulation_state import SimulationState
 
@@ -72,6 +74,9 @@ class BlocksWorldSimulation:
         # If the action is a StopAction, stop the simulation by setting _simulation_running flag
         elif isinstance(action, StopAction):
             self._simulation_state.set_simulation_running(False)
+            action.reply_success()
+        elif isinstance(action, GetScenariosAction):
+            action.set_result_data(scenario_manager.get_scenario_info(action.get_scenario_name()))
             action.reply_success()
         # If the action is a GetStatusAction, reply with the current status of the simulation
         elif isinstance(action, GetStatusAction):
