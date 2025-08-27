@@ -1,6 +1,6 @@
 from typing import Tuple
 from blocksworld_simulation.constraints.constraint import Constraint
-from blocksworld_simulation.simulation.simulation_action import GetStatusAction, SimulationAction
+from blocksworld_simulation.simulation.simulation_actions import GetStatusAction, SimulationAction
 from blocksworld_simulation.simulation.simulation_state import SimulationState
 
 

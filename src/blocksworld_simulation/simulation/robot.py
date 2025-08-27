@@ -3,7 +3,7 @@ from enum import Enum
 
 import pygame
 
-from .simulation_action import RobotAction, PickUpAction, PutDownAction, StackAction, UnstackAction
+from .simulation_actions import RobotAction, PickUpAction, PutDownAction, StackAction, UnstackAction
 from .block import Block
 
 logger = logging.getLogger(__name__)

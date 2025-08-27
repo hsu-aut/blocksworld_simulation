@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 import queue
 import logging
 
-from ..simulation.simulation_action import (
+from ..simulation.simulation_actions import (
     GetRulesAction, GetStatusAction, PreStartAction, StopAction, PickUpAction, PutDownAction, StackAction, UnstackAction, GetScenariosAction
 )
 from .request_validation import (

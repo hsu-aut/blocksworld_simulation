@@ -1,7 +1,7 @@
 from blocksworld_simulation.constraints.constraint_set import ConstraintSet
 from blocksworld_simulation.constraints.contraint_sets.base.base import BaseConstraintSet
 from blocksworld_simulation.constraints.contraint_sets.hanoi_towers.hanoi_towers import HanoiTowersConstraintSet
-from blocksworld_simulation.simulation.simulation_action import SimulationAction
+from blocksworld_simulation.simulation.simulation_actions import SimulationAction
 from blocksworld_simulation.simulation.simulation_state import SimulationState
 
 

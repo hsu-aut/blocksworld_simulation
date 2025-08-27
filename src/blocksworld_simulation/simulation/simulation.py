@@ -6,7 +6,7 @@ from .user_input_handler import handle_user_inputs
 from blocksworld_simulation.constraints.constraint_manager import constraint_manager
 from .stack_creator import create_stacks
 from .robot import Robot
-from .simulation_action import (
+from .simulation_actions import (
     PreStartAction, SimulationAction, QuitAction, 
     StartAction, StopAction, RobotAction, GetStatusAction, GetRulesAction
 )

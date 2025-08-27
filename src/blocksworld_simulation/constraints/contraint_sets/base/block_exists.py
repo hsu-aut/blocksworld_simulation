@@ -1,7 +1,7 @@
 from typing import Tuple
 from blocksworld_simulation.constraints.constraint import Constraint
 from blocksworld_simulation.simulation.block import Block
-from blocksworld_simulation.simulation.simulation_action import SimulationAction, PickUpAction, PutDownAction, StackAction, UnstackAction
+from blocksworld_simulation.simulation.simulation_actions import SimulationAction, PickUpAction, PutDownAction, StackAction, UnstackAction
 from blocksworld_simulation.simulation.simulation_state import SimulationState
 
 

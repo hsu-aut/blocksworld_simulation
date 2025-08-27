@@ -3,7 +3,7 @@ from typing import List
 from blocksworld_simulation.simulation.simulation_state import SimulationState
 
 from blocksworld_simulation.constraints.constraint import Constraint
-from blocksworld_simulation.simulation.simulation_action import (
+from blocksworld_simulation.simulation.simulation_actions import (
     GetRulesAction, PreStartAction, SimulationAction, 
     StartAction, StopAction, QuitAction, PickUpAction, 
     PutDownAction, StackAction, UnstackAction, GetStatusAction

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from blocksworld_simulation.simulation.simulation_action import SimulationAction
+from blocksworld_simulation.simulation.simulation_actions import SimulationAction
 from blocksworld_simulation.simulation.simulation_state import SimulationState
     
 
