@@ -17,6 +17,7 @@
       ["F", "E", "D", "C", "B", "A"]
     ]
   },
+  "constraint_set": "base",
   "metadata": {
     "difficulty": "1",
     "min_steps": 12,

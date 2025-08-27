@@ -20,6 +20,7 @@
       ["E"]
     ]
   },
+  "constraint_set": "base",
   "metadata": {
     "difficulty": "impossible",
     "min_steps": -1,
