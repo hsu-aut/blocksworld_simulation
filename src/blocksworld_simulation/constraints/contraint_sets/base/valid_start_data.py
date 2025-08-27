@@ -12,7 +12,6 @@ class ValidStartData(Constraint):
         constraint_set = action.get_constraint_set()
         scenario_id = action.get_scenario_id()
         stack_config = action.get_stack_config()
-        print(constraint_set, scenario_id, stack_config)
         # if constraint_set and scenario_id are not given, validate, and use base constraint set
         if constraint_set is None and scenario_id is None:
             action.set_constraint_set("base")

@@ -1,8 +1,14 @@
 from typing import Tuple
+
 from .stack import Stack
 from .block import Block
 from queue import Queue
 from abc import ABC, abstractmethod
+from ..api.request_models import (
+    PickUpRequest, PutDownRequest, StackRequest, UnstackRequest,
+    StartSimulationRequest, StopSimulationRequest, 
+    GetStatusRequest, ScenarioRequest
+)
 
 class SimulationAction(ABC):
     """Base class for actions in the simulation.
@@ -88,11 +94,11 @@ class StartAction(SimulationAction):
 class PreStartAction(SimulationAction):
     """Action for changing the constraint set before starting the simulation with a StartAction."""
 
-    def __init__(self, reply_queue: Queue, stack_config=None, scenario_id=None, constraint_set=None):
+    def __init__(self, reply_queue: Queue, request: StartSimulationRequest):
         super().__init__(reply_queue)
-        self._stack_config = stack_config
-        self._scenario_id = scenario_id
-        self._constraint_set = constraint_set
+        self._stack_config = request.initial_stacks
+        self._scenario_id = request.scenario_id
+        self._constraint_set = request.constraint_set
     
     def get_constraint_set(self) -> str | None:
         """Get the new constraint set to be applied."""
@@ -133,7 +139,7 @@ class PreStartAction(SimulationAction):
 class StopAction(SimulationAction):
     """Action for stopping the simulation."""
 
-    def __init__(self, reply_queue: Queue):
+    def __init__(self, reply_queue: Queue, request: StopSimulationRequest):
         super().__init__(reply_queue)
 
     def _success_message(self):
@@ -146,7 +152,7 @@ class StopAction(SimulationAction):
 class GetStatusAction(SimulationAction):
     """Action for getting the status of the simulation."""
 
-    def __init__(self, reply_queue: Queue):
+    def __init__(self, reply_queue: Queue, request: GetStatusRequest):
         super().__init__(reply_queue)
         self._status_dict: dict = None
 
@@ -176,9 +182,9 @@ class RobotAction(SimulationAction):
 class PickUpAction(RobotAction):
     """Action for picking up a block."""
 
-    def __init__(self, reply_queue: Queue, block_name: str):
+    def __init__(self, reply_queue: Queue, request: PickUpRequest):
         super().__init__(reply_queue)
-        self._block_name = block_name
+        self._block_name = request.block
         self._block: Block = None
         self._stack: Stack = None
 
@@ -217,9 +223,9 @@ class PickUpAction(RobotAction):
 class PutDownAction(RobotAction):
     """Action for putting down a block."""
 
-    def __init__(self, reply_queue: Queue, block_name: str):
+    def __init__(self, reply_queue: Queue, request: PutDownRequest):
         super().__init__(reply_queue)
-        self._block_name = block_name
+        self._block_name = request.block
         self._block: Block = None
         self._stack: Stack = None
 
@@ -258,11 +264,11 @@ class PutDownAction(RobotAction):
 class StackAction(RobotAction):
     """Action for stacking a block on another block."""
 
-    def __init__(self, reply_queue: Queue, block_name: str, target_block_name: str):
+    def __init__(self, reply_queue: Queue, request: StackRequest):
         super().__init__(reply_queue)
-        self._block_name = block_name
+        self._block_name = request.block1
         self._block: Block = None
-        self._target_block_name = target_block_name
+        self._target_block_name = request.block2
         self._target_block: Block = None
         self._stack: Stack = None
 
@@ -313,11 +319,11 @@ class StackAction(RobotAction):
 class UnstackAction(RobotAction):
     """Action for unstacking a block from another block."""
 
-    def __init__(self, reply_queue: Queue, block_name: str, block_below_name: str):
+    def __init__(self, reply_queue: Queue, request: UnstackRequest):
         super().__init__(reply_queue)
-        self._block_name = block_name
+        self._block_name = request.block1
         self._block: Block = None
-        self._block_below_name = block_below_name
+        self._block_below_name = request.block2
         self._block_below: Block = None
         self._stack: Stack = None
 
@@ -364,3 +370,24 @@ class UnstackAction(RobotAction):
 
     def _failure_message(self) -> str:
         return "Block could not be unstacked"
+
+
+class GetScenariosAction(SimulationAction):
+    """Action for getting scenario information."""
+
+    def __init__(self, reply_queue: Queue, request: ScenarioRequest):
+        super().__init__(reply_queue)
+        self._scenario_name = request.scenario_name
+        self._result_data = None
+
+    def get_scenario_name(self) -> str:
+        return self._scenario_name
+
+    def set_result_data(self, result_data):
+        self._result_data = result_data
+
+    def _success_message(self):
+        return self._result_data
+
+    def _failure_message(self) -> str:
+        return "Could not retrieve scenario information"
