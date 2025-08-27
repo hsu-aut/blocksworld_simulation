@@ -2,6 +2,7 @@ from blocksworld_simulation.constraints.constraint_set import ConstraintSet
 from blocksworld_simulation.constraints.contraint_sets.base.base_rules import get_base_rules
 from blocksworld_simulation.constraints.contraint_sets.base.robot_holding import RobotHolding
 from blocksworld_simulation.constraints.contraint_sets.base.robot_idle import RobotIdle
+from blocksworld_simulation.constraints.contraint_sets.base.scenario_exists import ScenarioExists
 from blocksworld_simulation.constraints.contraint_sets.base.simulation_not_running import SimulationNotRunning
 from blocksworld_simulation.constraints.contraint_sets.base.simulation_running import SimulationRunning
 from blocksworld_simulation.constraints.contraint_sets.base.block_exists import BlockExists
@@ -43,8 +44,10 @@ class BaseConstraintSet(ConstraintSet):
         self._get_rules_constraints.extend([
             SimulationRunning()
         ])
-        # GET SCENARIOS: No constraints
-        self._get_scenario_constraints.extend([])
+        # GET SCENARIOS: ScenarioExists
+        self._get_scenario_constraints.extend([
+            ScenarioExists()
+        ])
         # PICK UP: SimulationRunning, RobotIdle, BlockExists, BlockOnGroundOnly, BlockOnTopOfStack
         self._pick_up_constraints.extend([
             SimulationRunning(),
