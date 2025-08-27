@@ -10,12 +10,7 @@ class SimulationState:
     def __init__(self, simulation_running: bool = False, robot: Robot = None, stacks: List[Stack] = None):
         self._simulation_running: bool = simulation_running
         self._robot: Robot = robot
-        self._stacks: List[Stack] = stacks or []
-        
-        self._robot_held_block: Block = robot.get_held_block() if robot is not None else None
-        self._all_blocks: List[Block] = [block for stack in self._stacks for block in stack.get_blocks()] if self._stacks else []
-        if self._robot_held_block:
-            self._all_blocks.append(self._robot_held_block)
+        self._stacks: List[Stack] = stacks
     
     def get_simulation_running(self) -> bool:
         """Get whether the simulation is running."""
@@ -43,12 +38,15 @@ class SimulationState:
     
     def get_robot_held_block(self) -> Block:
         """Get the block currently held by the robot."""
-        return self._robot_held_block
+        return self._robot.get_held_block() if self._robot is not None else None
     
     def get_all_blocks(self) -> List[Block]:
         """Get all blocks in the simulation (from stacks and robot)."""
-        return self._all_blocks
-    
+        all_blocks: List[Block] = [block for stack in self._stacks for block in stack.get_blocks()] if self._stacks else []
+        if self.get_robot_held_block() is not None:
+            all_blocks.append(self.get_robot_held_block())
+        return all_blocks
+
     def to_dict(self) -> dict:
         """Convert simulation state to dictionary format."""
         return {
