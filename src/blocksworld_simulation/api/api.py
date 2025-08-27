@@ -5,9 +5,7 @@ import logging
 from ..simulation.simulation_actions import (
     GetRulesAction, GetStatusAction, PreStartAction, StopAction, PickUpAction, PutDownAction, StackAction, UnstackAction, GetScenariosAction
 )
-from .request_validation import (
-    validate_request, validate_params
-)
+from .request_validation import validate_request
 from .request_models import (
     StartSimulationRequest, StopSimulationRequest,
     PickUpRequest, PutDownRequest, StackRequest, UnstackRequest,
@@ -73,32 +71,26 @@ def unstack(validated_data: UnstackRequest):
     return return_api(result)
 
 @app.route('/scenarios', methods=['GET'])
-@validate_params(ScenarioRequest)
-def list_scenarios(validated_data: ScenarioRequest):
-    """Get list of all available scenarios."""
-    api_to_sim_queue.put(GetScenariosAction(sim_to_api_queue, validated_data))
+def list_scenarios():
+    api_to_sim_queue.put(GetScenariosAction(sim_to_api_queue, ScenarioRequest()))
     result = sim_to_api_queue.get()
     return return_api(result)
 
 @app.route('/scenarios/<scenario_name>', methods=['GET'])
-@validate_params(ScenarioRequest)
-def get_scenario_details(validated_data: ScenarioRequest):
-    """Get detailed information about a specific scenario."""
-    api_to_sim_queue.put(GetScenariosAction(sim_to_api_queue, validated_data))
+def get_scenario_details(scenario_name: str):
+    api_to_sim_queue.put(GetScenariosAction(sim_to_api_queue, ScenarioRequest(scenario_name=scenario_name)))
     result = sim_to_api_queue.get()
     return return_api(result)
 
 @app.route('/get_status', methods=['GET'])
-@validate_params(GetStatusRequest)
-def get_status(validated_data: GetStatusRequest):
-    api_to_sim_queue.put(GetStatusAction(sim_to_api_queue, validated_data))
+def get_status():
+    api_to_sim_queue.put(GetStatusAction(sim_to_api_queue, GetStatusRequest()))
     result = sim_to_api_queue.get()
     return return_api(result)
 
 @app.route('/get_rules', methods=['GET'])
-@validate_params(GetRulesRequest)
-def get_rules(validated_data: GetRulesRequest):
-    api_to_sim_queue.put(GetRulesAction(sim_to_api_queue, validated_data))
+def get_rules():
+    api_to_sim_queue.put(GetRulesAction(sim_to_api_queue, GetRulesRequest()))
     result = sim_to_api_queue.get()
     return return_api(result)
 
