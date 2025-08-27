@@ -53,7 +53,6 @@ def handle_user_inputs(
                                 if block.get_name().upper() == key_name.upper():
                                     i_block = stack.get_blocks().index(block)
                                     block_below = stack.get_blocks()[i_block - 1] if i_block > 0 else None
-                                    logger.debug(f"Found stack: {stack.get_number()}, block: {block.get_name()}, block_below: {block_below.get_name() if block_below else None}")
                                     # if a <KEY> is pressed and block <KEY> is on a stack with only one block, create a pick up action
                                     if len(stack.get_blocks()) == 1:
                                         return PickUpAction(
