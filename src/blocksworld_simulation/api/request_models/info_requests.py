@@ -10,3 +10,8 @@ class ScenarioRequest(BaseModel):
 class GetStatusRequest(BaseModel):
     """Request model for getting simulation status."""
     pass
+
+
+class GetRulesRequest(BaseModel):
+    """Request model for getting simulation rules."""
+    pass

@@ -33,6 +33,10 @@ class ConstraintManager:
         """Get the active constraint set."""
         return self._active_constraint_set
 
+    def get_rules(self) -> str:
+        """Get the rules from the active constraint set."""
+        return self._active_constraint_set.get_rules()
+
     def validate_action(self, action: SimulationAction, state: SimulationState):
         """Validate an action against the active constraint set."""
         return self._active_constraint_set.validate(state, action)

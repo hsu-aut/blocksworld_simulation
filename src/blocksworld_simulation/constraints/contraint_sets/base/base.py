@@ -1,4 +1,5 @@
 from blocksworld_simulation.constraints.constraint_set import ConstraintSet
+from blocksworld_simulation.constraints.contraint_sets.base.base_rules import get_base_rules
 from blocksworld_simulation.constraints.contraint_sets.base.robot_holding import RobotHolding
 from blocksworld_simulation.constraints.contraint_sets.base.robot_idle import RobotIdle
 from blocksworld_simulation.constraints.contraint_sets.base.simulation_not_running import SimulationNotRunning
@@ -38,6 +39,10 @@ class BaseConstraintSet(ConstraintSet):
         self._get_status_constraints.extend([
             SimulationRunning()
         ])
+        # GET RULES: No constraints
+        self._get_rules_constraints.extend([
+            SimulationRunning()
+        ])
         # PICK UP: SimulationRunning, RobotIdle, BlockExists, BlockOnGroundOnly, BlockOnTopOfStack
         self._pick_up_constraints.extend([
             SimulationRunning(),
@@ -71,4 +76,4 @@ class BaseConstraintSet(ConstraintSet):
             BlocksOnSameStack(),
             BlockBelowRelationship()
         ])
-
+        self._rules = get_base_rules()

@@ -1,4 +1,5 @@
 from blocksworld_simulation.constraints.contraint_sets.base.base import BaseConstraintSet
+from blocksworld_simulation.constraints.contraint_sets.hanoi_towers.hanoi_towers_rules import get_additional_rules
 from blocksworld_simulation.constraints.contraint_sets.hanoi_towers.valid_start_config import ValidStartConfig
 from blocksworld_simulation.constraints.contraint_sets.hanoi_towers.block_below_wider import BlockBelowWider
 
@@ -8,24 +9,14 @@ class HanoiTowersConstraintSet(BaseConstraintSet):
 
     def __init__(self):
         super().__init__()
-        # QUIT: No additional constraints
-        self._quit_constraints.extend([])
-        # START: No additional constraints
+        # START: add ValidStartConfig
         self._start_constraints.extend([
             ValidStartConfig()
         ])
-        # STOP: No additional constraints
-        self._stop_constraints.extend([])
-        # GET STATUS: No additional constraints
-        self._get_status_constraints.extend([])
-        # PICK UP: No additional constraints
-        self._pick_up_constraints.extend([])
-        # PUT DOWN: No additional constraints
-        self._put_down_constraints.extend([])
-        # STACK: BlockBelowWider
+        # STACK: add BlockBelowWider
         self._stack_constraints.extend([
             BlockBelowWider()
         ])
-        # UNSTACK: No additional constraints
-        self._unstack_constraints.extend([])
+        # Rules: first explain the hanoi towers problem, then add the base blocksworld rules
+        self._rules = get_additional_rules() + self._rules
 

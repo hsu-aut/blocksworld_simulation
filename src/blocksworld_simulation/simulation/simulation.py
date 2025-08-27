@@ -6,7 +6,10 @@ from .user_input_handler import handle_user_inputs
 from blocksworld_simulation.constraints.constraint_manager import constraint_manager
 from .stack_creator import create_stacks
 from .robot import Robot
-from .simulation_action import PreStartAction, SimulationAction, QuitAction, StartAction, StopAction, RobotAction, GetStatusAction
+from .simulation_action import (
+    PreStartAction, SimulationAction, QuitAction, 
+    StartAction, StopAction, RobotAction, GetStatusAction, GetRulesAction
+)
 from .simulation_state import SimulationState
 
 
@@ -72,6 +75,10 @@ class BlocksWorldSimulation:
             action.reply_success()
         # If the action is a GetStatusAction, reply with the current status of the simulation
         elif isinstance(action, GetStatusAction):
+            action.reply_success()
+        # If the action is a GetRulesAction, reply with the current rules of the simulation
+        elif isinstance(action, GetRulesAction):
+            action.set_rules(constraint_manager.get_rules())
             action.reply_success()
         # If the action is a RobotAction, pass the action to the robot
         elif isinstance(action, RobotAction):

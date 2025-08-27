@@ -10,5 +10,6 @@ from .robot_action_requests import (
 )
 from .info_requests import (
     ScenarioRequest,
-    GetStatusRequest
+    GetStatusRequest,
+    GetRulesRequest
 )

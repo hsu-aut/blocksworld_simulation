@@ -3,7 +3,11 @@ from typing import List
 from blocksworld_simulation.simulation.simulation_state import SimulationState
 
 from blocksworld_simulation.constraints.constraint import Constraint
-from blocksworld_simulation.simulation.simulation_action import PreStartAction, SimulationAction, StartAction, StopAction, QuitAction, PickUpAction, PutDownAction, StackAction, UnstackAction, GetStatusAction
+from blocksworld_simulation.simulation.simulation_action import (
+    GetRulesAction, PreStartAction, SimulationAction, 
+    StartAction, StopAction, QuitAction, PickUpAction, 
+    PutDownAction, StackAction, UnstackAction, GetStatusAction
+)
 
 
 class ConstraintSet(ABC):
@@ -20,6 +24,8 @@ class ConstraintSet(ABC):
         self._put_down_constraints: List[Constraint] = []
         self._stack_constraints: List[Constraint] = []
         self._unstack_constraints: List[Constraint] = []
+        self._get_rules_constraints: List[Constraint] = []
+        self._rules: str = ""
 
     def _get_constraints_for_action(self, action: SimulationAction) -> List[Constraint]:
         """Get the appropriate constraint list based on action type."""
@@ -33,6 +39,8 @@ class ConstraintSet(ABC):
             return self._stop_constraints
         elif isinstance(action, GetStatusAction):
             return self._get_status_constraints
+        elif isinstance(action, GetRulesAction):
+            return self._get_rules_constraints
         elif isinstance(action, PickUpAction):
             return self._pick_up_constraints
         elif isinstance(action, PutDownAction):
@@ -55,3 +63,7 @@ class ConstraintSet(ABC):
         # if all constraints are satisfied, validate the action and return
         action.set_valid()
         return
+
+    def get_rules(self) -> str:
+        """Get the rules from the active constraint set."""
+        return self._rules

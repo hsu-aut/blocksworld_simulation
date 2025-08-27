@@ -3,15 +3,15 @@ import queue
 import logging
 
 from ..simulation.simulation_action import (
-    GetStatusAction, PreStartAction, StopAction, PickUpAction, PutDownAction, StackAction, UnstackAction, GetScenariosAction
+    GetRulesAction, GetStatusAction, PreStartAction, StopAction, PickUpAction, PutDownAction, StackAction, UnstackAction, GetScenariosAction
 )
 from .request_validation import (
     validate_request, validate_params
 )
 from .request_models import (
     StartSimulationRequest, StopSimulationRequest,
-    PickUpRequest, PutDownRequest, StackRequest, UnstackRequest, 
-    ScenarioRequest, GetStatusRequest
+    PickUpRequest, PutDownRequest, StackRequest, UnstackRequest,
+    ScenarioRequest, GetStatusRequest, GetRulesRequest
 )
 
 app = Flask(__name__)
@@ -92,6 +92,13 @@ def get_scenario_details(validated_data: ScenarioRequest):
 @validate_params(GetStatusRequest)
 def get_status(validated_data: GetStatusRequest):
     api_to_sim_queue.put(GetStatusAction(sim_to_api_queue, validated_data))
+    result = sim_to_api_queue.get()
+    return return_api(result)
+
+@app.route('/get_rules', methods=['GET'])
+@validate_params(GetRulesRequest)
+def get_rules(validated_data: GetRulesRequest):
+    api_to_sim_queue.put(GetRulesAction(sim_to_api_queue, validated_data))
     result = sim_to_api_queue.get()
     return return_api(result)
 

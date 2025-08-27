@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 from ..api.request_models import (
     PickUpRequest, PutDownRequest, StackRequest, UnstackRequest,
     StartSimulationRequest, StopSimulationRequest, 
-    GetStatusRequest, ScenarioRequest
+    GetStatusRequest, ScenarioRequest, GetRulesRequest
 )
 
 class SimulationAction(ABC):
@@ -391,3 +391,20 @@ class GetScenariosAction(SimulationAction):
 
     def _failure_message(self) -> str:
         return "Could not retrieve scenario information"
+    
+
+class GetRulesAction(SimulationAction):
+    """Action for getting simulation rules."""
+
+    def __init__(self, reply_queue: Queue, request: GetRulesRequest):
+        super().__init__(reply_queue)
+        self._rules: str = None
+
+    def set_rules(self, rules: str):
+        self._rules = rules
+
+    def _success_message(self):
+        return self._rules
+
+    def _failure_message(self) -> str:
+        return "Could not retrieve simulation rules."
