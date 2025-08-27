@@ -65,7 +65,7 @@ class BlocksWorldSimulation:
             action.reply_success()
         # If the action is a GetStatusAction, reply with the current status of the simulation
         elif isinstance(action, GetStatusAction):
-            action.reply_success(self._simulation_state)
+            action.reply_success(self._simulation_state.to_dict())
         # If the action is a PickUpAction, PutDownAction, StackAction or UnstackAction,
         # i.e. a subclass of RobotAction, pass the action to the robot
         elif isinstance(action, RobotAction):

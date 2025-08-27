@@ -48,3 +48,10 @@ class SimulationState:
     def get_all_blocks(self) -> List[Block]:
         """Get all blocks in the simulation (from stacks and robot)."""
         return self._all_blocks
+    
+    def to_dict(self) -> dict:
+        """Convert simulation state to dictionary format."""
+        return {
+            "stacks": [stack.to_dict() for stack in self._stacks],
+            "robot": self._robot.to_dict()
+        }

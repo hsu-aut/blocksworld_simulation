@@ -1,6 +1,4 @@
 from typing import Tuple
-
-from blocksworld_simulation.simulation.simulation_state import SimulationState
 from .stack import Stack
 from .block import Block
 from queue import Queue
@@ -64,13 +62,9 @@ class GetStatusAction(SimulationAction):
     def __init__(self, reply_queue: Queue):
         super().__init__(reply_queue)
 
-    def reply_success(self, simulation_state: SimulationState):
-        """Send a success reply back to the reply queue"""
-        status = {
-            "stacks": [stack.to_dict() for stack in simulation_state.get_stacks()],
-            "robot": simulation_state.get_robot().to_dict()
-        }
-        self._reply_queue.put((True, status))
+    def reply_success(self, status_dict: dict):
+        """Send status dict back to reply queue"""
+        self._reply_queue.put((True, status_dict))
 
 
 class RobotAction(SimulationAction):
