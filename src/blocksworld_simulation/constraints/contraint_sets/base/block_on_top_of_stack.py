@@ -12,7 +12,11 @@ class BlockOnTopOfStack(Constraint):
         if isinstance(action, (UnstackAction, PickUpAction)):
             block_name = action.get_block_name()
         elif isinstance(action, StackAction):
-            block_name = action.get_target_block_name()            
+            block_name = action.get_target_block_name()
+            # see if robot held block is the target block
+            if block_name == state.get_robot().get_held_block().get_name():
+                action.set_invalid(f"Block {block_name} is not on top of a stack.")
+                return False          
         stacks = state.get_stacks()
         # find block in stacks
         for stack in stacks:
