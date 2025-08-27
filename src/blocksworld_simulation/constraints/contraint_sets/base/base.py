@@ -1,4 +1,3 @@
-from blocksworld_simulation.constraints.constraint import Constraint
 from blocksworld_simulation.constraints.constraint_set import ConstraintSet
 from blocksworld_simulation.constraints.contraint_sets.base.robot_holding import RobotHolding
 from blocksworld_simulation.constraints.contraint_sets.base.robot_idle import RobotIdle
@@ -11,6 +10,7 @@ from blocksworld_simulation.constraints.contraint_sets.base.block_on_top_of_stac
 from blocksworld_simulation.constraints.contraint_sets.base.free_stack_available import FreeStackAvailable
 from blocksworld_simulation.constraints.contraint_sets.base.blocks_on_same_stack import BlocksOnSameStack
 from blocksworld_simulation.constraints.contraint_sets.base.block_below_relationship import BlockBelowRelationship
+from blocksworld_simulation.constraints.contraint_sets.base.unique_block_names import UniqueBlockNames
 from blocksworld_simulation.constraints.contraint_sets.base.valid_start_data import ValidStartData
 
 class BaseConstraintSet(ConstraintSet):
@@ -25,9 +25,10 @@ class BaseConstraintSet(ConstraintSet):
             SimulationNotRunning(),
             ValidStartData()
         ])
-        # START: SimulationNotRunning
+        # START: SimulationNotRunning, UniqueBlockNames
         self._start_constraints.extend([
-            SimulationNotRunning()
+            SimulationNotRunning(),
+            UniqueBlockNames()
         ])
         # STOP: SimulationRunning
         self._stop_constraints.extend([
