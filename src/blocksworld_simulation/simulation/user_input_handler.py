@@ -53,13 +53,13 @@ def handle_user_inputs(
                                 if block.get_name().upper() == key_name.upper():
                                     i_block = stack.get_blocks().index(block)
                                     block_below = stack.get_blocks()[i_block - 1] if i_block > 0 else None
-                                    # if a <KEY> is pressed and block <KEY> is on a stack with only one block, create a pick up action
-                                    if len(stack.get_blocks()) == 1:
+                                    # if robot is idle and a <KEY> is pressed and block <KEY> is in the first position of a stack, create a pick up action
+                                    if i_block == 0:
                                         return PickUpAction(
                                             reply_queue=reply_queue,
                                             block_name=key_name.upper()
                                         )
-                                    # if a <KEY> is pressed and block <KEY> is on another block and robot is idle, create a unstack action
+                                    # if robot is idle and a <KEY> is pressed and block <KEY> is on another block, create a unstack action
                                     else:
                                         return UnstackAction(
                                             reply_queue=reply_queue,
