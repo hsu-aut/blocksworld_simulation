@@ -11,19 +11,4 @@ from .stack_action import StackAction
 from .unstack_action import UnstackAction
 from .get_scenarios_action import GetScenarioAction
 from .get_rules_action import GetRulesAction
-
-__all__ = [
-    'SimulationAction',
-    'RobotAction',
-    'QuitAction',
-    'StartAction',
-    'PreStartAction',
-    'StopAction',
-    'GetStatusAction',
-    'PickUpAction',
-    'PutDownAction',
-    'StackAction',
-    'UnstackAction',
-    'GetScenarioAction',
-    'GetRulesAction'
-]
+from .execute_plan_action import ExecutePlanAction

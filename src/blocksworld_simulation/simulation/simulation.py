@@ -10,7 +10,7 @@ from .robot import Robot
 from .simulation_actions import (
     PreStartAction, SimulationAction, QuitAction, 
     StartAction, StopAction, RobotAction, GetStatusAction, 
-    GetRulesAction, GetScenarioAction
+    GetRulesAction, GetScenarioAction, ExecutePlanAction
 )
 from .simulation_state import SimulationState
 
@@ -88,6 +88,9 @@ class BlocksWorldSimulation:
         # If the action is a RobotAction, pass the action to the robot
         elif isinstance(action, RobotAction):
             self._simulation_state.get_robot().set_action(action)
+        # If the action is a ExecutePlanAction, 
+        elif isinstance(action, ExecutePlanAction):
+            action.reply_success()
         return
 
     def _log_local_reply_queue(self):

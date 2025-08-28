@@ -5,7 +5,7 @@ import logging
 
 from blocksworld_simulation.simulation.simulation_actions import (
     PreStartAction, QuitAction, StopAction,
-    PickUpAction, PutDownAction, StackAction, UnstackAction,
+    PickUpAction, PutDownAction, StackAction, UnstackAction, ExecutePlanAction,
     GetScenarioAction, GetStatusAction, GetRulesAction
 )
 
@@ -13,6 +13,7 @@ from .request_validation import validate_request
 from .request_models import (
     StartSimulationRequest,
     PickUpRequest, PutDownRequest, StackRequest, UnstackRequest,
+    ExecutePlanRequest
 )
 
 
@@ -74,6 +75,13 @@ def stack(validated_data: StackRequest):
 @validate_request(UnstackRequest)
 def unstack(validated_data: UnstackRequest):
     api_to_sim_queue.put(UnstackAction(validated_data))
+    result = sim_to_api_queue.get()
+    return return_api(result)
+
+@app.route('/execute_plan', methods=['POST'])
+@validate_request(ExecutePlanRequest)
+def execute_plan(validated_data: ExecutePlanRequest):
+    api_to_sim_queue.put(ExecutePlanAction(validated_data))
     result = sim_to_api_queue.get()
     return return_api(result)
 
