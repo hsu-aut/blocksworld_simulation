@@ -1,6 +1,6 @@
 {
   "name": "Quad-Stack Organization Challenge",
-  "description": "Organize 8 blocks into four perfect 2-block stacks: A-E, B-F, C-G, D-H",
+  "description": "Organize 8 blocks into four perfect 2-block stacks: A-E, B-F, D-H, C-G",
   "initial_state": {
     "stacks": [
       ["A", "B", "C", "D"],
@@ -12,19 +12,40 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Create four 2-block stacks with A-E, B-F, C-G, D-H",
+    "description": "Create four 2-block stacks with A-E, B-F, D-H, C-G",
     "target_configurations": [
       ["A", "E"],
       ["B", "F"],
-      ["C", "G"],
-      ["D", "H"]
+      ["D", "H"],
+      ["C", "G"]
     ]
   },
   "constraint_set": "base",
   "metadata": {
     "difficulty": "1",
     "min_steps": 18,
+    "aux_steps": 4,
     "num_blocks": 8,
     "num_stacks": 4
-  }
+  },
+  "optimal_plan": [
+    {"action": "unstack", "block1": "D", "block2": "C"},
+    {"action": "put_down", "block": "D"},
+    {"action": "unstack", "block1": "C", "block2": "B"},
+    {"action": "put_down", "block": "C"},
+    {"action": "unstack", "block1": "H", "block2": "G"},
+    {"action": "stack", "block1": "H", "block2": "D"},
+    {"action": "unstack", "block1": "G", "block2": "F"},
+    {"action": "stack", "block1": "G", "block2": "C"},
+    {"action": "unstack", "block1": "B", "block2": "A", "auxiliary": true},
+    {"action": "stack", "block1": "B", "block2": "G", "auxiliary": true},
+    {"action": "unstack", "block1": "F", "block2": "E", "auxiliary": true},
+    {"action": "stack", "block1": "F", "block2": "H", "auxiliary": true},
+    {"action": "pick_up", "block": "E"},
+    {"action": "stack", "block1": "E", "block2": "A"},
+    {"action": "unstack", "block1": "B", "block2": "G"},
+    {"action": "put_down", "block": "B"},
+    {"action": "unstack", "block1": "F", "block2": "H"},
+    {"action": "stack", "block1": "F", "block2": "B"}
+  ]
 }

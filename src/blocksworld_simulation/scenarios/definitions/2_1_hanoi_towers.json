@@ -27,7 +27,40 @@
   "metadata": {
     "difficulty": "2",
     "min_steps": 30,
+    "aux_steps": 22,
     "num_blocks": 4,
     "num_stacks": 3
-  }
+  },
+  "optimal_plan": [
+    {"action": "unstack", "block1": "A", "block2": "B", "auxiliary": true},
+    {"action": "put_down", "block": "A", "auxiliary": true},
+    {"action": "unstack", "block1": "B", "block2": "C", "auxiliary": true},
+    {"action": "put_down", "block": "B", "auxiliary": true},
+    {"action": "pick_up", "block": "A", "auxiliary": true},
+    {"action": "stack", "block1": "A", "block2": "B", "auxiliary": true},
+    {"action": "unstack", "block1": "C", "block2": "D", "auxiliary": true},
+    {"action": "put_down", "block": "C", "auxiliary": true},
+    {"action": "unstack", "block1": "A", "block2": "B", "auxiliary": true},
+    {"action": "stack", "block1": "A", "block2": "D", "auxiliary": true},
+    {"action": "pick_up", "block": "B", "auxiliary": true},
+    {"action": "stack", "block1": "B", "block2": "C", "auxiliary": true},
+    {"action": "unstack", "block1": "A", "block2": "D", "auxiliary": true},
+    {"action": "stack", "block1": "A", "block2": "B", "auxiliary": true},
+    {"action": "pick_up", "block": "D"},
+    {"action": "put_down", "block": "D"},
+    {"action": "unstack", "block1": "A", "block2": "B", "auxiliary": true},
+    {"action": "stack", "block1": "A", "block2": "D", "auxiliary": true},
+    {"action": "unstack", "block1": "B", "block2": "C", "auxiliary": true},
+    {"action": "put_down", "block": "B", "auxiliary": true},
+    {"action": "unstack", "block1": "A", "block2": "D", "auxiliary": true},
+    {"action": "stack", "block1": "A", "block2": "B", "auxiliary": true},
+    {"action": "pick_up", "block": "C"},
+    {"action": "stack", "block1": "C", "block2": "D"},
+    {"action": "unstack", "block1": "A", "block2": "B", "auxiliary": true},
+    {"action": "put_down", "block": "A", "auxiliary": true},
+    {"action": "pick_up", "block": "B"},
+    {"action": "stack", "block1": "B", "block2": "C"},
+    {"action": "pick_up", "block": "A"},
+    {"action": "stack", "block1": "A", "block2": "B"}
+  ]
 }

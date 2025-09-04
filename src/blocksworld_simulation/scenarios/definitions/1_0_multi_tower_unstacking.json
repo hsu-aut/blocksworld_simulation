@@ -3,10 +3,10 @@
   "description": "Separate two 2-block towers into individual stacks",
   "initial_state": {
     "stacks": [
-      ["A", "B"],
-      ["C", "D"],
       [],
-      []
+      [],
+      ["B", "A"],
+      ["D", "C"]
     ],
     "holding": null,
     "robot_status": "idle"
@@ -24,7 +24,16 @@
   "metadata": {
     "difficulty": "1",
     "min_steps": 6,
+    "aux_steps": 0,
     "num_blocks": 4,
     "num_stacks": 4
-  }
+  },
+  "optimal_plan": [
+    {"action": "unstack", "block1": "A", "block2": "B"},
+    {"action": "put_down", "block": "A"},
+    {"action": "pick_up", "block": "B"},
+    {"action": "put_down", "block": "B"},
+    {"action": "unstack", "block1": "C", "block2": "D"},
+    {"action": "put_down", "block": "C"}
+  ]
 }

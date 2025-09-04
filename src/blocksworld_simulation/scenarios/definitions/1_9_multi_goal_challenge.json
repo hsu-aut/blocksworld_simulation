@@ -15,6 +15,8 @@
     "description": "Build two towers: A-C-E-G and B-D-F",
     "target_configurations": [
       ["A", "C", "E", "G"],
+      [],
+      [],
       ["B", "D", "F"]
     ]
   },
@@ -22,7 +24,24 @@
   "metadata": {
     "difficulty": "1",
     "min_steps": 14,
+    "aux_steps": 2,
     "num_blocks": 7,
     "num_stacks": 4
-  }
+  },
+  "optimal_plan": [
+    {"action": "unstack", "block1": "C", "block2": "B", "auxiliary": true},
+    {"action": "stack", "block1": "C", "block2": "E", "auxiliary": true},
+    {"action": "unstack", "block1": "B", "block2": "A"},
+    {"action": "put_down", "block": "B"},
+    {"action": "unstack", "block1": "C", "block2": "E"},
+    {"action": "stack", "block1": "C", "block2": "A"},
+    {"action": "unstack", "block1": "E", "block2": "D"},
+    {"action": "stack", "block1": "E", "block2": "C"},
+    {"action": "unstack", "block1": "G", "block2": "F"},
+    {"action": "stack", "block1": "G", "block2": "E"},
+    {"action": "pick_up", "block": "D"},
+    {"action": "stack", "block1": "D", "block2": "B"},
+    {"action": "pick_up", "block": "F"},
+    {"action": "stack", "block1": "F", "block2": "D"}
+  ]
 }
