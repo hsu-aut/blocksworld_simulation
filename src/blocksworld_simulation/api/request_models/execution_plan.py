@@ -10,36 +10,36 @@ LETTERS = Literal[
 
 class UnstackStep(BaseModel):
     """Pydantic model for an unstack step in the execution plan."""
-    action: str = "unstack"
+    action: Literal["unstack"]
     block1: LETTERS
     block2: LETTERS
 
 
 class StackStep(BaseModel):
     """Pydantic model for a stack step in the execution plan."""
-    action: str = "stack"
+    action: Literal["stack"]
     block1: LETTERS
     block2: LETTERS
 
 
 class PickUpStep(BaseModel):
     """Pydantic model for a pick up step in the execution plan."""
-    action: str = "pick_up"
+    action: Literal["pick_up"]
     block: LETTERS
 
 
 class PutDownStep(BaseModel):
     """Pydantic model for a put down step in the execution plan."""
-    action: str = "put_down"
+    action: Literal["put_down"]
     block: LETTERS
 
 
 class ExecutePlanRequest(BaseModel):
     """Pydantic model for an execute plan request."""
-    plan: list[Union[PickUpStep, PutDownStep, StackStep, UnstackStep]]
+    plan: list[UnstackStep | StackStep | PickUpStep | PutDownStep]
     """The execution plan to be executed."""   
-    validation: Optional[bool] = False
+    validation_mode: Optional[bool] = False
     """If True, the plan will be executed instantly, with no graphical representation 
-    and no modification of the simulatio state.
+    and no modification of the simulation state.
     The first error will be reported or none if the simulation is valid.
     If False (default), the plan will be executed in real-time."""

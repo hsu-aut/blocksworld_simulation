@@ -8,5 +8,9 @@ from .robot_action_requests import (
     UnstackRequest
 )
 from .execution_plan import (
-    ExecutePlanRequest
+    ExecutePlanRequest,
+    PickUpStep,
+    PutDownStep,
+    StackStep,
+    UnstackStep
 )
