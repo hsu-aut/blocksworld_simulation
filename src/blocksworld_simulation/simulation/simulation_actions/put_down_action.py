@@ -3,14 +3,15 @@ from .robot_action import RobotAction
 from ..stack import Stack
 from ..block import Block
 from ...api.request_models import PutDownRequest
+from ...api.request_models.execution_plan import PutDownStep
 
 
 class PutDownAction(RobotAction):
     """Action for putting down a block."""
 
-    def __init__(self, request: PutDownRequest):
+    def __init__(self, data: PutDownRequest | PutDownStep):
         super().__init__()
-        self._block_name = request.block
+        self._block_name = data.block
         self._block: Block = None
         self._stack: Stack = None
 

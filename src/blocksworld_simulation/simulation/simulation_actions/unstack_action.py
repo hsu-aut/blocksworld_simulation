@@ -3,16 +3,17 @@ from .robot_action import RobotAction
 from ..stack import Stack
 from ..block import Block
 from ...api.request_models import UnstackRequest
+from ...api.request_models.execution_plan import UnstackStep
 
 
 class UnstackAction(RobotAction):
     """Action for unstacking a block from another block."""
 
-    def __init__(self, request: UnstackRequest):
+    def __init__(self, data: UnstackRequest | UnstackStep):
         super().__init__()
-        self._block_name = request.block1
+        self._block_name = data.block1
         self._block: Block = None
-        self._block_below_name = request.block2
+        self._block_below_name = data.block2
         self._block_below: Block = None
         self._stack: Stack = None
 

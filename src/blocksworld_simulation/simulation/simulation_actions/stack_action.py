@@ -3,16 +3,17 @@ from .robot_action import RobotAction
 from ..stack import Stack
 from ..block import Block
 from ...api.request_models import StackRequest
+from ...api.request_models.execution_plan import StackStep
 
 
 class StackAction(RobotAction):
     """Action for stacking a block on another block."""
 
-    def __init__(self, request: StackRequest):
+    def __init__(self, data: StackRequest | StackStep):
         super().__init__()
-        self._block_name = request.block1
+        self._block_name = data.block1
         self._block: Block = None
-        self._target_block_name = request.block2
+        self._target_block_name = data.block2
         self._target_block: Block = None
         self._stack: Stack = None
 

@@ -10,9 +10,10 @@ from .robot import Robot
 from .simulation_actions import (
     PreStartAction, SimulationAction, QuitAction, 
     StartAction, StopAction, RobotAction, GetStatusAction, 
-    GetRulesAction, GetScenarioAction
+    GetRulesAction, GetScenarioAction, ExecutePlanAction
 )
 from .simulation_state import SimulationState
+import copy
 
 
 logger = logging.getLogger(__name__)
@@ -31,18 +32,25 @@ class BlocksWorldSimulation:
         # Initialize clock for frame rate control
         self._fps = 60
         self._clock = pygame.time.Clock()
-        # Application state and simulation state
+        # Application state
         self._app_running = False
+        # Application mode (validation mode: execute list of actions to be validated without gui, reset simulation afterwards)
+        self._validation_mode = False
         # Simulation state
         self._simulation_state: SimulationState = SimulationState(
             simulation_running=False,
             robot=None,
             stacks=[]
         )
+        self._pre_validation_simulation_state: SimulationState = None
         # Queues for input/feedback to user and API
         self._local_reply_queue = Queue()
         self._api_to_sim_queue = api_to_sim_queue
         self._sim_to_api_queue = sim_to_api_queue
+        # Queues etc. for executing plans
+        self._current_execute_plan_action: ExecutePlanAction = None
+        self._execute_plan_queue: Queue = Queue()
+        self._execute_plan_reply_queue: Queue = Queue()
 
     def _init_simulation(self, stack_config = None):
         """Initialize the simulation (randomly or with given stacks)"""
@@ -88,6 +96,14 @@ class BlocksWorldSimulation:
         # If the action is a RobotAction, pass the action to the robot
         elif isinstance(action, RobotAction):
             self._simulation_state.get_robot().set_action(action)
+        # If the action is a ExecutePlanAction, put actions in the execute plan processing queue
+        elif isinstance(action, ExecutePlanAction):
+            self._pre_validation_simulation_state = copy.deepcopy(self._simulation_state)
+            self._current_execute_plan_action = action
+            for sub_action in action.get_actions():
+                self._execute_plan_queue.put(sub_action)
+            self._validation_mode = action.is_in_validation_mode()
+            self._simulation_state.get_robot().set_validation_mode(self._validation_mode)
         return
 
     def _log_local_reply_queue(self):
@@ -95,6 +111,24 @@ class BlocksWorldSimulation:
         while not self._local_reply_queue.empty():
             success, message = self._local_reply_queue.get()
             logger.info(message) if success else logger.warning(message)
+
+    def _handle_execute_plan_reply_queue(self):
+        if not self._execute_plan_reply_queue.empty():
+            success, message = self._execute_plan_reply_queue.get()
+            # if success and last action, reply success via API, reset validation mode
+            if success and self._execute_plan_queue.empty():
+                self._current_execute_plan_action.reply_success()  
+            # if not success, return error report via API, reset validation mode and clear queue
+            elif not success:
+                self._current_execute_plan_action.reply_plan_invalid(message)
+            # in both cases, reset validation mode, queue and current action
+            if (success and self._execute_plan_queue.empty()) or not success:
+                # reset simulation state, if previously in validation mode
+                if self._validation_mode:
+                    self._simulation_state = self._pre_validation_simulation_state
+                self._simulation_state.get_robot().set_validation_mode(False)
+                self._validation_mode = False
+                self._execute_plan_queue = Queue()
 
     def _draw(self):
         """Draw the simulation"""
@@ -120,10 +154,15 @@ class BlocksWorldSimulation:
             # check user inputs
             input_action = handle_user_inputs(self._simulation_state)
             input_action.set_reply_queue(self._local_reply_queue) if input_action else None
-            # check for API inputs, overwriting user input if both are present
-            if not self._api_to_sim_queue.empty():
+            # check for API inputs, overwriting user input 
+            if not self._api_to_sim_queue.empty() and self._execute_plan_queue.empty():
                 input_action: SimulationAction = self._api_to_sim_queue.get()
                 input_action.set_reply_queue(self._sim_to_api_queue)
+            # check for execute plan processing inputs, overwriting API and user input
+            if not self._execute_plan_queue.empty() and self._simulation_state.get_robot().is_available():
+                input_action: RobotAction = self._execute_plan_queue.get()
+                input_action.set_reply_queue(self._execute_plan_reply_queue)
+                self._current_execute_plan_action.increment_step()
             # process input action (if any)
             constraint_manager.validate_action(input_action, self._simulation_state) if input_action else None
             # handle action (if any)
@@ -132,8 +171,10 @@ class BlocksWorldSimulation:
             self._simulation_state.get_robot().update_state() if self._simulation_state.get_simulation_running() else None
             # log local reply queue
             self._log_local_reply_queue()
+            # handle execute plan reply queue
+            self._handle_execute_plan_reply_queue()
             # draw the simulation
-            self._draw()
+            self._draw() if not self._validation_mode else None
             # update clock
             self._clock.tick(self._fps)
         # if we reach here, it means the app should quitting, so quit pygame, app will be closed by main.py
