@@ -14,15 +14,18 @@
     "description": "Build two towers A-B and A-C",
     "target_configurations": [
       ["A", "B"],
-      ["A", "C"]
+      ["A", "C"],
+      []
     ]
   },
   "constraint_set": "base",
   "metadata": {
     "difficulty": "0",
     "min_steps": -1,
+    "aux_steps": -1,
     "num_blocks": 3,
     "num_stacks": 3,
     "impossible_reason": "Block A appears in multiple target stacks simultaneously"
-  }
+  },
+  "optimal_plan": []
 }

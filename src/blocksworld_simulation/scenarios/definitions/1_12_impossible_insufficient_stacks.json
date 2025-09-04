@@ -24,8 +24,10 @@
   "metadata": {
     "difficulty": "impossible",
     "min_steps": -1,
+    "aux_steps": -1,
     "num_blocks": 5,
     "num_stacks": 3,
     "impossible_reason": "Goal requires 5 stacks but only 3 are available in the environment"
-  }
+  },
+  "optimal_plan": []
 }

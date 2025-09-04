@@ -13,6 +13,8 @@
   "goal": {
     "description": "Build tower B-A-C",
     "target_configurations": [
+      [],
+      [],
       ["B", "A", "C"]
     ]
   },
@@ -20,7 +22,16 @@
   "metadata": {
     "difficulty": "0",
     "min_steps": 6,
+    "aux_steps": 0,
     "num_blocks": 3,
     "num_stacks": 3
-  }
+  },
+  "optimal_plan": [
+    {"action": "unstack", "block1": "B", "block2": "A"},
+    {"action": "put_down", "block": "B"},
+    {"action": "pick_up", "block": "A"},
+    {"action": "stack", "block1": "A", "block2": "B"},
+    {"action": "pick_up", "block": "C"},
+    {"action": "stack", "block1": "C", "block2": "A"}
+  ]
 }

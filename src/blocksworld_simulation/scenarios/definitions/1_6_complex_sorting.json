@@ -14,6 +14,9 @@
   "goal": {
     "description": "Build tower G-F-E-D-C-B-A",
     "target_configurations": [
+      [],
+      [],
+      [],
       ["G", "F", "E", "D", "C", "B", "A"]
     ]
   },
@@ -21,7 +24,24 @@
   "metadata": {
     "difficulty": "1",
     "min_steps": 14,
+    "aux_steps": 0,
     "num_blocks": 7,
     "num_stacks": 4
-  }
+  },
+  "optimal_plan": [
+    {"action": "unstack", "block1": "G", "block2": "D"},
+    {"action": "put_down", "block": "G"},
+    {"action": "unstack", "block1": "F", "block2": "C"},
+    {"action": "stack", "block1": "F", "block2": "G"},
+    {"action": "unstack", "block1": "E", "block2": "B"},
+    {"action": "stack", "block1": "E", "block2": "F"},
+    {"action": "unstack", "block1": "D", "block2": "A"},
+    {"action": "stack", "block1": "D", "block2": "E"},
+    {"action": "pick_up", "block": "C"},
+    {"action": "stack", "block1": "C", "block2": "D"},
+    {"action": "pick_up", "block": "B"},
+    {"action": "stack", "block1": "B", "block2": "C"},
+    {"action": "pick_up", "block": "A"},
+    {"action": "stack", "block1": "A", "block2": "B"}
+  ]
 }

@@ -12,15 +12,18 @@
   "goal": {
     "description": "Build tower B-C-A",
     "target_configurations": [
-      ["B", "C", "A"]
+      ["B", "C", "A"],
+      []
     ]
   },
   "constraint_set": "base",
   "metadata": {
     "difficulty": "0",
     "min_steps": -1,
+    "aux_steps": -1,
     "num_blocks": 3,
     "num_stacks": 2,
     "impossible_reason": "Block B must be the base of the tower but A is below B in initial state. To place B as base, another stack is missing, because block A and C are already base of two stacks."
-  }
+  },
+  "optimal_plan": []
 }

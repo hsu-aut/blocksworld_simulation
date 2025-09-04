@@ -13,15 +13,19 @@
   "goal": {
     "description": "Build tower A-Z-B",
     "target_configurations": [
-      ["A", "Z", "B"]
+      ["A", "Z", "B"],
+      [],
+      []
     ]
   },
   "constraint_set": "base",
   "metadata": {
     "difficulty": "0",
     "min_steps": -1,
+    "aux_steps": -1,
     "num_blocks": 3,
     "num_stacks": 3,
     "impossible_reason": "Goal references block 'Z' that does not exist in initial state"
-  }
+  },
+  "optimal_plan": []
 }
