@@ -1,4 +1,4 @@
-from typing import Optional, Union, Literal
+from typing import Literal
 from pydantic import BaseModel
 
 
@@ -34,12 +34,7 @@ class PutDownStep(BaseModel):
     block: LETTERS
 
 
-class ExecutePlanRequest(BaseModel):
+class PlanRequest(BaseModel):
     """Pydantic model for an execute plan request."""
     plan: list[UnstackStep | StackStep | PickUpStep | PutDownStep]
-    """The execution plan to be executed."""   
-    validation_mode: Optional[bool] = False
-    """If True, the plan will be executed instantly, with no graphical representation 
-    and no modification of the simulation state.
-    The first error will be reported or none if the simulation is valid.
-    If False (default), the plan will be executed in real-time."""
+    """The execution plan to be executed."""

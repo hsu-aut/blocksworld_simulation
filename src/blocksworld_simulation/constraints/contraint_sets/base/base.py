@@ -82,7 +82,7 @@ class BaseConstraintSet(ConstraintSet):
             BlockBelowRelationship()
         ])
         # EXECUTE_PLAN: SimulationRunning
-        self._execute_plan_constraints.extend([
+        self._plan_constraints.extend([
             SimulationRunning()
         ])
         self._rules = get_base_rules()

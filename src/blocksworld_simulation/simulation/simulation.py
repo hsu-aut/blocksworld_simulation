@@ -10,7 +10,7 @@ from .robot import Robot
 from .simulation_actions import (
     PreStartAction, SimulationAction, QuitAction, 
     StartAction, StopAction, RobotAction, GetStatusAction, 
-    GetRulesAction, GetScenarioAction, ExecutePlanAction
+    GetRulesAction, GetScenarioAction, PlanAction
 )
 from .simulation_state import SimulationState
 import copy
@@ -48,7 +48,7 @@ class BlocksWorldSimulation:
         self._api_to_sim_queue = api_to_sim_queue
         self._sim_to_api_queue = sim_to_api_queue
         # Queues etc. for executing plans
-        self._current_execute_plan_action: ExecutePlanAction = None
+        self._current_execute_plan_action: PlanAction = None
         self._execute_plan_queue: Queue = Queue()
         self._execute_plan_reply_queue: Queue = Queue()
 
@@ -96,8 +96,8 @@ class BlocksWorldSimulation:
         # If the action is a RobotAction, pass the action to the robot
         elif isinstance(action, RobotAction):
             self._simulation_state.get_robot().set_action(action)
-        # If the action is a ExecutePlanAction, put actions in the execute plan processing queue
-        elif isinstance(action, ExecutePlanAction):
+        # If the action is a PlanAction, put actions in the execute plan processing queue
+        elif isinstance(action, PlanAction):
             self._pre_validation_simulation_state = copy.deepcopy(self._simulation_state)
             self._current_execute_plan_action = action
             for sub_action in action.get_actions():
