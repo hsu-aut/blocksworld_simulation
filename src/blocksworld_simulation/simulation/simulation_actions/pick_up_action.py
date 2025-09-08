@@ -3,7 +3,7 @@ from .robot_action import RobotAction
 from ..stack import Stack
 from ..block import Block
 from ...api.request_models import PickUpRequest
-from ...api.request_models.execution_plan import PickUpStep
+from ...api.request_models.plan import PickUpStep
 
 
 class PickUpAction(RobotAction):

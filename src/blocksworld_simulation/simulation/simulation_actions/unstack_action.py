@@ -3,7 +3,7 @@ from .robot_action import RobotAction
 from ..stack import Stack
 from ..block import Block
 from ...api.request_models import UnstackRequest
-from ...api.request_models.execution_plan import UnstackStep
+from ...api.request_models.plan import UnstackStep
 
 
 class UnstackAction(RobotAction):

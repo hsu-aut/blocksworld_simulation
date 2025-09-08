@@ -1,4 +1,4 @@
-from blocksworld_simulation.api.request_models import ExecutePlanRequest
+from blocksworld_simulation.api.request_models import PlanRequest
 from blocksworld_simulation.simulation.simulation_actions import RobotAction
 from blocksworld_simulation.simulation.simulation_actions import (
     PickUpAction,
@@ -7,18 +7,20 @@ from blocksworld_simulation.simulation.simulation_actions import (
     UnstackAction
 )
 from .simulation_action import SimulationAction
-from ...api.request_models.execution_plan import (
+from ...api.request_models.plan import (
     PickUpStep,
     PutDownStep,
     UnstackStep,
     StackStep
 )
-class ExecutePlanAction(SimulationAction):
-    """Action for executing a simulation plan."""
 
-    def __init__(self, request: ExecutePlanRequest):
+
+class PlanAction(SimulationAction):
+    """Action for executing or validating a simulation plan."""
+
+    def __init__(self, request: PlanRequest):
         super().__init__()
-        self._validation_mode = request.validation_mode
+        self._validation_mode = None # to be set in subclasses
         self._steps = request.plan
         self._actions: list[RobotAction] = []
         for step in self._steps:
@@ -70,3 +72,19 @@ class ExecutePlanAction(SimulationAction):
 
     def _failure_message(self) -> str:
         return "Failed to execute/validate plan"
+
+   
+class ExecutePlanAction(PlanAction):
+    """Action for executing a simulation plan."""
+
+    def __init__(self, request: PlanRequest):
+        super().__init__(request)
+        self._validation_mode = False
+
+
+class ValidatePlanAction(PlanAction):
+    """Action for validating a simulation plan."""
+
+    def __init__(self, request: PlanRequest):
+        super().__init__(request)
+        self._validation_mode = True
