@@ -22,7 +22,7 @@
   },
   "constraint_set": "base",
   "metadata": {
-    "difficulty": "impossible",
+    "difficulty": "1",
     "min_steps": -1,
     "aux_steps": -1,
     "num_blocks": 5,
