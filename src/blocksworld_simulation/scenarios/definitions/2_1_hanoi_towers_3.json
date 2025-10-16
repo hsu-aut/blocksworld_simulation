@@ -1,12 +1,11 @@
 {
-  "name": "Hanoi Towers Challenge",
+  "name": "Hanoi Towers Challenge 3",
   "description": "Restack Stack 1 to Stack 3",
   "initial_state": {
     "stacks": [
       [],
       [],
       [
-        {"name": "D", "x_size": 100, "y_size": 30},
         {"name": "C", "x_size": 80, "y_size": 30},
         {"name": "B", "x_size": 60, "y_size": 30},
         {"name": "A", "x_size": 40, "y_size": 30}
@@ -16,19 +15,19 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Restack Stack 3 (D-C-B-A) to Stack 2 (empty) following the hanoi tower rules-",
+    "description": "Restack Stack 3 (C-B-A) to Stack 2 (empty) following the hanoi tower rules-",
     "target_configurations": [
       [],
-      ["D", "C", "B", "A"],
+      ["C", "B", "A"],
       []      
     ]
   },
   "constraint_set": "hanoi_towers",
   "metadata": {
     "difficulty": "2",
-    "min_steps": 30,
-    "aux_steps": 22,
-    "num_blocks": 4,
+    "min_steps": -1,
+    "aux_steps": -1,
+    "num_blocks": 3,
     "num_stacks": 3
   },
   "optimal_plan": [
