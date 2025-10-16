@@ -40,7 +40,7 @@ class Robot:
     Handles a "state machine", the moving logic and the visual apperance of the robot."""
 
     def __init__(self):
-        self._x = 500
+        self._x = 280
         self._y = TOP_GRIP_HEIGHT
         self._target_x = 700
         self._target_y = 300

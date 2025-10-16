@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class BlocksWorldSimulation:
     """Main simulation class that manages the blocks world simulation"""
     
-    def __init__(self, api_to_sim_queue: Queue, sim_to_api_queue: Queue, width: int = 1000, height: int = 600):
+    def __init__(self, api_to_sim_queue: Queue, sim_to_api_queue: Queue, width: int = 560, height: int = 600):
         """Initialize the simulation with given width and height"""
         # Initialize pygame
         pygame.init()

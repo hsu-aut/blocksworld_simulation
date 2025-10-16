@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 import re
 
 DEFAULT_BLOCK_SIZE_X = 100
-DEFAULT_BLOCK_SIZE_Y = 60
+DEFAULT_BLOCK_SIZE_Y = 40
 COLOR_LIST = [
     (255, 140, 140), (140, 255, 140), (140, 140, 255), (255, 215, 140), 
     (200, 140, 255), (140, 255, 255), (255, 255, 140), (255, 140, 255), 
@@ -130,7 +130,7 @@ class Block:
             border_radius=corner_radius
         )
         # Draw the block's name in the center (including weight)
-        font = pygame.font.Font(None, 20)
+        font = pygame.font.Font(None, 40)
         label = self._name
         details = []
         if self._weight is not None:

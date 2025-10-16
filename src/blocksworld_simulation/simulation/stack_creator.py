@@ -9,7 +9,7 @@ from .stack import Stack
 logger = logging.getLogger(__name__)
 
 STACK_TO_BORDER_OFFSET = 50
-SCREEN_WIDTH = 1000
+SCREEN_WIDTH = 560
 SCREEN_HEIGHT = 600
 STACK_BASE_HEIGHT = 20
 STACK_BASE_WIDTH = 100
