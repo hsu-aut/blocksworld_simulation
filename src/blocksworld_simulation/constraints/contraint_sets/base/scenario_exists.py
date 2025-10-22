@@ -9,7 +9,7 @@ class ScenarioExists(Constraint):
 
     def validate(self, state: SimulationState, action: GetScenarioAction) -> bool:
         # get data from action
-        scenario_name_or_id = action.get_scenario_name
+        scenario_name_or_id = action.get_scenario_name()
         # if None, all scenarios are returned
         if scenario_name_or_id is None:
             return True
