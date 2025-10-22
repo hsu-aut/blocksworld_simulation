@@ -6,6 +6,7 @@ A visual simulation environment for the classic Blocksworld AI planning problem.
 
 - **Interactive GUI**: Pygame-based visual simulation with real-time block manipulation
 - **REST API**: Complete Flask-based API for programmatic control and automation
+- **LLM-Ready**: Compatible with AI assistants through our [MCP Server](https://github.com/hsu-aut/llmstudy_mcp-server)
 - **Predefined Scenarios**: 20+ built-in challenges with varying difficulty levels
 - **Plan Execution & Validation**: Test AI-generated plans before execution
 - **Constraint Sets**: Multiple rule sets including standard blocksworld and Tower of Hanoi
@@ -35,6 +36,18 @@ poetry run blocksworld-simulation
 ```
 
 The GUI will open, and the REST API will be available at `http://127.0.0.1:5001`.
+
+## 🤖 LLM Integration
+
+Want to use this simulation with your own AI agents or just try it out with LLMs like Claude or ChatGPT? Check out our **[MCP Server for Blocksworld Simulation](https://github.com/hsu-aut/llmstudy_mcp-server)** that exposes the simulation as MCP tools.
+
+The MCP server allows LLMs to:
+- Interact with the simulation through natural language
+- Execute block manipulation actions as tool calls
+- Query the simulation state and rules
+- Verify and execute multi-step plans
+
+Perfect for AI planning research, testing LLM reasoning capabilities, or building AI agents!
 
 ## 🎮 Control Methods
 
@@ -121,4 +134,9 @@ curl -X POST http://127.0.0.1:5001/start_simulation \
 ## 📚 Documentation
 
 - [REST API Documentation](./docs/rest-api.md) - Complete API reference with examples
+- [MCP Server Repository](https://github.com/hsu-aut/llmstudy_mcp-server) - LLM integration via Model Context Protocol
 - Scenario definitions: `src/blocksworld_simulation/scenarios/definitions/`
+
+## 🔗 Related Projects
+
+- **[Blocksworld MCP Server](https://github.com/hsu-aut/llmstudy_mcp-server)** - Enable LLMs to control the simulation through MCP tools
