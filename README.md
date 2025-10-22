@@ -1,46 +1,124 @@
-# 🧱 Blocksworld Simulation (Pygame)
+# 🧱 Blocksworld Simulation
 
-In this project, a simulation is provided with which the classic Blocksworld problem can be represented / simulated. 
-For this purpose, a robot arm is simulated that can place and move colored boxes on different stacks.  
-The graphical simulation is based on Pygame and several actions can be controlled either via keyboard input or conveniently via a REST API with Flask.
+A visual simulation environment for the classic Blocksworld AI planning problem. The simulation features a robot arm that can manipulate colored blocks across multiple stacks, with support for both interactive GUI control and programmatic access via a REST API.
 
-## How to run the simulation
+## ✨ Features
 
-The project uses the [poetry](https://python-poetry.org/docs/#installation) dependency management.
-Clone the repository and execute:
+- **Interactive GUI**: Pygame-based visual simulation with real-time block manipulation
+- **REST API**: Complete Flask-based API for programmatic control and automation
+- **Predefined Scenarios**: 20+ built-in challenges with varying difficulty levels
+- **Plan Execution & Validation**: Test AI-generated plans before execution
+- **Constraint Sets**: Multiple rule sets including standard blocksworld and Tower of Hanoi
+- **Optimal Solutions**: Reference solutions provided for all scenarios
+- **Keyboard Control**: Quick manual testing and experimentation
 
+## 🚀 Quick Start
+
+### Installation
+
+The project uses [Poetry](https://python-poetry.org/docs/#installation) for dependency management.
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd blocksworld-simulation
+```
+
+2. Install dependencies:
 ```bash
 poetry install
 ```
 
-to install the required packages.
-Then, run the simulation by executing: 
-
+3. Run the simulation:
 ```bash
 poetry run blocksworld-simulation
 ```
 
-## Control
+The GUI will open, and the REST API will be available at `http://127.0.0.1:5001`.
 
-### Controlling the Robot with Keyboard
+## 🎮 Control Methods
 
-Press the letter of a corresponding block to pick it up. 
-When controlling via the keyboard, there's no distinction made between unstack and pickup.
+### Keyboard Control
 
-When a block is lifted, it can either be placed on the floor (put down) using the space bar or stacked on another block by typing the corresponding letter of the block (stack).
+- **Pick up/Unstack**: Press the letter of the block you want to pick up
+- **Put down**: Press `SPACE` to place the held block on the ground
+- **Stack**: While holding a block, press the letter of the target block to stack on top of it
+- **Start random simulation**: Press `SPACE` (when no simulation is running)
 
-### Controlling the Robot via REST API commands
+### REST API Control
 
-There are the following 5 commands:
+The API provides 13 endpoints for complete programmatic control:
 
-1. `pick_up(block)` - picks up a block from the ground
+#### Simulation Control
+- `POST /start_simulation` - Start with a scenario or custom configuration
+- `POST /stop_simulation` - Stop the current simulation
+- `POST /quit` - Quit the application
 
-2. `put_down(block)` - puts down a held block on the ground
+#### Block Actions
+- `POST /pick_up` - Pick up a block from the ground
+- `POST /put_down` - Put down a held block
+- `POST /stack` - Stack one block on another
+- `POST /unstack` - Unstack one block from another
 
-3. `stack(block1, block2)` - stacks block1 on top of block2
+#### Plan Execution
+- `POST /execute_plan` - Execute a sequence of actions with GUI animation
+- `POST /validate_plan` - Validate a plan without executing it
 
-4. `unstack(block1, block2)` - unstacks block1 from block2
+#### Information
+- `GET /get_status` - Get current simulation state (blocks, stacks, robot)
+- `GET /get_rules` - Get active constraint rules
+- `GET /scenarios` - List all available scenarios
+- `GET /scenarios/<name_or_id>` - Get details for a specific scenario
 
-5. `get_status()` - returns the current status from the robot as well as the current positions of each block
+For detailed API documentation with request/response examples, see the [REST API Documentation](./docs/rest-api.md).
 
-For detailed information about the available REST API endpoints and example requests, see the [API documentation](./docs/rest-api.md).
+## 📋 Example Workflow
+
+```bash
+# 1. Get a scenario with its optimal plan
+curl http://127.0.0.1:5001/scenarios/Tower%20Building%20Challenge
+
+# 2. Start the scenario
+curl -X POST http://127.0.0.1:5001/start_simulation \
+  -H "Content-Type: application/json" \
+  -d '{"scenario_id": "Tower Building Challenge"}'
+
+# 3. Validate your plan before executing
+curl -X POST http://127.0.0.1:5001/validate_plan \
+  -H "Content-Type: application/json" \
+  -d '{
+    "plan": [
+      {"action": "pick_up", "block": "A"},
+      {"action": "stack", "block1": "A", "block2": "B"}
+    ]
+  }'
+
+# 4. Execute the plan (watch it in the GUI!)
+curl -X POST http://127.0.0.1:5001/execute_plan \
+  -H "Content-Type: application/json" \
+  -d '{
+    "plan": [
+      {"action": "pick_up", "block": "A"},
+      {"action": "stack", "block1": "A", "block2": "B"}
+    ]
+  }'
+```
+
+## 🎯 Constraint Sets
+
+The simulation supports different rule sets:
+
+- **`base`** (default): Standard blocksworld with limited ground positions
+- **`hanoi_towers`**: Tower of Hanoi rules (blocks must be placed in size order)
+
+Specify the constraint set when starting a simulation:
+```bash
+curl -X POST http://127.0.0.1:5001/start_simulation \
+  -H "Content-Type: application/json" \
+  -d '{"initial_stacks": [["A"], ["B"], ["C"]], "constraint_set": "hanoi_towers"}'
+```
+
+## 📚 Documentation
+
+- [REST API Documentation](./docs/rest-api.md) - Complete API reference with examples
+- Scenario definitions: `src/blocksworld_simulation/scenarios/definitions/`
