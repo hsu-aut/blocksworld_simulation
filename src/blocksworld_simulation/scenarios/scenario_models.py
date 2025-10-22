@@ -24,3 +24,4 @@ class Scenario(BaseModel):
     goal: Goal
     constraint_set: str
     metadata: Optional[Dict[str, Any]] = None
+    optimal_plan: Optional[List[Dict[str, Any]]] = None
