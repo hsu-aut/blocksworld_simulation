@@ -34,15 +34,15 @@ class BlocksWorldSimulation:
         self._clock = pygame.time.Clock()
         # Application state
         self._app_running = False
-        # Application mode (validation mode: execute list of actions to be validated without gui, reset simulation afterwards)
-        self._validation_mode = False
+        # Application mode (Verification mode: execute list of actions to be validated without gui, reset simulation afterwards)
+        self._verification_mode = False
         # Simulation state
         self._simulation_state: SimulationState = SimulationState(
             simulation_running=False,
             robot=None,
             stacks=[]
         )
-        self._pre_validation_simulation_state: SimulationState = None
+        self._pre_verification_simulation_state: SimulationState = None
         # Queues for input/feedback to user and API
         self._local_reply_queue = Queue()
         self._api_to_sim_queue = api_to_sim_queue
@@ -98,12 +98,12 @@ class BlocksWorldSimulation:
             self._simulation_state.get_robot().set_action(action)
         # If the action is a PlanAction, put actions in the execute plan processing queue
         elif isinstance(action, PlanAction):
-            self._pre_validation_simulation_state = copy.deepcopy(self._simulation_state)
+            self._pre_verification_simulation_state = copy.deepcopy(self._simulation_state)
             self._current_execute_plan_action = action
             for sub_action in action.get_actions():
                 self._execute_plan_queue.put(sub_action)
-            self._validation_mode = action.is_in_validation_mode()
-            self._simulation_state.get_robot().set_validation_mode(self._validation_mode)
+            self._verification_mode = action.is_in_verification_mode()
+            self._simulation_state.get_robot().set_verification_mode(self._verification_mode)
         return
 
     def _log_local_reply_queue(self):
@@ -115,19 +115,19 @@ class BlocksWorldSimulation:
     def _handle_execute_plan_reply_queue(self):
         if not self._execute_plan_reply_queue.empty():
             success, message = self._execute_plan_reply_queue.get()
-            # if success and last action, reply success via API, reset validation mode
+            # if success and last action, reply success via API, reset verification mode
             if success and self._execute_plan_queue.empty():
                 self._current_execute_plan_action.reply_success()  
-            # if not success, return error report via API, reset validation mode and clear queue
+            # if not success, return error report via API, reset verification mode and clear queue
             elif not success:
                 self._current_execute_plan_action.reply_plan_invalid(message)
-            # in both cases, reset validation mode, queue and current action
+            # in both cases, reset verification mode, queue and current action
             if (success and self._execute_plan_queue.empty()) or not success:
-                # reset simulation state, if previously in validation mode
-                if self._validation_mode:
-                    self._simulation_state = self._pre_validation_simulation_state
-                self._simulation_state.get_robot().set_validation_mode(False)
-                self._validation_mode = False
+                # reset simulation state, if previously in verification mode
+                if self._verification_mode:
+                    self._simulation_state = self._pre_verification_simulation_state
+                self._simulation_state.get_robot().set_verification_mode(False)
+                self._verification_mode = False
                 self._execute_plan_queue = Queue()
 
     def _draw(self):
@@ -174,7 +174,7 @@ class BlocksWorldSimulation:
             # handle execute plan reply queue
             self._handle_execute_plan_reply_queue()
             # draw the simulation
-            self._draw() if not self._validation_mode else None
+            self._draw() if not self._verification_mode else None
             # update clock
             self._clock.tick(self._fps)
         # if we reach here, it means the app should quitting, so quit pygame, app will be closed by main.py

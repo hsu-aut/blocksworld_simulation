@@ -11,4 +11,4 @@ from .stack_action import StackAction
 from .unstack_action import UnstackAction
 from .get_scenarios_action import GetScenarioAction
 from .get_rules_action import GetRulesAction
-from .plan_action import ExecutePlanAction, ValidatePlanAction, PlanAction
+from .plan_action import ExecutePlanAction, VerifyPlanAction, PlanAction

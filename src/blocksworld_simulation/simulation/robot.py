@@ -45,7 +45,7 @@ class Robot:
         self._target_x = 700
         self._target_y = 300
         self._state = RobotState.IDLE
-        self._validation_mode = False
+        self._verification_mode = False
         self._held_block: Block = None
         self._action_in_progress: RobotAction = None
 
@@ -61,9 +61,9 @@ class Robot:
         """Check if the robot is available for a new action"""
         return (self._state == RobotState.IDLE or self._state == RobotState.HOLDING) and self._action_in_progress is None
 
-    def set_validation_mode(self, validation_mode: bool):
-        """Set the robot to validation mode mode, in which actions are executed instantly, without visual feedback."""
-        self._validation_mode = validation_mode
+    def set_verification_mode(self, verification_mode: bool):
+        """Set the robot to verification mode mode, in which actions are executed instantly, without visual feedback."""
+        self._verification_mode = verification_mode
 
     def set_action(self, action: RobotAction):
         """Set a new action for the robot to execute"""
@@ -101,7 +101,7 @@ class Robot:
             return
         # if moving to pick up a block, move until target x is reached, then transition to picking
         if self._state == RobotState.MOVING_TO_PICK:
-            if abs(self._x - self._target_x) > SPEED and not self._validation_mode:
+            if abs(self._x - self._target_x) > SPEED and not self._verification_mode:
                 self._x += SPEED if self._x < self._target_x else -SPEED
             else:
                 self._x = self._target_x
@@ -109,7 +109,7 @@ class Robot:
             return
         # if picking, move until target y is reached, then transition to LIFTING
         if self._state == RobotState.PICKING and isinstance(self._action_in_progress, (UnstackAction, PickUpAction)):
-            if abs(self._y - self._target_y) > SPEED and not self._validation_mode:
+            if abs(self._y - self._target_y) > SPEED and not self._verification_mode:
                 self._y += SPEED 
             else:
                 self._y = self._target_y
@@ -119,7 +119,7 @@ class Robot:
             return
         # if lifting, move until top grip height is reached, then transition to HOLDING
         if self._state == RobotState.LIFTING:
-            if abs(self._y - TOP_GRIP_HEIGHT) > SPEED and not self._validation_mode:
+            if abs(self._y - TOP_GRIP_HEIGHT) > SPEED and not self._verification_mode:
                 self._y -= SPEED
                 self._held_block.set_position_on_robot(self._x, self._y)
             else:
@@ -132,7 +132,7 @@ class Robot:
             return
         # if robot is moving to place a block, move until target x is reached, then transition to LOWERING
         if self._state == RobotState.MOVING_TO_PLACE:
-            if abs(self._x - self._target_x) > SPEED and not self._validation_mode:
+            if abs(self._x - self._target_x) > SPEED and not self._verification_mode:
                 self._x += SPEED if self._x < self._target_x else -SPEED
                 self._held_block.set_position_on_robot(self._x, self._y)
             else:
@@ -142,7 +142,7 @@ class Robot:
             return
         # if robot is lowering, move until target y is reached, then transition to RELEASING
         if self._state == RobotState.LOWERING and isinstance(self._action_in_progress, (StackAction, PutDownAction)):
-            if abs(self._y - self._target_y) > SPEED and not self._validation_mode:
+            if abs(self._y - self._target_y) > SPEED and not self._verification_mode:
                 self._y += SPEED
                 self._held_block.set_position_on_robot(self._x, self._y)
             else:
@@ -154,7 +154,7 @@ class Robot:
             return
         # if robot is releasing, move until top grip height is reached, then transition to IDLE
         if self._state == RobotState.RELEASING:
-            if abs(self._y - TOP_GRIP_HEIGHT) > SPEED and not self._validation_mode:
+            if abs(self._y - TOP_GRIP_HEIGHT) > SPEED and not self._verification_mode:
                 self._y -= SPEED
             else:
                 self._y = TOP_GRIP_HEIGHT

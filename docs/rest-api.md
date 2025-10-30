@@ -251,16 +251,16 @@ curl -X POST http://127.0.0.1:5001/execute_plan \
   -d '{"plan": [{"action": "pick_up", "block": "A"}, {"action": "put_down", "block": "A"}]}'
 ```
 
-#### 9. Validate Plan
-Validates a plan without executing it. The validation runs in the background without GUI animation and doesn't modify the actual simulation state. It checks if each action in the plan would be valid when executed sequentially.
+#### 9. Verify Plan
+Verifies a plan without executing it. The verification runs in the background without GUI animation and doesn't modify the actual simulation state. It checks if each action in the plan would be valid when executed sequentially.
 
-**Endpoint:** `POST /validate_plan`
+**Endpoint:** `POST /verify_plan`
 
 **Request Body:** Same format as execute_plan
 
 **cURL Example:**
 ```bash
-curl -X POST http://127.0.0.1:5001/validate_plan \
+curl -X POST http://127.0.0.1:5001/verify_plan \
   -H "Content-Type: application/json" \
   -d '{"plan": [{"action": "pick_up", "block": "A"}]}'
 ```
@@ -268,7 +268,7 @@ curl -X POST http://127.0.0.1:5001/validate_plan \
 **Success Response:**
 ```json
 {
-  "result": "Simulation plan is valid and can be executed."
+  "result": "Simulation plan is verified and can be executed."
 }
 ```
 
@@ -529,10 +529,10 @@ curl -X POST http://127.0.0.1:5001/execute_plan \
   }'
 ```
 
-### Validating a Plan Before Execution
+### Verifying a Plan Before Execution
 ```bash
-# Validate a plan to check if it would work
-curl -X POST http://127.0.0.1:5001/validate_plan \
+# Verify a plan to check if it would work
+curl -X POST http://127.0.0.1:5001/verify_plan \
   -H "Content-Type: application/json" \
   -d '{
     "plan": [
