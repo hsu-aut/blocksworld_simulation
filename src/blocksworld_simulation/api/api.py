@@ -6,7 +6,7 @@ import logging
 from blocksworld_simulation.simulation.simulation_actions import (
     PreStartAction, QuitAction, StopAction,
     PickUpAction, PutDownAction, StackAction, UnstackAction, 
-    ExecutePlanAction, ValidatePlanAction,
+    ExecutePlanAction, VerifyPlanAction,
     GetScenarioAction, GetStatusAction, GetRulesAction
 )
 
@@ -86,10 +86,10 @@ def execute_plan(validated_data: PlanRequest):
     result = sim_to_api_queue.get()
     return return_api(result)
 
-@app.route('/validate_plan', methods=['POST'])
+@app.route('/verify_plan', methods=['POST'])
 @validate_request(PlanRequest)
-def validate_plan(validated_data: PlanRequest):
-    api_to_sim_queue.put(ValidatePlanAction(validated_data))
+def verify_plan(validated_data: PlanRequest):
+    api_to_sim_queue.put(VerifyPlanAction(validated_data))
     result = sim_to_api_queue.get()
     return return_api(result)
 

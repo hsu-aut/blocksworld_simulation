@@ -8,7 +8,7 @@ A visual simulation environment for the classic Blocksworld AI planning problem.
 - **REST API**: Complete Flask-based API for programmatic control and automation
 - **LLM-Ready**: Compatible with AI assistants through our [MCP Server](https://github.com/hsu-aut/llmstudy_mcp-server)
 - **Predefined Scenarios**: 20+ built-in challenges with varying difficulty levels
-- **Plan Execution & Validation**: Test AI-generated plans before execution
+- **Plan Execution & Verification**: Test AI-generated plans before execution
 - **Constraint Sets**: Multiple rule sets including standard blocksworld and Tower of Hanoi
 - **Optimal Solutions**: Reference solutions provided for all scenarios
 - **Keyboard Control**: Quick manual testing and experimentation
@@ -75,7 +75,7 @@ The API provides 13 endpoints for complete programmatic control:
 
 #### Plan Execution
 - `POST /execute_plan` - Execute a sequence of actions with GUI animation
-- `POST /validate_plan` - Validate a plan without executing it
+- `POST /verify_plan` - Verify a plan without executing it
 
 #### Information
 - `GET /get_status` - Get current simulation state (blocks, stacks, robot)
@@ -96,8 +96,8 @@ curl -X POST http://127.0.0.1:5001/start_simulation \
   -H "Content-Type: application/json" \
   -d '{"scenario_id": "Tower Building Challenge"}'
 
-# 3. Validate your plan before executing
-curl -X POST http://127.0.0.1:5001/validate_plan \
+# 3. Verify your plan before executing
+curl -X POST http://127.0.0.1:5001/verify_plan \
   -H "Content-Type: application/json" \
   -d '{
     "plan": [

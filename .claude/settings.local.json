@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Read(//c/Users/LuisMiguelVieiradaSi/git-repos/llmstudy_mcp-server/src/blocksworld_simulation_mcp_server/**)"
+    ]
+  }
+}

@@ -16,11 +16,11 @@ from ...api.request_models.plan import (
 
 
 class PlanAction(SimulationAction):
-    """Action for executing or validating a simulation plan."""
+    """Action for executing or verifying a simulation plan."""
 
     def __init__(self, request: PlanRequest):
         super().__init__()
-        self._validation_mode = None # to be set in subclasses
+        self._verification_mode = None # to be set in subclasses
         self._steps = request.plan
         self._actions: list[RobotAction] = []
         for step in self._steps:
@@ -34,8 +34,8 @@ class PlanAction(SimulationAction):
                 self._actions.append(UnstackAction(step))
         self._current_step_index: int = -1
 
-    def is_in_validation_mode(self) -> bool:
-        return self._validation_mode
+    def is_in_verification_mode(self) -> bool:
+        return self._verification_mode
     
     def get_actions(self) -> list[RobotAction]:
         return self._actions
@@ -66,12 +66,12 @@ class PlanAction(SimulationAction):
         self._reply_queue.put((False, failure_message))
 
     def _success_message(self):
-        if self._validation_mode:
-            return "Simulation plan is valid and can be executed."
-        return "Simulation plan is valid and was executed successfully."
+        if self._verification_mode:
+            return "Simulation plan is verified and can be executed."
+        return "Simulation plan is verified and was executed successfully."
 
     def _failure_message(self) -> str:
-        return "Failed to execute/validate plan"
+        return "Failed to execute/verify plan"
 
    
 class ExecutePlanAction(PlanAction):
@@ -79,12 +79,12 @@ class ExecutePlanAction(PlanAction):
 
     def __init__(self, request: PlanRequest):
         super().__init__(request)
-        self._validation_mode = False
+        self._verification_mode = False
 
 
-class ValidatePlanAction(PlanAction):
-    """Action for validating a simulation plan."""
+class VerifyPlanAction(PlanAction):
+    """Action for verifying a simulation plan."""
 
     def __init__(self, request: PlanRequest):
         super().__init__(request)
-        self._validation_mode = True
+        self._verification_mode = True
