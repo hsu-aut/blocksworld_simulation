@@ -1,6 +1,8 @@
 from blocksworld_simulation.constraints.constraint_set import ConstraintSet
 from blocksworld_simulation.constraints.contraint_sets.base.base import BaseConstraintSet
 from blocksworld_simulation.constraints.contraint_sets.hanoi_towers.hanoi_towers import HanoiTowersConstraintSet
+from blocksworld_simulation.constraints.contraint_sets.partial_observability.partial_observability import PartialObservabilityConstraintSet
+from blocksworld_simulation.constraints.contraint_sets.different_blocks.different_blocks import DifferentBlocksConstraintSet
 from blocksworld_simulation.simulation.simulation_actions import SimulationAction
 from blocksworld_simulation.simulation.simulation_state import SimulationState
 
@@ -11,6 +13,8 @@ class ConstraintManager:
         self._constraint_sets: dict[str, ConstraintSet] = {
             "base": BaseConstraintSet(),
             "hanoi_towers": HanoiTowersConstraintSet(),
+            "partial_observability": PartialObservabilityConstraintSet(),
+            "different_blocks": DifferentBlocksConstraintSet()
         }
 
     def _find_set_by_name(self, name: str) -> ConstraintSet | None:
