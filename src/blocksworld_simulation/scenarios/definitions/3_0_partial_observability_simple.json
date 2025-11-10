@@ -1,0 +1,36 @@
+{
+  "name": "Partial Observability - Simple Challenge",
+  "description": "Separate a 3-block tower with only partial visibility. You can only see the top block of each stack, but know how many blocks are on each stack.",
+  "initial_state": {
+    "stacks": [
+      ["A", "B", "C"],
+      [],
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Place each block alone on separate stacks",
+    "target_configurations": [
+      ["A"],
+      ["C"],
+      ["B"]
+    ]
+  },
+  "constraint_set": "partial_observability",
+  "metadata": {
+    "difficulty": "3",
+    "min_steps": 4,
+    "aux_steps": 0,
+    "num_blocks": 3,
+    "num_stacks": 3,
+    "observability": "partial - only top blocks visible"
+  },
+  "optimal_plan": [
+    {"action": "unstack", "block1": "C", "block2": "B"},
+    {"action": "put_down", "block": "C"},
+    {"action": "unstack", "block1": "B", "block2": "A"},
+    {"action": "put_down", "block": "A"}
+  ]
+}
