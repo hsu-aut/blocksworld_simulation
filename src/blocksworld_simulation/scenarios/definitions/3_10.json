@@ -1,0 +1,31 @@
+{
+  "name": "3_10",
+  "description": "IMPOSSIBLE - Circular block dependency",
+  "initial_state": {
+    "stacks": [
+      ["B", "A"],
+      ["C", "D"],
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Sort the blocks so that B is on A, C is on B, D is on C and A is on D",
+    "target_configurations": [
+      ["A", "B", "C", "D", "A"],
+      [],
+      []
+    ]
+  },
+  "constraint_set": "base",
+  "metadata": {
+    "category": "3",
+    "min_steps": -1,
+    "aux_steps": -1,
+    "num_blocks": 4,
+    "num_stacks": 3,
+    "misplaced_blocks": 4,
+    "impossible_reason": "Circular dependency among blocks: A on D, D on C, C on B, and B on A."
+  }
+}

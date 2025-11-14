@@ -1,0 +1,32 @@
+{
+  "name": "5_6",
+  "description": "Organize 6 blocks with partial visibility. You can only see the top block of each stack, but know how many blocks are on each stack.",
+  "initial_state": {
+    "stacks": [
+      ["A", "D", "F", "C"],
+      ["B", "E"],
+      [],
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build the following towers (each from bottom to top): A-B, C-E, D-F",
+    "target_configurations": [
+      ["A", "B"],
+      [],
+      ["C", "E"],
+      ["D", "F"]
+    ]
+  },
+  "constraint_set": "partial_observability",
+  "metadata": {
+    "category": "5",
+    "min_steps": 12,
+    "aux_steps": 2,
+    "num_blocks": 6,
+    "num_stacks": 4,
+    "misplaced_blocks": 5
+  }
+}

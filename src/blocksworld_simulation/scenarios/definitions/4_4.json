@@ -1,0 +1,53 @@
+{
+  "name": "4_4",
+  "description": "Create Tower E,D,C,B,A",
+  "initial_state": {
+    "stacks": [
+      [
+        {"name": "E", "x_size": 100, "y_size": 40},
+        {"name": "D", "x_size": 80, "y_size": 40}
+      ],
+      [],
+      [
+        {"name": "C", "x_size": 60, "y_size": 40},
+        {"name": "B", "x_size": 40, "y_size": 40},
+        {"name": "A", "x_size": 20, "y_size": 40}
+      ]
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Create Tower E,D,C,B,A",
+    "target_configurations": [
+      ["E", "D", "C", "B", "A"],
+      [],
+      []
+    ]
+  },
+  "constraint_set": "hanoi_towers",
+  "metadata": {
+    "category": "4",
+    "min_steps": 14,
+    "aux_steps": 8,
+    "num_blocks": 5,
+    "num_stacks": 3,
+    "misplaced_blocks": 3
+  },
+  "optimal_plan": [
+    {"action": "unstack", "block1": "A", "block2": "B", "auxiliary": true},
+    {"action": "stack", "block1": "A", "block2": "D", "auxiliary": true},
+    {"action": "unstack", "block1": "B", "block2": "C", "auxiliary": true},
+    {"action": "put_down", "block": "B", "auxiliary": true},
+    {"action": "unstack", "block1": "A", "block2": "D", "auxiliary": true},
+    {"action": "stack", "block1": "A", "block2": "B", "auxiliary": true},
+    {"action": "pick_up", "block": "C"},
+    {"action": "stack", "block1": "C", "block2": "D"},
+    {"action": "unstack", "block1": "A", "block2": "B", "auxiliary": true},
+    {"action": "put_down", "block": "A", "auxiliary": true},
+    {"action": "pick_up", "block": "B"},
+    {"action": "stack", "block1": "B", "block2": "C"},
+    {"action": "pick_up", "block": "A"},
+    {"action": "stack", "block1": "A", "block2": "B"}
+  ]
+}

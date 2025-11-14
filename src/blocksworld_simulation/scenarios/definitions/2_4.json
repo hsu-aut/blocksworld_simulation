@@ -1,0 +1,53 @@
+{
+  "name": "2_4",
+  "name_old": "Balanced Distribution Challenge",
+  "description": "Redistribute 6-block tower into two balanced 3-block stacks",
+  "initial_state": {
+    "stacks": [
+      ["A", "B", "C", "D", "E", "F"],
+      [],
+      [],
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build two towers A-C-E and B-D-F",
+    "target_configurations": [
+      ["A", "C", "E"],
+      [],
+      ["B", "D", "F"],
+      []
+    ]
+  },
+  "constraint_set": "base",
+  "metadata": {
+    "category": "2",
+    "min_steps": 18,
+    "aux_steps": 8,
+    "num_blocks": 6,
+    "num_stacks": 4,
+    "misplaced_blocks": 5
+  },
+  "optimal_plan": [
+    {"action": "unstack", "block1": "F", "block2": "E", "auxiliary": true},
+    {"action": "put_down", "block": "F", "auxiliary": true},
+    {"action": "unstack", "block1": "E", "block2": "D", "auxiliary": true},
+    {"action": "stack", "block1": "E", "block2": "F", "auxiliary": true},
+    {"action": "unstack", "block1": "D", "block2": "C", "auxiliary": true},
+    {"action": "stack", "block1": "D", "block2": "E", "auxiliary": true},
+    {"action": "unstack", "block1": "C", "block2": "B", "auxiliary": true},
+    {"action": "stack", "block1": "C", "block2": "D", "auxiliary": true},
+    {"action": "unstack", "block1": "B", "block2": "A"},
+    {"action": "put_down", "block": "B"},
+    {"action": "unstack", "block1": "C", "block2": "D"},
+    {"action": "stack", "block1": "C", "block2": "A"},
+    {"action": "unstack", "block1": "D", "block2": "E"},
+    {"action": "stack", "block1": "D", "block2": "B"},
+    {"action": "unstack", "block1": "E", "block2": "F"},
+    {"action": "stack", "block1": "E", "block2": "C"},
+    {"action": "pick_up", "block": "F"},
+    {"action": "stack", "block1": "F", "block2": "D"}
+  ]
+}

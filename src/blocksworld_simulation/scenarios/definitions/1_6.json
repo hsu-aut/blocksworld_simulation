@@ -1,0 +1,41 @@
+{
+  "name": "1_6",
+  "name_old": "Multi-Tower Unstacking Challenge",
+  "description": "Separate two 2-block towers into individual stacks",
+  "initial_state": {
+    "stacks": [
+      [],
+      [],
+      ["B", "A"],
+      ["D", "C"]
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Place each block in its own stack",
+    "target_configurations": [
+      ["A"],
+      ["B"],
+      ["C"],
+      ["D"]
+    ]
+  },
+  "constraint_set": "base",
+  "metadata": {
+    "category": "1",
+    "min_steps": 4,
+    "aux_steps": 0,
+    "num_blocks": 4,
+    "num_stacks": 4,
+    "misplaced_blocks": 2
+  },
+  "optimal_plan": [
+    {"action": "unstack", "block1": "A", "block2": "B"},
+    {"action": "put_down", "block": "A"},
+    {"action": "pick_up", "block": "B"},
+    {"action": "put_down", "block": "B"},
+    {"action": "unstack", "block1": "C", "block2": "D"},
+    {"action": "put_down", "block": "C"}
+  ]
+}

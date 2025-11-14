@@ -1,0 +1,57 @@
+{
+  "name": "2_7",
+  "name_old": "Ultimate Tower Challenge",
+  "description": "Build the ultimate 8-block tower H-G-F-E-D-C-B-A from maximum chaos",
+  "initial_state": {
+    "stacks": [
+      ["A", "E"],
+      ["B", "F"],
+      ["C", "G"],
+      ["D", "H"]
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build tower H-G-F-E-D-C-B-A",
+    "target_configurations": [
+      [],
+      [],
+      [],
+      ["H", "G", "F", "E", "D", "C", "B", "A"]
+    ]
+  },
+  "constraint_set": "base",
+  "metadata": {
+    "category": "2",
+    "min_steps": 22,
+    "aux_steps": 6,
+    "num_blocks": 8,
+    "num_stacks": 4,
+    "misplaced_blocks": 8
+  },
+  "optimal_plan": [
+    {"action": "unstack", "block1": "H", "block2": "D", "auxiliary": true},
+    {"action": "stack", "block1": "H", "block2": "G", "auxiliary": true},
+    {"action": "pick_up", "block": "D", "auxiliary": true},
+    {"action": "stack", "block1": "D", "block2": "E", "auxiliary": true},
+    {"action": "unstack", "block1": "H", "block2": "G"},
+    {"action": "put_down", "block": "H"},
+    {"action": "unstack", "block1": "G", "block2": "C"},
+    {"action": "stack", "block1": "G", "block2": "H"},
+    {"action": "unstack", "block1": "F", "block2": "B"},
+    {"action": "stack", "block1": "F", "block2": "G"},
+    {"action": "unstack", "block1": "D", "block2": "E", "auxiliary": true},
+    {"action": "stack", "block1": "D", "block2": "C", "auxiliary": true},
+    {"action": "unstack", "block1": "E", "block2": "A"},
+    {"action": "stack", "block1": "E", "block2": "F"},
+    {"action": "unstack", "block1": "D", "block2": "C"},
+    {"action": "stack", "block1": "D", "block2": "E"},
+    {"action": "pick_up", "block": "C"},
+    {"action": "stack", "block1": "C", "block2": "D"},
+    {"action": "pick_up", "block": "B"},
+    {"action": "stack", "block1": "B", "block2": "C"},
+    {"action": "pick_up", "block": "A"},
+    {"action": "stack", "block1": "A", "block2": "B"}
+  ]
+}

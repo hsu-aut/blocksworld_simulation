@@ -1,0 +1,32 @@
+{
+  "name": "5_3",
+  "description": "Build the following towers (each from bottom to top): A-E, C-D, F-H-G, B-I",
+  "initial_state": {
+    "stacks": [
+      ["A", "C", "E"],
+      ["B", "D", "F"],
+      ["G", "H", "I"],
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build the following towers ( each from bottom to top): A-E, C-D, F-H-G, B-I",
+    "target_configurations": [
+      ["A", "E"],
+      ["C", "D"],
+      ["F","H", "G"],
+      ["B","I"]
+    ]
+  },
+  "constraint_set": "partial_observability",
+  "metadata": {
+    "category": "5",
+    "min_steps": 20,
+    "aux_steps": 6,
+    "num_blocks": 9,
+    "num_stacks": 4,
+    "misplaced_blocks": 7
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "3_7",
+  "description": "Sort the blocks so that each stack contains only blocks of one size.",
+  "initial_state": {
+    "stacks": [
+      [ 
+        {"name": "E", "x_size": 80, "y_size": 40},
+        {"name": "C", "x_size": 80, "y_size": 40},
+        {"name": "G", "x_size": 40, "y_size": 40}
+      ],
+      [
+        {"name": "F", "x_size": 60, "y_size": 40},
+        {"name": "D", "x_size": 60, "y_size": 40}
+      ],
+      [
+
+        {"name": "B", "x_size": 100, "y_size": 40},
+        {"name": "A", "x_size": 100, "y_size": 40},
+        {"name": "H", "x_size": 40, "y_size": 40}
+      ]
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Sort the blocks so that each stack contains only blocks of one size.",
+    "target_configurations": [
+      ["B", "A"],
+      ["E", "C"],
+      ["F", "D"],
+      ["G", "H"]
+    ]
+  },
+  "constraint_set": "different_blocks",
+  "metadata": {
+    "category": "3",
+    "min_steps": -1,
+    "aux_steps": -1,
+    "num_blocks": 6,
+    "num_stacks": 3,
+    "misplaced_blocks": 2,
+    "impossible_reason": "There are more different block sizes than stacks, making it impossible to sort as per goal configuaration."
+  }
+}

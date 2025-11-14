@@ -1,0 +1,29 @@
+{
+  "name": "3_9",
+  "description": "Build the tower A-B-C-D-E",
+  "initial_state": {
+    "stacks": [
+      ["A", "B", "E"],
+      ["C", "D"]
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build the tower A-B-C-D-E",
+    "target_configurations": [
+      ["A", "B","C", "D", "E"],
+      []
+    ]
+  },
+  "constraint_set": "base",
+  "metadata": {
+    "category": "3",
+    "min_steps": -1,
+    "aux_steps": -1,
+    "num_blocks": 3,
+    "num_stacks": 3,
+    "misplaced_blocks": 3,
+    "impossible_reason": "In order to stack blocks C and D according to the goal configuration, block E has to be temporarily stored on a third stack. However, only two stacks are available."
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "2_9",
+  "description": "Build tower G-M-R-F-A-D-Q",
+  "initial_state": {
+    "stacks": [
+      ["A", "E", "I", "M", "Q"],
+      ["B", "F", "J", "N", "R"],
+      ["C", "G", "K", "O", "S"],
+      ["D", "H", "L", "P", "T"],
+      [],
+      []
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build tower G-M-R-F-A-D-Q",
+    "target_configurations": [
+      ["T", "P", "L", "H" ],
+      ["B", "I", "E" ],
+      ["C", "N", "J"],
+      [],
+      ["S", "O", "K"],
+      ["G", "M", "R", "F", "A", "D", "Q"]
+    ]
+  },
+  "constraint_set": "base",
+  "metadata": {
+    "category": "2",
+    "min_steps": 38,
+    "aux_steps": 24,
+    "num_blocks": 20,
+    "num_stacks": 6,
+    "misplaced_blocks": 7
+  }
+}

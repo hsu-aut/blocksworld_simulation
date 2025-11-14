@@ -1,0 +1,30 @@
+{
+  "name": "3_3",
+  "name_old": "Impossible: Unreachable Order",
+  "description": "IMPOSSIBLE - Cannot build B-C-A tower: B needs to be base but A and C blocks access to base",
+  "initial_state": {
+    "stacks": [
+      ["A", "B"],
+      ["C"]
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build tower B-C-A",
+    "target_configurations": [
+      ["B", "C", "A"],
+      []
+    ]
+  },
+  "constraint_set": "base",
+  "metadata": {
+    "category": "3",
+    "min_steps": -1,
+    "aux_steps": -1,
+    "num_blocks": 3,
+    "num_stacks": 2,
+    "misplaced_blocks": 3,
+    "impossible_reason": "Block B must be the base of the tower but A is below B in initial state. To place B as base, another stack is missing, because block A and C are already base of two stacks."
+  }
+}

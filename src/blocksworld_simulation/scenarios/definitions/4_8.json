@@ -1,0 +1,39 @@
+{
+  "name": "4_8",
+  "description": "Build the following towers (each from bottom to top): F-E-C, D-B, A",
+  "initial_state": {
+    "stacks": [
+      [
+        {"name": "F", "x_size": 100, "y_size": 40},
+        {"name": "D", "x_size": 60, "y_size": 40},
+        {"name": "B", "x_size": 40, "y_size": 40}
+      ],
+      [
+        {"name": "E", "x_size": 80, "y_size": 40},
+        {"name": "C", "x_size": 70, "y_size": 40}
+      ],
+      [
+        {"name": "A", "x_size": 100, "y_size": 40}
+      ]
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build the following towers (each from bottom to top): F-E-C, D-B, A",
+    "target_configurations": [
+      ["F", "E", "C"],
+      ["D", "B"],
+      ["A"]
+    ]
+  },
+  "constraint_set": "different_blocks",
+  "metadata": {
+    "category": "4",
+    "min_steps": 18,
+    "aux_steps": 10,
+    "num_blocks": 6,
+    "num_stacks": 3,
+    "misplaced_blocks": 4
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "1_2",
+  "name_old": "Stacking Challenge", 
+  "description": "Stack 3 individual blocks into a single tower",
+  "initial_state": {
+    "stacks": [
+      ["A"],
+      ["B"],
+      ["C"]
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build tower A-B-C",
+    "target_configurations": [
+      ["A", "B", "C"],
+      [],
+      []
+    ]
+  },
+  "constraint_set": "base",
+  "metadata": {
+    "category": "1",
+    "min_steps": 4,
+    "aux_steps": 0,
+    "num_blocks": 3,
+    "num_stacks": 3,
+    "misplaced_blocks": 2
+  },
+  "optimal_plan": [
+    {"action": "pick_up", "block": "B"},
+    {"action": "stack", "block1": "B", "block2": "A"},
+    {"action": "pick_up", "block": "C"},
+    {"action": "stack", "block1": "C", "block2": "B"}
+  ]
+}

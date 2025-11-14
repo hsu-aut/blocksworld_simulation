@@ -1,0 +1,30 @@
+{
+  "name": "3_6",
+  "description": "Arrange the blocks so that two towers of equal height are created. The robot at the end should not be holding any block.",
+  "initial_state": {
+    "stacks": [
+      ["A", "B", "E"],
+      ["C", "D"]
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build tower A-C-E-B-D",
+    "target_configurations": [
+      ["A", "B", "E"],
+      ["C", "D", "F"]
+    ]
+  },
+  "constraint_set": "base",
+  "metadata": {
+    "category": "3",
+    "min_steps": -1,
+    "aux_steps": -1,
+    "num_blocks": 5,
+    "num_stacks": 2,
+    "misplaced_blocks": 4,
+    "impossible_reason": "There is an odd number of blocks, making it impossible to create two towers of equal height."
+
+  }
+}

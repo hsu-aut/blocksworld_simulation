@@ -1,0 +1,42 @@
+{
+  "name": "4_7",
+  "description": "Build the tower H,A,B,C,E,G,F,D",
+  "initial_state": {
+    "stacks": [
+      [ 
+        {"name": "H", "x_size":100, "y_size": 40},
+        {"name": "E", "x_size": 80, "y_size": 40},
+        {"name": "C", "x_size": 80, "y_size": 40}
+      ],
+      [
+        {"name": "G", "x_size": 80, "y_size": 40},
+        {"name": "F", "x_size": 60, "y_size": 40},
+        {"name": "D", "x_size": 60, "y_size": 40}
+      ],
+      [
+
+        {"name": "A", "x_size": 100, "y_size": 40},
+        {"name": "B", "x_size": 100, "y_size": 40}
+      ]
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Build the tower H,A,B,C,E,G,F,D",
+    "target_configurations": [
+      ["H","A","B","C","E","G","F","D"],
+      [],
+      []      
+    ]
+  },
+  "constraint_set": "different_blocks",
+  "metadata": {
+    "category": "4",
+    "min_steps": 58,
+    "aux_steps": 44,
+    "num_blocks": 8,
+    "num_stacks": 3,
+    "misplaced_blocks": 7
+  }
+}

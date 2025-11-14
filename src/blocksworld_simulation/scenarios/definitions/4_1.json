@@ -1,0 +1,51 @@
+{
+  "name": "4_1",
+  "name_old": "Hanoi Towers Challenge 3",
+  "description": "Restack Stack 3 to Stack 1",
+  "initial_state": {
+    "stacks": [
+      [],
+      [],
+      [
+        {"name": "C", "x_size": 80, "y_size": 40},
+        {"name": "B", "x_size": 60, "y_size": 40},
+        {"name": "A", "x_size": 40, "y_size": 40}
+      ]
+    ],
+    "holding": null,
+    "robot_status": "idle"
+  },
+  "goal": {
+    "description": "Restack Stack 3 (C-B-A) to Stack 1 (empty) following the hanoi tower rules-",
+    "target_configurations": [
+      ["C", "B", "A"],
+      [],
+      []
+    ]
+  },
+  "constraint_set": "hanoi_towers",
+  "metadata": {
+    "category": "4",
+    "min_steps": 14,
+    "aux_steps": 8,
+    "num_blocks": 3,
+    "num_stacks": 3,
+    "misplaced_blocks": 3
+  },
+  "optimal_plan": [
+    {"action": "unstack", "block1": "A", "block2": "B", "auxiliary": true},
+    {"action": "put_down", "block": "A", "auxiliary": true},
+    {"action": "unstack", "block1": "B", "block2": "C", "auxiliary": true},
+    {"action": "put_down", "block": "B", "auxiliary": true},
+    {"action": "pick_up", "block": "A", "auxiliary": true},
+    {"action": "stack", "block1": "A", "block2": "B", "auxiliary": true},
+    {"action": "pick_up", "block": "C"},
+    {"action": "put_down", "block": "C"},
+    {"action": "unstack", "block1": "A", "block2": "B", "auxiliary": true},
+    {"action": "put_down", "block": "A", "auxiliary": true},
+    {"action": "pick_up", "block": "B"},
+    {"action": "stack", "block1": "B", "block2": "C"},
+    {"action": "pick_up", "block": "A"},
+    {"action": "stack", "block1": "A", "block2": "B"}
+  ]
+}
