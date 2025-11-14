@@ -58,6 +58,8 @@ class Block:
         """Block's weight"""
         self._type = type
         """Block's type"""
+        self._hide_name = False
+        """Whether to hide the block's name in the visual display"""
 
     def get_name(self) -> str:
         """Get the block's name"""
@@ -101,6 +103,14 @@ class Block:
         """Set the position of the block relative to the robot's position (center x, top y)"""
         self._x = robot_x
         self._y = robot_y + self._height // 2
+
+    def set_hide_name(self, hide: bool):
+        """Set whether to hide the block's name in the visual display"""
+        self._hide_name = hide
+
+    def is_name_hidden(self) -> bool:
+        """Check if the block's name is hidden in the visual display"""
+        return self._hide_name
         
     def draw(self, surface):
         """Draw the block on the given surface
@@ -129,16 +139,17 @@ class Block:
             width=2,
             border_radius=corner_radius
         )
-        # Draw the block's name in the center (including weight)
-        font = pygame.font.Font(None, 20)
-        label = self._name
-        details = []
-        if self._weight is not None:
-            details.append(f"W:{self._weight}")
-        if self._type is not None:
-            details.append(f"T:{self._type}")
-        if details:
-            label += " (" + "/".join(details) + ")"
-        text_surface = font.render(label, True, (0, 0, 0))
-        text_rect = text_surface.get_rect(center=(self._x, self._y))
-        surface.blit(text_surface, text_rect)
+        # Draw the block's name in the center (including weight) only if name is not hidden
+        if not self._hide_name:
+            font = pygame.font.Font(None, 20)
+            label = self._name
+            details = []
+            if self._weight is not None:
+                details.append(f"W:{self._weight}")
+            if self._type is not None:
+                details.append(f"T:{self._type}")
+            if details:
+                label += " (" + "/".join(details) + ")"
+            text_surface = font.render(label, True, (0, 0, 0))
+            text_rect = text_surface.get_rect(center=(self._x, self._y))
+            surface.blit(text_surface, text_rect)

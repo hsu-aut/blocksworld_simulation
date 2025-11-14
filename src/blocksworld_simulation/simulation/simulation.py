@@ -130,6 +130,17 @@ class BlocksWorldSimulation:
                 self._verification_mode = False
                 self._execute_plan_queue = Queue()
 
+    def _apply_visibility_constraints(self):
+        """Apply visibility constraints based on the current constraint set.
+
+        This is called after action execution to update visual display based on constraints.
+        For example, PartialObservabilityConstraintSet uses this to hide block names.
+        """
+        # Create a temporary action to trigger visibility constraints
+        from blocksworld_simulation.simulation.simulation_actions import GetStatusAction
+        temp_action = GetStatusAction()
+        constraint_manager.validate_action(temp_action, self._simulation_state)
+
     def _draw(self):
         """Draw the simulation"""
         self._screen.fill((255, 255, 255))
@@ -169,6 +180,8 @@ class BlocksWorldSimulation:
             self._handle_action(input_action)
             # update robot state (if simulation is running)
             self._simulation_state.get_robot().update_state() if self._simulation_state.get_simulation_running() else None
+            # apply visibility constraints after action execution (e.g., for partial observability)
+            self._apply_visibility_constraints() if self._simulation_state.get_simulation_running() else None
             # log local reply queue
             self._log_local_reply_queue()
             # handle execute plan reply queue
