@@ -26,7 +26,7 @@
     "aux_steps": -1,
     "num_blocks": 3,
     "num_stacks": 3,
-    "misplaced_blocks": 2,
+    "misplaced_blocks": -1,
     "impossible_reason": "Goal references block 'Z' that does not exist in initial state."
     
 

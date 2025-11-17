@@ -37,7 +37,7 @@
     "aux_steps": 44,
     "num_blocks": 8,
     "num_stacks": 3,
-    "misplaced_blocks": 7,
+    "misplaced_blocks": -1,
     "impossible_reason": "Block E cannot be placed on top of block C due to size constraints."
   }
 }

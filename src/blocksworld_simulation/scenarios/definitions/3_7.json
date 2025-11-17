@@ -38,7 +38,7 @@
     "aux_steps": -1,
     "num_blocks": 6,
     "num_stacks": 3,
-    "misplaced_blocks": 2,
+    "misplaced_blocks": -1,
     "impossible_reason": "There are more different block sizes than stacks, making it impossible to sort as per goal configuaration."
   }
 }

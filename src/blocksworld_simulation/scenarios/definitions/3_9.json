@@ -23,7 +23,7 @@
     "aux_steps": -1,
     "num_blocks": 3,
     "num_stacks": 3,
-    "misplaced_blocks": 3,
+    "misplaced_blocks": -1,
     "impossible_reason": "In order to stack blocks C and D according to the goal configuration, block E has to be temporarily stored on a third stack. However, only two stacks are available."
   }
 }

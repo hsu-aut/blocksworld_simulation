@@ -28,7 +28,7 @@
     "aux_steps": -1,
     "num_blocks": 5,
     "num_stacks": 3,
-    "misplaced_blocks": 4,
+    "misplaced_blocks": -1,
     "impossible_reason": "Goal requires 5 stacks but only 3 are available in the environment."
   }
 }

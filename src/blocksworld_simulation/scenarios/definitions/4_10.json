@@ -40,8 +40,8 @@
   "constraint_set": "different_blocks",
   "metadata": {
     "category": "4",
-    "min_steps": 90,
-    "aux_steps": 70,
+    "min_steps": 80,
+    "aux_steps": 60,
     "num_blocks": 12,
     "num_stacks": 4,
     "misplaced_blocks": 10

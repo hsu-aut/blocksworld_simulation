@@ -35,7 +35,7 @@
     "aux_steps": -1,
     "num_blocks": 6,
     "num_stacks": 3,
-    "misplaced_blocks": 5,
+    "misplaced_blocks": -1,
     "impossible_reason": "Blocks have different sizes and cannot be stacked as per goal configuration."
   }
 }

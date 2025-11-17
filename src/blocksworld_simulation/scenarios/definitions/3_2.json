@@ -26,7 +26,7 @@
     "aux_steps": -1,
     "num_blocks": 3,
     "num_stacks": 3,
-    "mispolaced_blocks": 3,
+    "mispolaced_blocks": -1,
     "impossible_reason": "Block A appears in multiple target stacks simultaneously."
   }
 }

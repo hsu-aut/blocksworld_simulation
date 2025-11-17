@@ -23,7 +23,7 @@
     "aux_steps": -1,
     "num_blocks": 5,
     "num_stacks": 2,
-    "misplaced_blocks": 4,
+    "misplaced_blocks": -1,
     "impossible_reason": "There is an odd number of blocks, making it impossible to create two towers of equal height."
 
   }

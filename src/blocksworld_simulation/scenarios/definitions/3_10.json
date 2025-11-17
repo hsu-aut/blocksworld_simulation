@@ -25,7 +25,7 @@
     "aux_steps": -1,
     "num_blocks": 4,
     "num_stacks": 3,
-    "misplaced_blocks": 4,
+    "misplaced_blocks": -1,
     "impossible_reason": "Circular dependency among blocks: A on D, D on C, C on B, and B on A."
   }
 }
