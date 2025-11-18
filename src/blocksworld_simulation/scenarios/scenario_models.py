@@ -19,7 +19,7 @@ class Goal(BaseModel):
 class Scenario(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
-    description: str
+    description: Optional[str] = None
     initial_state: InitialState
     goal: Goal
     constraint_set: str
