@@ -1,7 +1,6 @@
 {
   "name": "1_6",
   "name_old": "Multi-Tower Unstacking Challenge",
-  "description": "Separate two 2-block towers into individual stacks",
   "initial_state": {
     "stacks": [
       [],
@@ -13,7 +12,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Place each block in its own stack",
+    "description": "Each stack should contain only one block.",
     "target_configurations": [
       ["A"],
       ["B"],

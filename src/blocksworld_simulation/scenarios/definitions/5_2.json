@@ -1,6 +1,5 @@
 {
   "name": "5_2",
-  "description": "Organize blocks with partial visibility. Multiple blocks are hidden under the visible top blocks, creating planning uncertainty.",
   "initial_state": {
     "stacks": [
       ["A", "C", "E"],
@@ -11,7 +10,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Create three towers: A-B, C-D, and E alone",
+    "description": "Create the following three towers from bottom to top: A-B, C-D, and E alone.",
     "target_configurations": [
       ["A", "B"],
       ["C", "D"],

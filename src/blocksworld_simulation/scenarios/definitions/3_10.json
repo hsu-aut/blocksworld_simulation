@@ -1,6 +1,5 @@
 {
   "name": "3_10",
-  "description": "IMPOSSIBLE - Circular block dependency",
   "initial_state": {
     "stacks": [
       ["B", "A"],
@@ -11,7 +10,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Sort the blocks so that B is on A, C is on B, D is on C and A is on D",
+    "description": "Sort the blocks so that B is on A, C is on B, D is on C and A is on D.",
     "target_configurations": [
       ["A", "B", "C", "D", "A"],
       [],

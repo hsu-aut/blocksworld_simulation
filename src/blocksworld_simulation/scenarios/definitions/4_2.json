@@ -1,7 +1,6 @@
 {
   "name": "4_2",
   "name_old": "Hanoi Towers Challenge 4",
-  "description": "Restack Stack 3 to Stack 2",
   "initial_state": {
     "stacks": [
       [],
@@ -17,7 +16,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Restack Stack 3 (D-C-B-A) to Stack 2 (empty) following the hanoi tower rules",
+    "description": "Restack Stack 3 (D-C-B-A) to Stack 2 (empty) following the hanoi tower rules.",
     "target_configurations": [
       [],
       ["D", "C", "B", "A"],

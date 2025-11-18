@@ -1,6 +1,5 @@
 {
   "name": "3_7",
-  "description": "Sort the blocks so that each stack contains only blocks of one size.",
   "initial_state": {
     "stacks": [
       [ 

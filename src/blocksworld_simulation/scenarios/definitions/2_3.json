@@ -1,7 +1,6 @@
 {
   "name": "2_3",
   "name_old": "Alternating Tower Challenge",
-  "description": "Build alternating pattern tower A-C-E-B-D from mixed stacks",
   "initial_state": {
     "stacks": [
       ["A", "B"],
@@ -13,7 +12,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build tower A-C-E-B-D",
+    "description": "Build tower A-C-E-B-D from bottom to top.",
     "target_configurations": [
       ["A", "C", "E", "B", "D"],
       [],

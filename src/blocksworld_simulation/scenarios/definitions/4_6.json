@@ -1,6 +1,5 @@
 {
   "name": "4_6",
-  "description": "Build three different towers, each containing only blocks of one size.",
   "initial_state": {
     "stacks": [
       [

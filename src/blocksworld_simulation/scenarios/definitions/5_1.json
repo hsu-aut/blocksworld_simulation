@@ -1,6 +1,5 @@
 {
   "name": "5_1",
-  "description": "Separate a 3-block tower with only partial visibility. You can only see the top block of each stack, but know how many blocks are on each stack.",
   "initial_state": {
     "stacks": [
       ["A", "B", "C"],
@@ -11,7 +10,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Place each block alone on separate stacks",
+    "description": "Each stack should contain only one block.",
     "target_configurations": [
       ["A"],
       ["C"],

@@ -1,6 +1,5 @@
 {
   "name": "4_9",
-  "description": "Sort the blocks in ascending order by size in one tower.",
   "initial_state": {
     "stacks": [
       [

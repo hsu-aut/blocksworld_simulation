@@ -1,6 +1,5 @@
 {
   "name": "2_9",
-  "description": "Build tower G-M-R-F-A-D-Q",
   "initial_state": {
     "stacks": [
       ["A", "E", "I", "M", "Q"],
@@ -14,7 +13,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build tower G-M-R-F-A-D-Q",
+    "description": "Build tower G-M-R-F-A-D-Q from bottom to top.",
     "target_configurations": [
       ["T", "P", "L", "H" ],
       ["B", "I", "E" ],

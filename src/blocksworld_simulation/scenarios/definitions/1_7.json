@@ -1,7 +1,6 @@
 {
   "name": "1_7",
   "name_old": "Pyramid Challenge",
-  "description": "Build a pyramid formation: A-B on bottom, C-D on top",
   "initial_state": {
     "stacks": [
       ["A"],
@@ -13,7 +12,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Create two 2-block stacks A-C and B-D side by side",
+    "description": "Build two towers with A-C stacked from bottom to top, and B-D stacked from bottom to top.",
     "target_configurations": [
       ["A", "C"],
       ["B", "D"],

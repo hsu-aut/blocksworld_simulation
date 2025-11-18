@@ -1,7 +1,6 @@
 {
   "name": "2_2",
   "name_old": "Complex Stacking",
-  "description": "Basic scenario with 4 blocks to build a tower C-A-D-B",
   "initial_state": {
     "stacks": [
       ["A", "B"],
@@ -12,7 +11,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build tower C-A-D-B",
+    "description": "Build tower C-A-D-B from bottom to top.",
     "target_configurations": [
       [],
       ["C", "A", "D", "B"],

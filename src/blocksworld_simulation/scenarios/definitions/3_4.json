@@ -1,7 +1,6 @@
 {
   "name": "3_4",
   "name_old": "Impossible: Insufficient Stacks",
-  "description": "IMPOSSIBLE - Goal requires 5 separate stacks but only 3 are available",
   "initial_state": {
     "stacks": [
       ["A", "B", "C", "D", "E"],
@@ -12,7 +11,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Place each block in its own stack",
+    "description": "Each stack should contain only one block.",
     "target_configurations": [
       ["A"],
       ["B"],

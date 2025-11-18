@@ -1,7 +1,6 @@
 {
   "name": "2_1",
   "name_old": "Cross-Stack Sorting Challenge",
-  "description": "Sort mixed stacks A,C and B,D into sequential tower A-B-C-D",
   "initial_state": {
     "stacks": [
       ["A", "C"],
@@ -13,7 +12,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build tower A-B-C-D",
+    "description": "Build tower A-B-C-D from bottom to top.",
     "target_configurations": [
       ["A", "B", "C", "D"],
       [],

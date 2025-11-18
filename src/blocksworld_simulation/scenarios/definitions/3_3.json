@@ -1,7 +1,6 @@
 {
   "name": "3_3",
   "name_old": "Impossible: Unreachable Order",
-  "description": "IMPOSSIBLE - Cannot build B-C-A tower: B needs to be base but A and C blocks access to base",
   "initial_state": {
     "stacks": [
       ["A", "B"],
@@ -11,7 +10,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build tower B-C-A",
+    "description": "Build tower B-C-A from bottom to top.",
     "target_configurations": [
       ["B", "C", "A"],
       []

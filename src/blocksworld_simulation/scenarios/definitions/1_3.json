@@ -1,7 +1,6 @@
 {
   "name": "1_3",
   "name_old": "Partial Tower Challenge",
-  "description": "Rearrange blocks from 2 stacks to build tower C-B-A",
   "initial_state": {
     "stacks": [
       ["A", "B"],
@@ -12,7 +11,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build tower C-B-A",
+    "description": "Build tower C-B-A from bottom to top.",
     "target_configurations": [
       [],
       ["C", "B", "A"],

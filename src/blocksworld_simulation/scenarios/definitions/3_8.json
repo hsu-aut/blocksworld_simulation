@@ -1,6 +1,5 @@
 {
   "name": "4_7",
-  "description": "Build the tower H,A,B,C,E,G,F,D",
   "initial_state": {
     "stacks": [
       [ 
@@ -23,7 +22,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build the tower H,A,B,C,E,G,F,D",
+    "description": "Build the tower H,A,B,C,E,G,F,D from bottom to top.",
     "target_configurations": [
       ["H","A","B","C","E","G","F","D"],
       [],

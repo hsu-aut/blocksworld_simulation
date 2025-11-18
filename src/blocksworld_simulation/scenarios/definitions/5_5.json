@@ -1,6 +1,5 @@
 {
   "name": "5_5",
-  "description": "Build two towers A-C-E and B-D-F",
   "initial_state": {
     "stacks": [
       ["A", "B", "C", "D", "E", "F"],
@@ -12,7 +11,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build two towers A-C-E and B-D-F",
+    "description": "Build two towers with A-C-E stacked from bottom to top, and B-D-F stacked from bottom to top.",
     "target_configurations": [
       ["A", "C", "E"],
       [],

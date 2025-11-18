@@ -1,6 +1,5 @@
 {
   "name": "4_10",
-  "description": "Build the following stacks (each from bottom to top): L-I-C-F, B-E-H-K, D-G-J, A",
   "initial_state": {
     "stacks": [
       [
@@ -29,7 +28,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build the following stacks (each from bottom to top): L-I-C-F, B-E-H-K, D-G-J, A",
+    "description": "Build the following stacks from bottom to top: L-I-C-F, B-E-H-K, D-G-J, A.",
     "target_configurations": [
       ["L", "I", "C", "F"],
       ["B", "E", "H", "K"],

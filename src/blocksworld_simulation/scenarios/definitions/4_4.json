@@ -1,6 +1,5 @@
 {
   "name": "4_4",
-  "description": "Create Tower E,D,C,B,A",
   "initial_state": {
     "stacks": [
       [
@@ -18,7 +17,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Create Tower E,D,C,B,A",
+    "description": "Create Tower E,D,C,B,A from bottom to top.",
     "target_configurations": [
       ["E", "D", "C", "B", "A"],
       [],

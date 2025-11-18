@@ -1,7 +1,6 @@
 {
   "name": "3_1",
   "name_old": "Impossible: Non-existent Block",
-  "description": "IMPOSSIBLE - Goal references block 'Z' that doesn't exist in initial state",
   "initial_state": {
     "stacks": [
       ["A", "B"],
@@ -12,7 +11,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build tower A-Z-B",
+    "description": "Build tower A-Z-B from bottom to top.",
     "target_configurations": [
       ["A", "Z", "B"],
       [],

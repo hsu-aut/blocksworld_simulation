@@ -1,7 +1,6 @@
 {
   "name": "1_5",
   "name_old": "Tower Building Challenge",
-  "description": "Rearrange blocks from 2 stacks to build tower B-A-C",
   "initial_state": {
     "stacks": [
       ["A", "B"],
@@ -12,7 +11,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build tower B-A-C",
+    "description": "Build tower B-A-C from bottom to top.",
     "target_configurations": [
       [],
       [],

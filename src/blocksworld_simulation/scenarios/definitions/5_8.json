@@ -1,6 +1,5 @@
 {
   "name": "5_8",
-  "description": "Build the following towers (each from bottom to top): A-D-H, B-E-I, C-F-K, G-J",
   "initial_state": {
     "stacks": [
       ["A", "E", "I", "J"],
@@ -12,7 +11,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build the following towers (each from bottom to top): A-D-H, B-E-I, C-F-K, G-J",
+    "description": "Build the following four towers from bottom to top: A-D-H, B-E-I, C-F-K, G-J.",
     "target_configurations": [
       ["A", "D", "H"],
       ["B", "E", "I"],

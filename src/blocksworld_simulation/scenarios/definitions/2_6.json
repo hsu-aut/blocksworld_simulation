@@ -1,7 +1,6 @@
 {
   "name": "2_6",
   "name_old": "Quad-Stack Organization Challenge",
-  "description": "Organize 8 blocks into four perfect 2-block stacks: A-E, B-F, D-H, C-G",
   "initial_state": {
     "stacks": [
       ["A", "B", "C", "D"],
@@ -13,7 +12,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Create four 2-block stacks with A-E, B-F, D-H, C-G",
+    "description": "Create four stacks with two blocks each from bottom to top: A-E, B-F, D-H, C-G.",
     "target_configurations": [
       ["A", "E"],
       ["B", "F"],

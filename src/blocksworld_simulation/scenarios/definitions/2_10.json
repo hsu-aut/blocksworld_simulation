@@ -1,6 +1,5 @@
 {
   "name": "2_10",
-  "description": "Build the two towers T-C-I-O-J and A-H-E-M-P (each from bottom to top). The arrangement of the other blocks does not matter.",
   "initial_state": {
     "stacks": [
       ["T", "P", "L", "H"],
@@ -14,7 +13,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build the two towers T-C-I-O-J and A-H-E-M-P (each from bottom to top). The arrangement of the other blocks does not matter.",
+    "description": "Build two towers with  T-C-I-O-J stacked from bottom to top, and A-H-E-M-P stacked from bottom to top. The arrangement of the other blocks does not matter.",
     "target_configurations": [
       ["T", "C", "I", "O", "J"],
       ["A", "H", "E", "M", "P"],

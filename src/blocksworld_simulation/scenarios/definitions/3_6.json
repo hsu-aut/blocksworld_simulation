@@ -1,6 +1,5 @@
 {
   "name": "3_6",
-  "description": "Arrange the blocks so that two towers of equal height are created. The robot at the end should not be holding any block.",
   "initial_state": {
     "stacks": [
       ["A", "B", "E"],
@@ -10,7 +9,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build tower A-C-E-B-D",
+    "description": "Build tower A-C-E-B-D from bottom to top.",
     "target_configurations": [
       ["A", "B", "E"],
       ["C", "D", "F"]

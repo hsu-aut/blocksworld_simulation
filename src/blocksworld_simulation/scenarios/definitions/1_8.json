@@ -1,7 +1,6 @@
 {
   "name": "1_8",
   "name_old": "Reverse Pyramid Challenge",
-  "description": "Reverse a 5-block tower to build E-D-C-B-A",
   "initial_state": {
     "stacks": [
       ["A", "B", "C", "D", "E"],
@@ -11,7 +10,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build tower E-D-C-B-A",
+    "description": "Build tower E-D-C-B-A from bottom to top.",
     "target_configurations": [
       [],
       ["E", "D", "C", "B", "A"]
