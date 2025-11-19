@@ -40,6 +40,10 @@ class BaseConstraintSet(ConstraintSet):
         self._get_status_constraints.extend([
             SimulationRunning()
         ])
+        # GET FULL STATUS: SimulationRunning (no partial observability)
+        self._get_full_status_constraints.extend([
+            SimulationRunning()
+        ])
         # GET RULES: No constraints
         self._get_rules_constraints.extend([
             SimulationRunning()

@@ -4,10 +4,10 @@ from blocksworld_simulation.simulation.simulation_state import SimulationState
 
 from blocksworld_simulation.constraints.constraint import Constraint
 from blocksworld_simulation.simulation.simulation_actions import (
-    GetRulesAction, PreStartAction, SimulationAction, 
-    StartAction, StopAction, QuitAction, PickUpAction, 
+    GetRulesAction, PreStartAction, SimulationAction,
+    StartAction, StopAction, QuitAction, PickUpAction,
     PutDownAction, StackAction, UnstackAction, PlanAction,
-    GetStatusAction, GetScenarioAction
+    GetStatusAction, GetFullStatusAction, GetScenarioAction
 )
 
 
@@ -21,6 +21,7 @@ class ConstraintSet(ABC):
         self._start_constraints: List[Constraint] = []
         self._stop_constraints: List[Constraint] = []
         self._get_status_constraints: List[Constraint] = []
+        self._get_full_status_constraints: List[Constraint] = []
         self._pick_up_constraints: List[Constraint] = []
         self._put_down_constraints: List[Constraint] = []
         self._stack_constraints: List[Constraint] = []
@@ -40,6 +41,8 @@ class ConstraintSet(ABC):
             return self._start_constraints
         elif isinstance(action, StopAction):
             return self._stop_constraints
+        elif isinstance(action, GetFullStatusAction):
+            return self._get_full_status_constraints
         elif isinstance(action, GetStatusAction):
             return self._get_status_constraints
         elif isinstance(action, GetRulesAction):

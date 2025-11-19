@@ -7,7 +7,7 @@ from blocksworld_simulation.simulation.simulation_actions import (
     PreStartAction, QuitAction, StopAction,
     PickUpAction, PutDownAction, StackAction, UnstackAction, 
     ExecutePlanAction, VerifyPlanAction,
-    GetScenarioAction, GetStatusAction, GetRulesAction
+    GetScenarioAction, GetStatusAction, GetRulesAction, GetFullStatusAction
 )
 
 from .request_validation import validate_request
@@ -108,6 +108,12 @@ def get_scenario_details(scenario_name: str):
 @app.route('/get_status', methods=['GET'])
 def get_status():
     api_to_sim_queue.put(GetStatusAction())
+    result = sim_to_api_queue.get()
+    return return_api(result)
+
+@app.route('/get_full_status', methods=['GET'])
+def get_full_status():
+    api_to_sim_queue.put(GetFullStatusAction())
     result = sim_to_api_queue.get()
     return return_api(result)
 

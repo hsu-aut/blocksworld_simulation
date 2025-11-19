@@ -9,7 +9,7 @@ from .stack_creator import create_stacks
 from .robot import Robot
 from .simulation_actions import (
     PreStartAction, SimulationAction, QuitAction, 
-    StartAction, StopAction, RobotAction, GetStatusAction, 
+    StartAction, StopAction, RobotAction, GetStatusAction, GetFullStatusAction, 
     GetRulesAction, GetScenarioAction, PlanAction
 )
 from .simulation_state import SimulationState
@@ -89,6 +89,9 @@ class BlocksWorldSimulation:
         # If the action is a GetStatusAction, reply with the current status of the simulation
         elif isinstance(action, GetStatusAction):
             action.reply_success()
+        # If the action is a GetFullStatusAction, reply always with the full current status of the simulation
+        elif isinstance(action, GetFullStatusAction):
+            action.reply_success()   
         # If the action is a GetRulesAction, reply with the current rules of the simulation
         elif isinstance(action, GetRulesAction):
             action.set_rules(constraint_manager.get_rules())

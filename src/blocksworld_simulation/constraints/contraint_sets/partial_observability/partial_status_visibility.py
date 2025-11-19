@@ -1,5 +1,5 @@
 from blocksworld_simulation.constraints.constraint import Constraint
-from blocksworld_simulation.simulation.simulation_actions import GetStatusAction, SimulationAction
+from blocksworld_simulation.simulation.simulation_actions import GetStatusAction, GetFullStatusAction, SimulationAction
 from blocksworld_simulation.simulation.simulation_state import SimulationState
 
 
@@ -15,8 +15,8 @@ class PartialStatusVisibility(Constraint):
         if not state.get_simulation_running():
             action.set_invalid("Simulation is not running.")
             return False
-        # if the action is a GetStatusAction, set the partial status info
-        if isinstance(action, GetStatusAction):
+        # if the action is a GetStatusAction (but not GetFullStatusAction), set the partial status info
+        if isinstance(action, GetStatusAction) and not isinstance(action, GetFullStatusAction):
             action.set_status_dict(self._create_partial_status(state))
         # return True if no invalidation reason could be found
         return True

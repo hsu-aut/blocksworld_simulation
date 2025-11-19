@@ -1,6 +1,6 @@
 from typing import Tuple
 from blocksworld_simulation.constraints.constraint import Constraint
-from blocksworld_simulation.simulation.simulation_actions import GetStatusAction, SimulationAction
+from blocksworld_simulation.simulation.simulation_actions import GetStatusAction, GetFullStatusAction, SimulationAction
 from blocksworld_simulation.simulation.simulation_state import SimulationState
 
 
@@ -13,6 +13,8 @@ class SimulationRunning(Constraint):
             return False
         # if the action is a GetStatusAction, set the status info
         if isinstance(action, GetStatusAction):
+            action.set_status_dict(state.to_dict())
+        if isinstance(action, GetFullStatusAction):
             action.set_status_dict(state.to_dict())
         # return True in no invalidation reason could be found
         return True

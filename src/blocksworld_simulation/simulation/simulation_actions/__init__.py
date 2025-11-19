@@ -5,6 +5,7 @@ from .start_action import StartAction
 from .pre_start_action import PreStartAction
 from .stop_action import StopAction
 from .get_status_action import GetStatusAction
+from .get_full_status_action import GetFullStatusAction
 from .pick_up_action import PickUpAction
 from .put_down_action import PutDownAction
 from .stack_action import StackAction
