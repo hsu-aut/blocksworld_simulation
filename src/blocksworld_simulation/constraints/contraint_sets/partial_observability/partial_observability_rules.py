@@ -12,7 +12,7 @@ Only the top two blocks of each stack can be identified with the status tool. Al
 - All block properties (size, weight, type) for all blocks, even hidden ones
 - The robot's current state and held block (if any)
 
-### What You Don't Know
-- The identities of blocks deeper than 2 positions in the stack
-- The exact arrangement of hidden blocks below the top two visible blocks
+### Dealing with Unknown Blocks
+- The identities of blocks deeper than 2 positions in the stack are unknown and represented as "unknown".
+- The top 2 visible blocks should be restacked through avaliable tools to reveal the "unknown" blocks below. 
 """
