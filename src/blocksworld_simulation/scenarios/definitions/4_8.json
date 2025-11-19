@@ -19,7 +19,7 @@
     "robot_status": "idle"
   },
   "goal": {
-    "description": "Build the following two towers from bottom to top: F-E-C, D-B, A.",
+    "description": "Build the following three towers from bottom to top: F-E-C, D-B, A.",
     "target_configurations": [
       ["F", "E", "C"],
       ["D", "B"],
