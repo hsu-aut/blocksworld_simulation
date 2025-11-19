@@ -15,7 +15,12 @@ def validate_request(request_model, allow_empty_body=False):
                 validated_data = request_model(**data)
                 return func(validated_data, *args, **kwargs)
             except ValidationError as e:
-                return jsonify({"errors": e.errors()}), 400
+                # Convert error objects to JSON-serializable format
+                error_messages = []
+                for error in e.errors():
+                    error_messages.append(error.get("msg", "Validation error"))
+                result_message = " | ".join(error_messages)
+                return jsonify({"result": result_message}), 400
             except Exception as e:
                 return jsonify({"error": str(e)}), 400
         wrapper.__name__ = func.__name__
