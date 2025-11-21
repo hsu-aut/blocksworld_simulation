@@ -1,5 +1,5 @@
 {
-  "name": "4_7",
+  "name": "3_8",
   "initial_state": {
     "stacks": [
       [ 
@@ -32,8 +32,8 @@
   "constraint_set": "different_blocks",
   "metadata": {
     "category": "3",
-    "min_steps": 58,
-    "aux_steps": 44,
+    "min_steps": -1,
+    "aux_steps": -1,
     "num_blocks": 8,
     "num_stacks": 3,
     "misplaced_blocks": -1,
