@@ -23,7 +23,7 @@
   "metadata": {
     "category": "5",
     "min_steps": 16,
-    "aux_steps": 4,
+    "non_constructive_steps": 4,
     "num_blocks": 7,
     "num_stacks": 4,
     "misplaced_blocks": 6

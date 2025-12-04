@@ -383,7 +383,7 @@ curl -X GET http://127.0.0.1:5001/scenarios
         "metadata": {
           "difficulty": "0",
           "min_steps": 6,
-          "aux_steps": 0,
+          "non_constructive_steps": 0,
           "num_blocks": 3,
           "num_stacks": 3
         },
@@ -448,7 +448,7 @@ curl -X GET http://127.0.0.1:5001/scenarios/550e8400-e29b-41d4-a716-446655440000
     "metadata": {
       "difficulty": "0",
       "min_steps": 6,
-      "aux_steps": 0,
+      "non_constructive_steps": 0,
       "num_blocks": 3,
       "num_stacks": 3
     },
