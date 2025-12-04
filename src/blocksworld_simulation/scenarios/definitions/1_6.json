@@ -1,6 +1,5 @@
 {
   "name": "1_6",
-  "name_old": "Multi-Tower Unstacking Challenge",
   "initial_state": {
     "stacks": [
       [],

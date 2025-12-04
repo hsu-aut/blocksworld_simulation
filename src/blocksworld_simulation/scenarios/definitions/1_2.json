@@ -1,6 +1,5 @@
 {
   "name": "1_2",
-  "name_old": "Stacking Challenge",
   "initial_state": {
     "stacks": [
       ["A"],

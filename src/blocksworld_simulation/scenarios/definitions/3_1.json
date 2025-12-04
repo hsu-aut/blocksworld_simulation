@@ -1,6 +1,5 @@
 {
   "name": "3_1",
-  "name_old": "Impossible: Non-existent Block",
   "initial_state": {
     "stacks": [
       ["A", "B"],

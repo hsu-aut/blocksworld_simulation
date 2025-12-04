@@ -1,6 +1,5 @@
 {
   "name": "1_8",
-  "name_old": "Reverse Pyramid Challenge",
   "initial_state": {
     "stacks": [
       ["A", "B", "C", "D", "E"],

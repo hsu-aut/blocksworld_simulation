@@ -1,6 +1,5 @@
 {
   "name": "2_6",
-  "name_old": "Quad-Stack Organization Challenge",
   "initial_state": {
     "stacks": [
       ["A", "B", "C", "D"],
