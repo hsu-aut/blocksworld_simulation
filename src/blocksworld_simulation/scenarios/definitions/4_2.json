@@ -25,7 +25,7 @@
   "constraint_set": "block_size",
   "metadata": {
     "category": "4",
-    "min_steps": 30,
+    "min_known_steps": 30,
     "non_constructive_steps": 22,
     "num_blocks": 4,
     "num_stacks": 3,

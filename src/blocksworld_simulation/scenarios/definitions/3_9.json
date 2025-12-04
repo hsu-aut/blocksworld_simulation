@@ -18,7 +18,7 @@
   "constraint_set": "base",
   "metadata": {
     "category": "3",
-    "min_steps": -1,
+    "min_known_steps": -1,
     "non_constructive_steps": -1,
     "num_blocks": 3,
     "num_stacks": 3,

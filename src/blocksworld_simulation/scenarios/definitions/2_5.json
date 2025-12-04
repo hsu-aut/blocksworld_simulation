@@ -22,7 +22,7 @@
   "constraint_set": "base",
   "metadata": {
     "category": "2",
-    "min_steps": 14,
+    "min_known_steps": 14,
     "non_constructive_steps": 2,
     "num_blocks": 7,
     "num_stacks": 4,

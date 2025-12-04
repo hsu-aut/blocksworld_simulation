@@ -22,7 +22,7 @@
   "constraint_set": "partial_observability",
   "metadata": {
     "category": "5",
-    "min_steps": 26,
+    "min_known_steps": 26,
     "non_constructive_steps": 10,
     "num_blocks": 11,
     "num_stacks": 4,

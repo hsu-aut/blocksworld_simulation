@@ -26,8 +26,8 @@
   "constraint_set": "base",
   "metadata": {
     "category": "2",
-    "min_steps": 32,
-    "non_constructive_steps": 16,
+    "min_known_steps": 34,
+    "non_constructive_steps": 18,
     "num_blocks": 20,
     "num_stacks": 6,
     "misplaced_blocks": 8
