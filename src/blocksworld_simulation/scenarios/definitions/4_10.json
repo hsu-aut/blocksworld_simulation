@@ -36,7 +36,7 @@
       ["A"]
     ]
   },
-  "constraint_set": "different_blocks",
+  "constraint_set": "block_size",
   "metadata": {
     "category": "4",
     "min_steps": 80,

@@ -4,8 +4,8 @@ from blocksworld_simulation.simulation.simulation_actions import StackAction
 from blocksworld_simulation.simulation.simulation_state import SimulationState
 
 
-class UpperBlockNarrower(Constraint):
-    """Constraint to check if a block is stacked on a wider block."""
+class BlockBelowWiderEqual(Constraint):
+    """Constraint to check if a block is stacked on a wider or equal block."""
 
     def validate(self, state: SimulationState, action: StackAction) -> Tuple[bool, str]:
         block_width = action.get_block().get_size()[0]

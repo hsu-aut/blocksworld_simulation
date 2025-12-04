@@ -1,6 +1,5 @@
 {
   "name": "2_7",
-  "name_old": "Ultimate Tower Challenge",
   "initial_state": {
     "stacks": [
       ["A", "E"],

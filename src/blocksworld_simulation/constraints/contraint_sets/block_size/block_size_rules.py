@@ -1,5 +1,5 @@
 def get_additional_rules() -> str:
-    return """# Different Blocks Rules
+    return """#Block Size Rules
 
 1. Only one block can be moved at a time.
 2. A block can only be placed on top of a larger or equally sized block or on an empty stack.

@@ -1,6 +1,5 @@
 {
   "name": "1_3",
-  "name_old": "Partial Tower Challenge",
   "initial_state": {
     "stacks": [
       ["A", "B"],

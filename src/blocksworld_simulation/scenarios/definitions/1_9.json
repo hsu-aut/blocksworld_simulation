@@ -1,6 +1,5 @@
 {
   "name": "1_9",
-  "name_old": "Triple Stack Merge Challenge",
   "initial_state": {
     "stacks": [
       ["A", "B"],

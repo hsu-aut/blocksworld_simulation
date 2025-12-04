@@ -1,6 +1,5 @@
 {
   "name": "2_2",
-  "name_old": "Complex Stacking",
   "initial_state": {
     "stacks": [
       ["A", "B"],

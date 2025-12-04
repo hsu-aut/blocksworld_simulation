@@ -1,6 +1,5 @@
 {
   "name": "2_1",
-  "name_old": "Cross-Stack Sorting Challenge",
   "initial_state": {
     "stacks": [
       ["A", "C"],

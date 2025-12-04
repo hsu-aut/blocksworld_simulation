@@ -1,6 +1,5 @@
 {
   "name": "2_4",
-  "name_old": "Balanced Distribution Challenge",
   "initial_state": {
     "stacks": [
       ["A", "B", "C", "D", "E", "F"],

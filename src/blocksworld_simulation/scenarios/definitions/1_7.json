@@ -1,6 +1,5 @@
 {
   "name": "1_7",
-  "name_old": "Pyramid Challenge",
   "initial_state": {
     "stacks": [
       ["A"],

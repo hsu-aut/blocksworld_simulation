@@ -29,7 +29,7 @@
       []      
     ]
   },
-  "constraint_set": "different_blocks",
+  "constraint_set": "block_size",
   "metadata": {
     "category": "3",
     "min_steps": -1,

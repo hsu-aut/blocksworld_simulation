@@ -1,6 +1,5 @@
 {
   "name": "1_10",
-  "name_old": "Complex Sorting Challenge",
   "initial_state": {
     "stacks": [
       ["A", "D", "G"],

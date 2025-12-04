@@ -24,7 +24,7 @@
       []
     ]
   },
-  "constraint_set": "hanoi_towers",
+  "constraint_set": "block_size",
   "metadata": {
     "category": "4",
     "min_steps": 14,

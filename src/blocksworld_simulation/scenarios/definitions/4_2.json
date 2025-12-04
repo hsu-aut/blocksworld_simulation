@@ -1,6 +1,5 @@
 {
   "name": "4_2",
-  "name_old": "Hanoi Towers Challenge 4",
   "initial_state": {
     "stacks": [
       [],
@@ -23,7 +22,7 @@
       []      
     ]
   },
-  "constraint_set": "hanoi_towers",
+  "constraint_set": "block_size",
   "metadata": {
     "category": "4",
     "min_steps": 30,

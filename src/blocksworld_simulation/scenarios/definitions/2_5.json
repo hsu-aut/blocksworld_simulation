@@ -1,6 +1,5 @@
 {
   "name": "2_5",
-  "name_old": "Multi-Goal Challenge",
   "initial_state": {
     "stacks": [
       ["A", "B", "C"],
