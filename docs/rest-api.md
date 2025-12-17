@@ -35,7 +35,8 @@ Success responses return HTTP status 200, while errors return HTTP status 400.
 The simulation supports different constraint sets that define the rules for block manipulation:
 
 - **`base`** (default): Standard blocksworld rules with limited ground positions
-- **`hanoi_towers`**: Special rules for Tower of Hanoi puzzle (blocks must be placed in size order)
+- **`block_size`**: Blocks with varying sizes - blocks can only be placed on larger or equal-sized blocks
+- **`partial_observability`**: Limits the visibility of the simulation state (use `/get_full_status` to bypass)
 
 The active constraint set can be specified when starting a simulation with a scenario or custom configuration.
 
@@ -80,7 +81,7 @@ Starts the simulation with either a predefined scenario or custom configuration.
     [],
     []
   ],
-  "constraint_set": "hanoi_towers"
+  "constraint_set": "block_size"
 }
 ```
 
@@ -282,7 +283,7 @@ curl -X POST http://127.0.0.1:5001/verify_plan \
 ### Information Endpoints
 
 #### 10. Get Status
-Returns the current simulation status including all block positions, stack configurations, and robot state.
+Returns the current simulation status including all block positions, stack configurations, and robot state. When using the `partial_observability` constraint set, this endpoint respects visibility rules and may return limited information.
 
 **Endpoint:** `GET /get_status`
 
@@ -326,7 +327,50 @@ curl -X GET http://127.0.0.1:5001/get_status
 - `idle`: Robot is not holding any block
 - `holding`: Robot is holding a block (check `held_block` for the block name)
 
-#### 11. Get Rules
+#### 11. Get Full Status
+Returns the complete simulation status, bypassing any partial observability constraints. This endpoint is useful when you need full visibility of the simulation state regardless of the active constraint set.
+
+**Endpoint:** `GET /get_full_status`
+
+**cURL Example:**
+```bash
+curl -X GET http://127.0.0.1:5001/get_full_status
+```
+
+**Response Example:**
+```json
+{
+  "result": {
+    "stacks": [
+      {
+        "number": 1,
+        "blocks": [
+          {"name": "A", "x_size": 100, "y_size": 60, "position": 0},
+          {"name": "B", "x_size": 100, "y_size": 60, "position": 1}
+        ]
+      },
+      {
+        "number": 2,
+        "blocks": []
+      },
+      {
+        "number": 3,
+        "blocks": [
+          {"name": "C", "x_size": 100, "y_size": 60, "position": 0}
+        ]
+      }
+    ],
+    "robot": {
+      "state": "idle",
+      "held_block": null
+    }
+  }
+}
+```
+
+**Note:** This endpoint was added to bypass partial observability limitations. Use `/get_status` for standard queries that respect constraint set rules, or `/get_full_status` when you need complete state information.
+
+#### 12. Get Rules
 Returns the general blocksworld rules, including current constraint rules for the active constraint set in markdown format. This provides a human-readable description of all rules and constraints that apply to the current simulation.
 
 **Endpoint:** `GET /get_rules`
@@ -351,7 +395,7 @@ The response contains markdown-formatted text describing:
 - Goal specification format
 - Available actions
 
-#### 12. List Scenarios
+#### 13. List Scenarios
 Lists all available predefined scenarios with their complete configuration including initial state, goal, and optimal plans.
 
 **Endpoint:** `GET /scenarios`
@@ -368,24 +412,25 @@ curl -X GET http://127.0.0.1:5001/scenarios
     "scenarios": [
       {
         "id": "550e8400-e29b-41d4-a716-446655440000",
-        "name": "Tower Building Challenge",
-        "description": "Rearrange blocks from 2 stacks to build tower B-A-C",
+        "name": "1_5",
+        "description": null,
         "initial_state": {
           "stacks": [["A", "B"], ["C"], []],
           "holding": null,
           "robot_status": "idle"
         },
         "goal": {
-          "description": "Build tower B-A-C",
+          "description": "Build tower B-A-C  from bottom to top.",
           "target_configurations": [[], [], ["B", "A", "C"]]
         },
         "constraint_set": "base",
         "metadata": {
-          "difficulty": "0",
+          "category": "1",
           "min_known_steps": 6,
           "non_constructive_steps": 0,
           "num_blocks": 3,
-          "num_stacks": 3
+          "num_stacks": 3,
+          "misplaced_blocks": 3
         },
         "optimal_plan": [
           {"action": "unstack", "block1": "B", "block2": "A"},
@@ -403,15 +448,21 @@ curl -X GET http://127.0.0.1:5001/scenarios
 
 **Scenario Fields:**
 - `id`: Unique identifier (UUID) for the scenario
-- `name`: Human-readable name
+- `name`: Human-readable name (format: `<category>_<number>`, e.g., `2_9`)
 - `description`: Brief description of the challenge
 - `initial_state`: Starting configuration (stacks, robot state)
 - `goal`: Target configuration to achieve
-- `constraint_set`: Which constraint set to use (`base` or `hanoi_towers`)
-- `metadata`: Additional information (difficulty level, optimal step count, etc.)
+- `constraint_set`: Which constraint set to use (`base`, `block_size`, or `partial_observability`)
+- `metadata`: Additional information about the scenario:
+  - `category`: Difficulty category (1-5, where higher numbers indicate more complex scenarios)
+  - `min_known_steps`: Minimum number of steps required for known optimal solution
+  - `non_constructive_steps`: Number of auxiliary/intermediate steps needed (steps that don't directly contribute to the goal)
+  - `num_blocks`: Total number of blocks in the scenario
+  - `num_stacks`: Total number of stacks available
+  - `misplaced_blocks`: Number of blocks not in their goal position
 - `optimal_plan`: A known optimal solution (can be used for validation or as a reference)
 
-#### 13. Get Scenario Details
+#### 14. Get Scenario Details
 Gets details for a specific scenario by name or ID.
 
 **Endpoint:** `GET /scenarios/<scenario_name_or_id>`
@@ -433,24 +484,25 @@ curl -X GET http://127.0.0.1:5001/scenarios/550e8400-e29b-41d4-a716-446655440000
 {
   "result": {
     "id": "550e8400-e29b-41d4-a716-446655440000",
-    "name": "Tower Building Challenge",
-    "description": "Rearrange blocks from 2 stacks to build tower B-A-C",
+    "name": "1_5",
+    "description": null,
     "initial_state": {
       "stacks": [["A", "B"], ["C"], []],
       "holding": null,
       "robot_status": "idle"
     },
     "goal": {
-      "description": "Build tower B-A-C",
+      "description": "Build tower B-A-C from bottom to top.",
       "target_configurations": [[], [], ["B", "A", "C"]]
     },
     "constraint_set": "base",
     "metadata": {
-      "difficulty": "0",
+      "category": "1",
       "min_known_steps": 6,
       "non_constructive_steps": 0,
       "num_blocks": 3,
-      "num_stacks": 3
+      "num_stacks": 3, 
+      "misplaced_blocks": 3
     },
     "optimal_plan": [
       {"action": "unstack", "block1": "B", "block2": "A"},
@@ -496,9 +548,9 @@ curl -X GET http://127.0.0.1:5001/scenarios/550e8400-e29b-41d4-a716-446655440000
 - `"Invalid action type in plan"`: An unrecognized action type was specified in the plan
 - `"Missing required parameters for action"`: Action is missing `block`, `block1`, or `block2` parameters
 
-### Hanoi Towers Specific Errors
-When using the `hanoi_towers` constraint set:
-- `"Could not stack block A on block B - Larger blocks cannot be placed on smaller blocks"`: Violates Tower of Hanoi rule
+### Block Size Specific Errors
+When using the `block_size` constraint set:
+- `"Could not stack block A on block B - Block cannot be stacked on a smaller block"`: Violates size constraint rule
 
 ---
 
@@ -509,10 +561,10 @@ When using the `hanoi_towers` constraint set:
 # 1. Start with a specific scenario
 curl -X POST http://127.0.0.1:5001/start_simulation \
   -H "Content-Type: application/json" \
-  -d '{"scenario_id": "550e8400-e29b-41d4-a716-446655440000"}'
+  -d '{"scenario_id": "1_5"}'
 
 # 2. Get the scenario details to see the optimal plan
-curl -X GET http://127.0.0.1:5001/scenarios/550e8400-e29b-41d4-a716-446655440000
+curl -X GET http://127.0.0.1:5001/scenarios/1_5
 
 # 3. Execute the optimal plan from the scenario
 curl -X POST http://127.0.0.1:5001/execute_plan \
@@ -552,7 +604,7 @@ curl -X POST http://127.0.0.1:5001/execute_plan \
   }'
 ```
 
-### Custom Simulation with Hanoi Towers Rules
+### Custom Simulation with Size-Based Constraints
 ```bash
 curl -X POST http://127.0.0.1:5001/start_simulation \
   -H "Content-Type: application/json" \
@@ -566,6 +618,6 @@ curl -X POST http://127.0.0.1:5001/start_simulation \
       [],
       []
     ],
-    "constraint_set": "hanoi_towers"
+    "constraint_set": "block_size"
   }'
 ```

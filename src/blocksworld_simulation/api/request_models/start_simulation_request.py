@@ -35,7 +35,7 @@ class StartSimulationRequest(BaseModel):
     // Body:
     { 
         "initial_stacks": [["A", "B"], [], ["C"]],
-        "constraint_set": "hanoi_towers"
+        "constraint_set": "different_blocks"
     }
     ```
     
@@ -55,7 +55,7 @@ class StartSimulationRequest(BaseModel):
             [],
             []
         ],
-        "constraint_set": "hanoi_towers"
+        "constraint_set": "different_blocks"
     }
     ```
     """
