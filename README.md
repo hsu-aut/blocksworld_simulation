@@ -10,7 +10,6 @@ A visual simulation environment for the classic Blocksworld AI planning problem.
 - **Predefined Scenarios**: 50 built-in challenges across 5 categories with varying difficulty levels
 - **Plan Execution & Verification**: Test AI-generated plans before execution
 - **Constraint Sets**: Multiple rule sets including standard blocksworld, size-based constraints, and partial observability
-- **Optimal Solutions**: Reference solutions provided for all scenarios
 - **Keyboard Control**: Quick manual testing and experimentation
 
 ## 🚀 Quick Start
@@ -53,10 +52,11 @@ Perfect for AI planning research, testing LLM reasoning capabilities, or buildin
 
 ### Keyboard Control
 
+- **Start random simulation**: Press `SPACE` (when no simulation is running)
 - **Pick up/Unstack**: Press the letter of the block you want to pick up
 - **Put down**: Press `SPACE` to place the held block on the ground
 - **Stack**: While holding a block, press the letter of the target block to stack on top of it
-- **Start random simulation**: Press `SPACE` (when no simulation is running)
+- **Stop simulation**: Press `ESC` to stop the current simulation and start a new one
 
 ### REST API Control
 

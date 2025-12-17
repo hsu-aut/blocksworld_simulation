@@ -412,24 +412,25 @@ curl -X GET http://127.0.0.1:5001/scenarios
     "scenarios": [
       {
         "id": "550e8400-e29b-41d4-a716-446655440000",
-        "name": "Tower Building Challenge",
-        "description": "Rearrange blocks from 2 stacks to build tower B-A-C",
+        "name": "1_5",
+        "description": null,
         "initial_state": {
           "stacks": [["A", "B"], ["C"], []],
           "holding": null,
           "robot_status": "idle"
         },
         "goal": {
-          "description": "Build tower B-A-C",
+          "description": "Build tower B-A-C  from bottom to top.",
           "target_configurations": [[], [], ["B", "A", "C"]]
         },
         "constraint_set": "base",
         "metadata": {
-          "difficulty": "0",
+          "category": "1",
           "min_known_steps": 6,
           "non_constructive_steps": 0,
           "num_blocks": 3,
-          "num_stacks": 3
+          "num_stacks": 3,
+          "misplaced_blocks": 3
         },
         "optimal_plan": [
           {"action": "unstack", "block1": "B", "block2": "A"},
@@ -483,24 +484,25 @@ curl -X GET http://127.0.0.1:5001/scenarios/550e8400-e29b-41d4-a716-446655440000
 {
   "result": {
     "id": "550e8400-e29b-41d4-a716-446655440000",
-    "name": "Tower Building Challenge",
-    "description": "Rearrange blocks from 2 stacks to build tower B-A-C",
+    "name": "1_5",
+    "description": null,
     "initial_state": {
       "stacks": [["A", "B"], ["C"], []],
       "holding": null,
       "robot_status": "idle"
     },
     "goal": {
-      "description": "Build tower B-A-C",
+      "description": "Build tower B-A-C from bottom to top.",
       "target_configurations": [[], [], ["B", "A", "C"]]
     },
     "constraint_set": "base",
     "metadata": {
-      "difficulty": "0",
+      "category": "1",
       "min_known_steps": 6,
       "non_constructive_steps": 0,
       "num_blocks": 3,
-      "num_stacks": 3
+      "num_stacks": 3, 
+      "misplaced_blocks": 3
     },
     "optimal_plan": [
       {"action": "unstack", "block1": "B", "block2": "A"},
@@ -559,10 +561,10 @@ When using the `block_size` constraint set:
 # 1. Start with a specific scenario
 curl -X POST http://127.0.0.1:5001/start_simulation \
   -H "Content-Type: application/json" \
-  -d '{"scenario_id": "550e8400-e29b-41d4-a716-446655440000"}'
+  -d '{"scenario_id": "1_5"}'
 
 # 2. Get the scenario details to see the optimal plan
-curl -X GET http://127.0.0.1:5001/scenarios/550e8400-e29b-41d4-a716-446655440000
+curl -X GET http://127.0.0.1:5001/scenarios/1_5
 
 # 3. Execute the optimal plan from the scenario
 curl -X POST http://127.0.0.1:5001/execute_plan \
