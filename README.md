@@ -12,6 +12,49 @@ A visual simulation environment for the classic Blocksworld AI planning problem.
 - **Constraint Sets**: Multiple rule sets including standard blocksworld, size-based constraints, and partial observability
 - **Keyboard Control**: Quick manual testing and experimentation
 
+## 📊 Benchmark Leaderboard
+
+The following table shows benchmark results for different approaches on the given blocksworld scenarios.
+
+| Metric                             | Category   | [Single Agent](https://github.com/hsu-aut/blocksworld_single-agent) (OpenAI o3) | Approach 2 | Approach 3 |
+|------------------------------------|------------|---------------------------------------------------------------------------------|------------|------------|
+| **Success Rate**                   | C1         | 80%                                                                             |            |            |
+|                                    | C2         | 70%                                                                             |            |            |
+|                                    | C3         | 100%                                                                            |            |            |
+|                                    | C4         | 70%                                                                             |            |            |
+|                                    | C5         | 60%                                                                             |            |            |
+|                                    | **total**  | **76%**                                                                         |            |            |
+| **Avg. Time [s]**                  | C1         | 75.70                                                                           |            |            |
+|                                    | C2         | 290.00                                                                          |            |            |
+|                                    | C3         | 124.90                                                                          |            |            |
+|                                    | C4         | 731.50                                                                          |            |            |
+|                                    | C5         | 676.30                                                                          |            |            |
+|                                    | **total**  | **379.68**                                                                      |            |            |
+| **Avg. Attempts**                  | C1         | 1.10                                                                            |            |            |
+|                                    | C2         | 1.70                                                                            |            |            |
+|                                    | C3         | 1.80                                                                            |            |            |
+|                                    | C4         | 2.20                                                                            |            |            |
+|                                    | C5         | 3.10                                                                            |            |            |
+|                                    | **total**  | **1.98**                                                                        |            |            |
+| **Avg. Token**                     | C1         | 35,126                                                                          |            |            |
+|                                    | C2         | 111,721                                                                         |            |            |
+|                                    | C3         | 18,195                                                                          |            |            |
+|                                    | C4         | 143,714                                                                         |            |            |
+|                                    | C5         | 192,245                                                                         |            |            |
+|                                    | **total**  | **58,832**                                                                      |            |            |
+| **Avg. Steps vs. Optimum**         | C1         | 1.00                                                                            |            |            |
+|                                    | C2         | 1.20                                                                            |            |            |
+|                                    | C3         | 1.00                                                                            |            |            |
+|                                    | C4         | 1.08                                                                            |            |            |
+|                                    | C5         | 0.90                                                                            |            |            |
+|                                    | **total**  | **1.03**                                                                        |            |            |
+| **Avg. Execution Tool Errors**     | C1         | 0.00                                                                            |            |            |
+|                                    | C2         | 0.00                                                                            |            |            |
+|                                    | C3         | 0.00                                                                            |            |            |
+|                                    | C4         | 0.00                                                                            |            |            |
+|                                    | C5         | 0.50                                                                            |            |            |
+|                                    | **total**  | **0.16**                                                                        |            |            |
+
 ## 🚀 Quick Start
 
 ### Installation
@@ -19,20 +62,23 @@ A visual simulation environment for the classic Blocksworld AI planning problem.
 The project uses [Poetry](https://python-poetry.org/docs/#installation) for dependency management.
 
 1. Clone the repository:
-```bash
-git clone <repository-url>
-cd blocksworld-simulation
-```
+
+    ```bash
+    git clone <repository-url>
+    cd blocksworld-simulation
+    ```
 
 2. Install dependencies:
-```bash
-poetry install
-```
+
+    ```bash
+    poetry install
+    ```
 
 3. Run the simulation:
-```bash
-poetry run blocksworld-simulation
-```
+
+    ```bash
+    poetry run blocksworld-simulation
+    ```
 
 The GUI will open, and the REST API will be available at `http://127.0.0.1:5001`.
 
@@ -41,6 +87,7 @@ The GUI will open, and the REST API will be available at `http://127.0.0.1:5001`
 Want to use this simulation with your own AI agents or just try it out with LLMs like Claude or ChatGPT? Check out our **[MCP Server for Blocksworld Simulation](https://github.com/hsu-aut/llmstudy_mcp-server)** that exposes the simulation as MCP tools.
 
 The MCP server allows LLMs to:
+
 - Interact with the simulation through natural language
 - Execute block manipulation actions as tool calls
 - Query the simulation state and rules
@@ -63,21 +110,25 @@ Perfect for AI planning research, testing LLM reasoning capabilities, or buildin
 The API provides 14 endpoints for complete programmatic control:
 
 #### Simulation Control
+
 - `POST /start_simulation` - Start with a scenario or custom configuration
 - `POST /stop_simulation` - Stop the current simulation
 - `POST /quit` - Quit the application
 
 #### Block Actions
+
 - `POST /pick_up` - Pick up a block from the ground
 - `POST /put_down` - Put down a held block
 - `POST /stack` - Stack one block on another
 - `POST /unstack` - Unstack one block from another
 
 #### Plan Execution
+
 - `POST /execute_plan` - Execute a sequence of actions with GUI animation
 - `POST /verify_plan` - Verify a plan without executing it
 
 #### Information
+
 - `GET /get_status` - Get current simulation state (respects partial observability)
 - `GET /get_full_status` - Get complete simulation state (bypasses partial observability)
 - `GET /get_rules` - Get active constraint rules
@@ -127,6 +178,7 @@ The simulation supports different rule sets:
 - **`partial_observability`**: Limited visibility of simulation state
 
 Specify the constraint set when starting a simulation:
+
 ```bash
 curl -X POST http://127.0.0.1:5001/start_simulation \
   -H "Content-Type: application/json" \
